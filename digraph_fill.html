@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Phonics Fill in the Blank</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f5f5f5;
+  padding: 30px;
+}
+
+h2 { margin-top: 40px; }
+
+.quiz-card {
+  background: #1976d2;
+  color: white;
+  padding: 25px;
+  margin: 15px auto;
+  width: 350px;
+  border-radius: 12px;
+  font-size: 36px;
+}
+
+input {
+  font-size: 28px;
+  width: 80px;
+  text-align: center;
+}
+
+button {
+  margin-top: 10px;
+  font-size: 18px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.correct { color: #4caf50; }
+.wrong { color: #ff5252; }
+</style>
+</head>
+
+<body>
+
+<h1>Phonics Fill in the Blank</h1>
+<p>Type the missing sound → Click Check</p>
+
+<div id="quiz"></div>
+
+<script>
+
+const words = [
+
+/* SH */
+{q:"_ip", a:"sh"}, {q:"_op", a:"sh"}, {q:"_ell", a:"sh"},
+{q:"_ine", a:"sh"}, {q:"_oe", a:"sh"},
+
+/* CH */
+{q:"_air", a:"ch"}, {q:"_ip", a:"ch"}, {q:"_eck", a:"ch"},
+{q:"_in", a:"ch"}, {q:"_at", a:"ch"},
+
+/* TH soft */
+{q:"_in", a:"th"}, {q:"_ick", a:"th"}, {q:"_ing", a:"th"},
+{q:"_umb", a:"th"}, {q:"_ree", a:"th"},
+
+/* TH hard */
+{q:"_is", a:"th"}, {q:"_at", a:"th"}, {q:"_", a:"th"},
+{q:"_ose", a:"th"}, {q:"_en", a:"th"},
+
+/* PH */
+{q:"_one", a:"ph"}, {q:"_oto", a:"ph"}, {q:"_ish", a:"ph"},
+{q:"_onic", a:"ph"}, {q:"_ase", a:"ph"},
+
+/* GH */
+{q:"li_t", a:"gh"}, {q:"ni_t", a:"gh"}, {q:"ri_t", a:"gh"},
+{q:"hi_", a:"gh"}, {q:"si_", a:"gh"},
+
+/* WH */
+{q:"_at", a:"wh"}, {q:"_en", a:"wh"}, {q:"_ich", a:"wh"},
+{q:"_eel", a:"wh"}, {q:"_y", a:"wh"},
+
+/* CK */
+{q:"ba_", a:"ck"}, {q:"lu_", a:"ck"}, {q:"du_", a:"ck"},
+{q:"ro_", a:"ck"}, {q:"so_", a:"ck"},
+
+/* Ending practice */
+{q:"fi_", a:"sh"}, {q:"di_", a:"sh"}, {q:"ri_", a:"ch"},
+{q:"mat_", a:"ch"}, {q:"ba_", a:"th"}, {q:"wi_", a:"th"},
+{q:"ba_", a:"ck"}, {q:"du_", a:"ck"}, {q:"lau_", a:"gh"},
+{q:"tou_", a:"gh"}, {q:"ra_", a:"ph"}, {q:"jose_", a:"ph"}
+
+];
+
+const container = document.getElementById("quiz");
+
+words.forEach((item, i) => {
+  container.innerHTML += `
+  <div class="quiz-card">
+    ${item.q.replace("_", `<input id="ans${i}">`)}
+    <br>
+    <button onclick="check(${i}, '${item.a}')">Check</button>
+    <div id="result${i}"></div>
+  </div>`;
+});
+
+function check(i, answer) {
+  const user = document.getElementById("ans"+i).value.toLowerCase();
+  const result = document.getElementById("result"+i);
+
+  if(user === answer){
+    result.innerHTML = "✅ Correct!";
+    result.className = "correct";
+  } else {
+    result.innerHTML = "❌ Try again";
+    result.className = "wrong";
+  }
+}
+
+</script>
+
+</body>
+</html>
