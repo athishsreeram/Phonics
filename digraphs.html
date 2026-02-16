@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Phonics Digraph Practice</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background: #f5f5f5;
+  padding: 30px;
+}
+
+h2 {
+  margin-top: 50px;
+}
+
+.word-card {
+  background: #1976d2;
+  padding: 25px;
+  margin: 15px auto;
+  width: 320px;
+  border-radius: 12px;
+  font-size: 48px;
+}
+
+.sound {
+  color: white;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.red {
+  color: red !important;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Phonics Digraph Practice</h1>
+<p>Tap any sound to highlight</p>
+
+<!-- SH -->
+<h2>/sh/</h2>
+
+<div class="word-card">
+  <span class="sound">sh</span><span class="sound">i</span><span class="sound">p</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">sh</span><span class="sound">o</span><span class="sound">p</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">sh</span><span class="sound">e</span><span class="sound">ll</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">sh</span><span class="sound">i</span><span class="sound">n</span><span class="sound">e</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">sh</span><span class="sound">o</span><span class="sound">e</span>
+</div>
+
+
+<!-- CH -->
+<h2>/ch/</h2>
+
+<div class="word-card">
+  <span class="sound">ch</span><span class="sound">air</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">ch</span><span class="sound">i</span><span class="sound">p</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">ch</span><span class="sound">e</span><span class="sound">ck</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">ch</span><span class="sound">i</span><span class="sound">n</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">ch</span><span class="sound">a</span><span class="sound">t</span>
+</div>
+
+
+<!-- TH SOFT -->
+<h2>/th/ (soft)</h2>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">i</span><span class="sound">n</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">i</span><span class="sound">ck</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">i</span><span class="sound">ng</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">u</span><span class="sound">mb</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">r</span><span class="sound">ee</span>
+</div>
+
+
+<!-- TH HARD -->
+<h2>/th/ (hard)</h2>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">i</span><span class="sound">s</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">a</span><span class="sound">t</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">e</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">o</span><span class="sound">se</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">th</span><span class="sound">e</span><span class="sound">n</span>
+</div>
+
+
+<!-- NG -->
+<h2>/ng/</h2>
+
+<div class="word-card">
+  <span class="sound">r</span><span class="sound">i</span><span class="sound">ng</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">s</span><span class="sound">o</span><span class="sound">ng</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">l</span><span class="sound">o</span><span class="sound">ng</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">k</span><span class="sound">i</span><span class="sound">ng</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">w</span><span class="sound">i</span><span class="sound">ng</span>
+</div>
+
+
+<!-- ZH -->
+<h2>/zh/</h2>
+
+<div class="word-card">
+  <span class="sound">v</span><span class="sound">i</span><span class="sound">sion</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">te</span><span class="sound">le</span><span class="sound">vision</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">mea</span><span class="sound">sure</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">plea</span><span class="sound">sure</span>
+</div>
+
+<div class="word-card">
+  <span class="sound">a</span><span class="sound">zure</span>
+</div>
+
+
+<script>
+document.querySelectorAll(".sound").forEach(sound => {
+  sound.addEventListener("click", function(e) {
+    e.stopPropagation();
+    this.classList.toggle("red");
+  });
+});
+</script>
+
+</body>
+</html>
