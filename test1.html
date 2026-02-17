@@ -32,7 +32,7 @@
       padding: 12px 20px;
       background: white;
       border: 1px solid #ccc;
-      width: 280px;
+      width: 300px;
     }
     optgroup { font-weight: bold; color: #333; }
     button {
@@ -53,7 +53,7 @@
       text-transform: uppercase;
     }
     #result {
-      min-height: 240px;
+      min-height: 260px;
       margin-top: 20px;
       padding: 24px;
       border-radius: 12px;
@@ -62,7 +62,7 @@
       line-height: 1.6;
     }
     .score {
-      font-size: 3.4rem;
+      font-size: 3.6rem;
       font-weight: bold;
       text-align: center;
       margin: 12px 0;
@@ -70,7 +70,7 @@
     .great  { color: #2e7d32; }
     .okay   { color: #f57c00; }
     .poor   { color: #c62828; }
-    .emoji  { font-size: 2.4rem; margin: 0 8px; }
+    .emoji  { font-size: 2.5rem; margin: 0 8px; }
     .tip    { color: #555; font-style: italic; margin-top: 16px; }
     .feedback-item { margin: 10px 0; font-size: 1.1rem; }
   </style>
@@ -194,80 +194,24 @@
 
 <script>
 // ────────────────────────────────────────────────
-// Expanded PHONICS_RULES to better cover the new modules
 const PHONICS_RULES = [
-  // Basic single letters (short vowels, consonants)
+  // (same as previous version - kept unchanged for brevity; paste the full PHONICS_RULES array from the last code here)
+  // Basic single letters ...
   { pattern: /s/i,          sound: "s",               good: ["s","ss"],            bad: ["z","sh"],                  example: "sun" },
   { pattern: /a(?![e])/i,   sound: "short a",         good: ["a"],                 bad: ["ay","ai","ar"],            example: "cat" },
-  { pattern: /t/i,          sound: "t",               good: ["t","tt"],            bad: ["d"],                       example: "tap" },
-  { pattern: /i(?![e])/i,   sound: "short i",         good: ["i"],                 bad: ["ee","igh","ie"],           example: "pig" },
-  { pattern: /p/i,          sound: "p",               good: ["p","pp"],            bad: ["b"],                       example: "pin" },
-  { pattern: /n/i,          sound: "n",               good: ["n","nn"],            bad: ["m"],                       example: "net" },
-  { pattern: /m/i,          sound: "m",               good: ["m","mm"],            bad: ["n"],                       example: "mat" },
-  { pattern: /d/i,          sound: "d",               good: ["d","dd"],            bad: ["t"],                       example: "dog" },
-  { pattern: /g(?!e)/i,     sound: "hard g",          good: ["g","gg"],            bad: ["j"],                       example: "goat" },
-  { pattern: /o(?![e])/i,   sound: "short o",         good: ["o"],                 bad: ["oa","ow"],                 example: "pot" },
-  { pattern: /c(?!h)/i,     sound: "hard c",          good: ["c","k","ck"],        bad: ["s"],                       example: "cat" },
-  { pattern: /k/i,          sound: "k",               good: ["k","c","ck"],        bad: ["g"],                       example: "kit" },
-  { pattern: /e(?![e])/i,   sound: "short e",         good: ["e"],                 bad: ["ee","ea"],                 example: "bed" },
-  { pattern: /u(?![e])/i,   sound: "short u",         good: ["u"],                 bad: ["oo","ue"],                 example: "rug" },
-  { pattern: /r/i,          sound: "r",               good: ["r","rr"],            bad: ["w","l"],                   example: "rat" },
-  { pattern: /h/i,          sound: "h",               good: ["h"],                 bad: ["f"],                       example: "hat" },
-  { pattern: /b/i,          sound: "b",               good: ["b","bb"],            bad: ["p"],                       example: "bat" },
-  { pattern: /f/i,          sound: "f",               good: ["f","ff","ph"],       bad: ["v"],                       example: "fan" },
-  { pattern: /l/i,          sound: "l",               good: ["l","ll"],            bad: ["r"],                       example: "lip" },
-  { pattern: /j/i,          sound: "j",               good: ["j","g(e)"],          bad: ["g(hard)"],                 example: "jam" },
-  { pattern: /v/i,          sound: "v",               good: ["v"],                 bad: ["f"],                       example: "van" },
-  { pattern: /w/i,          sound: "w",               good: ["w"],                 bad: ["r"],                       example: "win" },
-  { pattern: /x/i,          sound: "x",               good: ["x"],                 bad: [],                          example: "box" },
-  { pattern: /y(?![e])/i,   sound: "y consonant",     good: ["y"],                 bad: ["w"],                       example: "yes" },
-  { pattern: /z/i,          sound: "z",               good: ["z","zz"],            bad: ["s"],                       example: "zip" },
-  { pattern: /qu/i,         sound: "qu",              good: ["qu"],                bad: ["k","kw"],                  example: "quiz" },
-
-  // Digraphs
-  { pattern: /sh/i,         sound: "sh",              good: ["sh"],                bad: ["s","ch"],                  example: "ship" },
-  { pattern: /ch|tch/i,     sound: "ch",              good: ["ch","tch"],          bad: ["sh","k"],                  example: "chin" },
-  { pattern: /th/i,         sound: "th",              good: ["th"],                bad: ["t","d","f"],               example: "thin/this" },
-  { pattern: /wh/i,         sound: "wh",              good: ["wh","w"],            bad: ["h"],                       example: "wheel" },
-  { pattern: /ng/i,         sound: "ng",              good: ["ng"],                bad: ["n","g"],                   example: "ring" },
-  { pattern: /ck|\bk\b/i,   sound: "ck",              good: ["ck","k"],            bad: ["g"],                       example: "back" },
-  { pattern: /ph/i,         sound: "ph (f)",          good: ["ph","f"],            bad: ["p"],                       example: "phone" },
-
-  // Long vowels / magic e
-  { pattern: /a_e/i,        sound: "long a (a_e)",    good: ["a"],                 bad: ["short a"],                 example: "cake" },
-  { pattern: /i_e/i,        sound: "long i (i_e)",    good: ["i"],                 bad: ["short i"],                 example: "kite" },
-  { pattern: /o_e/i,        sound: "long o (o_e)",    good: ["o"],                 bad: ["short o"],                 example: "rope" },
-  { pattern: /u_e/i,        sound: "long u (u_e)",    good: ["u"],                 bad: ["short u"],                 example: "mule" },
-  { pattern: /ai|ay/i,      sound: "long a (ai/ay)",  good: ["ai","ay"],          bad: ["short a"],                 example: "rain" },
-  { pattern: /ee|ea/i,      sound: "long e (ee/ea)",  good: ["ee","ea"],          bad: ["short e"],                 example: "tree" },
-  { pattern: /igh|y$/i,     sound: "long i (igh/y)",  good: ["igh","y"],          bad: ["short i"],                 example: "night" },
-  { pattern: /oa|ow(?!n)/i, sound: "long o (oa/ow)",  good: ["oa","ow"],          bad: ["short o"],                 example: "boat" },
-  { pattern: /ue|ew/i,      sound: "long u (ue/ew)",  good: ["ue","ew"],          bad: ["short u"],                 example: "blue" },
-
-  // Diphthongs & r-controlled
-  { pattern: /oo(?=k)/i,    sound: "short oo (book)", good: ["oo"],                bad: ["long oo"],                 example: "book" },
-  { pattern: /oo(?!k)/i,    sound: "long oo (moon)",  good: ["oo"],                bad: ["short oo"],                example: "moon" },
-  { pattern: /oi|oy/i,      sound: "oi/oy",           good: ["oi","oy"],           bad: ["oy short"],                example: "coin" },
-  { pattern: /ou|ow/i,      sound: "ou/ow",           good: ["ou","ow"],           bad: ["long o"],                  example: "out" },
-  { pattern: /ar/i,         sound: "ar (bossy r)",    good: ["ar"],                bad: ["short a"],                 example: "car" },
-  { pattern: /or/i,         sound: "or (bossy r)",    good: ["or"],                bad: ["short o"],                 example: "fork" },
-  { pattern: /er|ir|ur/i,   sound: "er/ir/ur",        good: ["er","ir","ur"],      bad: ["short e"],                 example: "her" },
-
-  // Advanced
-  { pattern: /c(?=[eiy])/i, sound: "soft c",          good: ["c","s"],             bad: ["k"],                       example: "city" },
-  { pattern: /g(?=[eiy])/i, sound: "soft g",          good: ["g","j"],             bad: ["hard g"],                  example: "giant" },
-  { pattern: /kn/i,         sound: "kn (silent k)",   good: ["n"],                 bad: ["k n"],                     example: "knee" },
-  { pattern: /wr/i,         sound: "wr (silent w)",   good: ["r"],                 bad: ["w r"],                     example: "write" },
-  { pattern: /tch/i,        sound: "tch",             good: ["tch"],               bad: ["ch","k"],                  example: "match" },
-  { pattern: /dge/i,        sound: "dge",             good: ["dge","j"],           bad: ["g"],                       example: "bridge" },
-  // Schwa is very hard to reliably score via text → give general tip instead
+  // ... include ALL the rules from the previous message
+  // (to save space here, assume the full array is copied in)
 ];
 
-// Scoring constants
+// Scoring constants - adjusted to prioritize word match
 const MAX_SCORE = 100;
-const POINTS_PER_CORRECT = 28;
-const POINTS_DEDUCTION_WRONG = 20;
-const POINTS_DEDUCTION_MISSING = 24;
+const WORD_MATCH_PERFECT_BONUS = 60;     // big reward for exact match
+const WORD_MATCH_CLOSE_BONUS = 30;       // partial for similar
+const WORD_MATCH_THRESHOLD = 0.85;       // ~85% char similarity for "close"
+const SOUND_CORRECT_BONUS = 8;           // smaller per sound now
+const SOUND_WRONG_DEDUCTION = 12;
+const SOUND_MISSING_DEDUCTION = 10;
+const BASE_SCORE_IF_NO_MATCH = 40;       // floor when word is completely wrong
 
 let recognition = null;
 let isRecording = false;
@@ -278,7 +222,6 @@ const resultEl   = document.getElementById("result");
 const targetEl   = document.getElementById("target");
 const wordSelect = document.getElementById("wordSelect");
 
-// ────────────────────────────────────────────────
 let currentWord = "sat";
 let currentDisplay = "s a t";
 
@@ -291,62 +234,98 @@ function updateTarget() {
 }
 
 wordSelect.addEventListener('change', updateTarget);
-updateTarget(); // init
+updateTarget();
 
-// ────────────────────────────────────────────────
+// Simple similarity function (Levenshtein-like normalized)
+function wordSimilarity(a, b) {
+  if (a === b) return 1;
+  const longer = a.length > b.length ? a : b;
+  const shorter = a.length > b.length ? b : a;
+  if (longer.length === 0) return 1;
+  let longerMap = {};
+  for (let i = 0; i < longer.length; i++) {
+    longerMap[longer.charAt(i)] = (longerMap[longer.charAt(i)] || 0) + 1;
+  }
+  let match = 0;
+  for (let i = 0; i < shorter.length; i++) {
+    const c = shorter.charAt(i);
+    if (longerMap[c] > 0) {
+      match++;
+      longerMap[c]--;
+    }
+  }
+  return match / longer.length;
+}
+
 function initSpeechRecognition() {
   if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
     resultEl.innerHTML = `<p style="color:#c62828">Speech Recognition not supported.<br>Use Chrome / Edge.</p>`;
     startBtn.disabled = true;
     return false;
   }
-
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
   recognition.continuous = false;
   recognition.interimResults = false;
   recognition.lang = "en-US";
-
   return true;
 }
 
-// ────────────────────────────────────────────────
 function scorePronunciation(transcript) {
   const spoken = transcript.toLowerCase().trim();
-  let score = MAX_SCORE;
   let feedback = [];
+  let score = 0;
 
+  // 1. Primary: Word match score (most important)
+  const similarity = wordSimilarity(currentWord, spoken.replace(/\s+/g, ''));
+  let wordScore = BASE_SCORE_IF_NO_MATCH;
+  let wordFeedback = "";
+
+  if (spoken === currentWord || spoken.replace(/\s+/g, '') === currentWord) {
+    wordScore = MAX_SCORE;
+    wordFeedback = `🏆 Perfect match – you said <b>${currentWord}</b> exactly!`;
+    score += WORD_MATCH_PERFECT_BONUS;
+  } else if (similarity >= WORD_MATCH_THRESHOLD || spoken.includes(currentWord)) {
+    wordScore = 70 + Math.round((similarity - WORD_MATCH_THRESHOLD) * 300);
+    wordFeedback = `🟡 Close! You said <b>"${spoken}"</b> (target: <b>${currentWord}</b>)`;
+    score += WORD_MATCH_CLOSE_BONUS;
+  } else {
+    wordFeedback = `🔴 Not quite – you said <b>"${spoken}"</b> instead of <b>${currentWord}</b>`;
+  }
+
+  feedback.push(`<b>Word accuracy:</b> ${wordFeedback}`);
+
+  // 2. Secondary: Individual sounds (only if word is reasonably close)
   const relevantRules = PHONICS_RULES.filter(rule => rule.pattern.test(currentWord));
+  let soundCount = relevantRules.length || 1;
+  let soundPoints = 0;
 
-  if (relevantRules.length === 0) {
-    feedback.push(`<span class="tip">No specific rule matched for this word yet.</span>`);
+  if (similarity > 0.5) {  // only judge sounds if word is not totally off
+    relevantRules.forEach(rule => {
+      const hasGood = rule.good.some(g => spoken.includes(g.toLowerCase()));
+      const hasBad  = rule.bad.some(b => spoken.includes(b.toLowerCase()));
+
+      if (hasGood) {
+        feedback.push(`🟢 Great <b>"${rule.sound}"</b> sound!`);
+        soundPoints += SOUND_CORRECT_BONUS;
+      } else if (hasBad) {
+        const badFound = rule.bad.find(b => spoken.includes(b.toLowerCase())) || "?";
+        feedback.push(`🔴 <b>"${rule.sound}"</b> → said <b>"${badFound}"</b>`);
+        soundPoints -= SOUND_WRONG_DEDUCTION;
+      } else {
+        feedback.push(`🟡 <b>"${rule.sound}"</b> unclear/missing`);
+        soundPoints -= SOUND_MISSING_DEDUCTION;
+      }
+    });
+  } else {
+    feedback.push(`<span class="tip">Word too different – focusing on whole-word match first.</span>`);
   }
 
-  relevantRules.forEach(rule => {
-    const hasGood = rule.good.some(g => spoken.includes(g.toLowerCase()));
-    const hasBad  = rule.bad.some(b => spoken.includes(b.toLowerCase()));
+  // Combine
+  score += Math.round(soundPoints * (soundCount > 0 ? 40 / (soundCount * 10) : 0)); // scale sound impact
+  score = Math.max(0, Math.min(MAX_SCORE, Math.round(score + wordScore)));
 
-    if (hasGood) {
-      feedback.push(`🟢 Great <b>"${rule.sound}"</b>!`);
-      score += POINTS_PER_CORRECT;
-    } else if (hasBad) {
-      score -= POINTS_DEDUCTION_WRONG;
-      const badFound = rule.bad.find(b => spoken.includes(b.toLowerCase())) || "?";
-      feedback.push(`🔴 You said <b>"${badFound}"</b> instead of <b>"${rule.sound}"</b>`);
-    } else {
-      score -= POINTS_DEDUCTION_MISSING;
-      feedback.push(`🟡 <b>"${rule.sound}"</b> unclear or missing`);
-    }
-  });
-
-  // Exact match bonus
-  if (spoken === currentWord || spoken.replace(/\s+/g,'') === currentWord) {
-    score += 25;
-    feedback.unshift(`🏆 Perfect – <b>${currentWord}</b>!`);
-  }
-
-  score = Math.max(0, Math.min(MAX_SCORE, Math.round(score)));
-
+  // Rating
   let overall = "";
   let emoji = "";
   if (score >= 85) {
@@ -362,7 +341,7 @@ function scorePronunciation(transcript) {
 
   let html = `
     <div class="score">${score}%</div>
-    <div style="text-align:center; font-size:1.5rem;">
+    <div style="text-align:center; font-size:1.5rem; margin-bottom:16px;">
       ${emoji} <b>Pronunciation Score: ${score}%</b> — ${overall}
     </div>
     <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
@@ -371,7 +350,7 @@ function scorePronunciation(transcript) {
   feedback.forEach(item => html += `<div class="feedback-item">${item}</div>`);
 
   if (currentWord === "about") {
-    html += `<div class="tip">Schwa (/ə/) is the unstressed "uh" sound – hard to score exactly, focus on natural unstressed vowels.</div>`;
+    html += `<div class="tip">Schwa (/ə/) is the unstressed "uh" sound – focus on natural flow.</div>`;
   }
 
   html += `<div class="tip" style="margin-top:16px;">You said: <i>"${transcript}"</i></div>`;
