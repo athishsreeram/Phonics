@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phonics Fox – Say It Right! 🦊✨</title>
+  <style>
+    :root {
+      --bg: #fff5f8;
+      --card: #ffffff;
+      --primary: #ff6b81;
+      --success: #51cf66;
+      --warning: #ffca3a;
+      --fox: #ff9f43;
+      --text: #2d3436;
+    }
+
+    body {
+      font-family: "Comic Sans MS", "Chalkboard SE", system-ui, sans-serif;
+      background: linear-gradient(135deg, var(--bg), #ffeef0);
+      color: var(--text);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container { max-width: 900px; margin: 0 auto; }
+
+    h1 {
+      text-align: center;
+      color: var(--primary);
+      font-size: 3.2rem;
+      margin: 10px 0;
+      text-shadow: 3px 3px 0 white;
+    }
+
+    .mascot {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .mascot img {
+      width: 160px;
+      border-radius: 50%;
+      border: 10px solid var(--fox);
+      box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+      animation: bounce 3s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    #settings {
+      text-align: center;
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 20px;
+    }
+
+    select, button {
+      font-size: 1.3rem;
+      padding: 12px 28px;
+      margin: 10px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+
+    select { background: white; border: 3px solid var(--primary); color: #e67e22; }
+
+    button { background: var(--primary); color: white; }
+
+    button:hover:not(:disabled) { transform: scale(1.08); background: #ff4757; }
+
+    button:disabled { background: #ccc; }
+
+    #target {
+      font-size: 5rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 30px 0;
+      letter-spacing: 10px;
+      color: #e74c3c;
+      background: rgba(255,255,255,0.6);
+      padding: 25px;
+      border-radius: 30px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    }
+
+    #waveform {
+      width: 100%;
+      height: 100px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 20px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+
+    #controls { text-align: center; margin: 40px 0; }
+
+    #result {
+      background: white;
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+      min-height: 300px;
+    }
+
+    .score { font-size: 5rem; font-weight: bold; text-align: center; color: var(--primary); }
+
+    .stars { font-size: 3.5rem; text-align: center; color: #f1c40f; margin: 15px 0; }
+
+    .feedback-item {
+      background: #f8f9fa;
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 20px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .particle {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      animation: fall 4s linear forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(120vh) rotate(1080deg); opacity: 0; }
+    }
+
+    .completed { color: var(--success); font-weight: bold; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="mascot">
+    <img src="https://images.unsplash.com/photo-1615751072497-5f5169febe17?w=300" alt="Cute Fox">
+    <h1>Phonics Fox Adventure! 🦊✨</h1>
+  </div>
+
+  <div id="settings">
+    <label>Difficulty: 
+      <select id="difficulty">
+        <option value="easy">Easy 🐥</option>
+        <option value="medium" selected>Medium 🦊</option>
+        <option value="hard">Hard 🔥</option>
+      </select>
+    </label>
+    <span style="margin:0 20px;">Stars earned: <span id="totalStars">0</span> ★</span>
+  </div>
+
+  <h2>Choose your word friend!</h2>
+
+  <div id="word-select">
+    <select id="wordSelect">
+      <!-- Expanded list – about 120 words -->
+      <optgroup label="Module 1 – Basic Code">
+        <option value="sat">sat</option>
+        <option value="pat">pat</option>
+        <option value="pin">pin</option>
+        <option value="mat">mat</option>
+        <option value="dog">dog</option>
+        <option value="cat">cat</option>
+        <option value="kit">kit</option>
+        <option value="rug">rug</option>
+        <option value="hat">hat</option>
+        <option value="bat">bat</option>
+        <!-- ... more can be added ... -->
+      </optgroup>
+      <!-- Add more optgroups with words from your original list -->
+      <!-- For brevity not all 120 are listed here – expand as needed -->
+    </select>
+  </div>
+
+  <div id="target">— pick a word —</div>
+
+  <canvas id="waveform"></canvas>
+
+  <div id="controls">
+    <button id="startBtn">🎤 Say it!</button>
+    <button id="stopBtn" disabled>🛑 Stop</button>
+  </div>
+
+  <div id="result"></div>
+
+  <div class="confetti" id="confetti"></div>
+
+</div>
+
+<script>
+// ────────────────────────────────────────────────
+// Your PHONICS_RULES array here (full version from previous messages)
+// For brevity omitted – paste it in
+const PHONICS_RULES = [ /* ... */ ];
+
+// Scoring constants
+const MAX_SCORE = 100;
+const DIFFICULTY = {
+  easy:   { threshold: 0.65, missingDeduct: 6, wrongDeduct: 8  },
+  medium: { threshold: 0.80, missingDeduct: 10, wrongDeduct: 14 },
+  hard:   { threshold: 0.90, missingDeduct: 14, wrongDeduct: 20 }
+};
+
+// State
+let recognition = null;
+let audioContext = null;
+let analyser = null;
+let mediaStream = null;
+let currentWord = "";
+let difficulty = "medium";
+
+// Progress
+function loadProgress() {
+  const data = localStorage.getItem("phonicsProgress");
+  return data ? JSON.parse(data) : { completed: {}, stars: 0 };
+}
+
+function saveProgress(completed, stars) {
+  localStorage.setItem("phonicsProgress", JSON.stringify({ completed, stars }));
+}
+
+let progress = loadProgress();
+document.getElementById("totalStars").textContent = progress.stars;
+
+// ────────────────────────────────────────────────
+const wordSelect   = document.getElementById("wordSelect");
+const targetEl     = document.getElementById("target");
+const startBtn     = document.getElementById("startBtn");
+const stopBtn      = document.getElementById("stopBtn");
+const resultEl     = document.getElementById("result");
+const difficultyEl = document.getElementById("difficulty");
+const waveform     = document.getElementById("waveform");
+
+// Update target & check if completed
+function updateTarget() {
+  currentWord = wordSelect.value.toLowerCase();
+  targetEl.textContent = currentWord.split('').join('  ');
+  resultEl.innerHTML = "";
+
+  const isDone = progress.completed[currentWord];
+  targetEl.style.color = isDone ? "#51cf66" : "#e74c3c";
+}
+
+wordSelect.addEventListener("change", updateTarget);
+difficultyEl.addEventListener("change", e => difficulty = e.target.value);
+updateTarget();
+
+// ──────────────────────────────────────────────── Waveform
+async function startWaveform() {
+  try {
+    mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaStreamSource(mediaStream);
+    analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    source.connect(analyser);
+
+    const canvasCtx = waveform.getContext("2d");
+    waveform.width = waveform.clientWidth * devicePixelRatio;
+    waveform.height = waveform.clientHeight * devicePixelRatio;
+    canvasCtx.scale(devicePixelRatio, devicePixelRatio);
+
+    function draw() {
+      const bufferLength = analyser.frequencyBinCount;
+      const dataArray = new Uint8Array(bufferLength);
+      analyser.getByteTimeDomainData(dataArray);
+
+      canvasCtx.fillStyle = "rgba(255,255,255,0.3)";
+      canvasCtx.fillRect(0, 0, waveform.width, waveform.height);
+
+      canvasCtx.lineWidth = 4;
+      canvasCtx.strokeStyle = var(--primary);
+      canvasCtx.beginPath();
+
+      const sliceWidth = waveform.width / bufferLength;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        const v = dataArray[i] / 128.0;
+        const y = (v * waveform.height) / 2;
+        if (i === 0) canvasCtx.moveTo(x, y);
+        else canvasCtx.lineTo(x, y);
+        x += sliceWidth;
+      }
+      canvasCtx.lineTo(waveform.width, waveform.height / 2);
+      canvasCtx.stroke();
+
+      if (isRecording) requestAnimationFrame(draw);
+    }
+    draw();
+  } catch (err) {
+    console.error("Mic error:", err);
+  }
+}
+
+// ──────────────────────────────────────────────── Scoring (your improved logic + difficulty)
+function scorePronunciation(transcript) {
+  const spoken = transcript.toLowerCase().trim().replace(/\s+/g, '');
+  const target = currentWord;
+  let score = 0;
+  let feedback = [];
+
+  // Word match
+  const exact = spoken === target;
+  const similarity = // your wordSimilarity function here
+  let wordBonus = 0;
+
+  if (exact) {
+    wordBonus = 65;
+    feedback.push(`<b style="color:#51cf66">Perfect! You said <b>${target}</b> exactly! 🏆</b>`);
+  } else if (similarity >= DIFFICULTY[difficulty].threshold) {
+    wordBonus = 35;
+    feedback.push(`<b>Close! You said "${spoken}"</b>`);
+  } else {
+    feedback.push(`<b style="color:#e74c3c">Not quite – you said "${spoken}"</b>`);
+  }
+
+  score += wordBonus;
+
+  // Sounds
+  const rules = PHONICS_RULES.filter(r => r.pattern.test(target));
+  let soundScore = 0;
+
+  rules.forEach(r => {
+    const good = r.good.some(g => spoken.includes(g.toLowerCase()));
+    const bad  = r.bad.some(b => spoken.includes(b.toLowerCase()));
+
+    if (good) {
+      feedback.push(`🟢 Great <b>${r.sound}</b>!`);
+      soundScore += 12;
+    } else if (bad) {
+      feedback.push(`🔴 ${r.sound} → said something different`);
+      soundScore -= DIFFICULTY[difficulty].wrongDeduct;
+    } else {
+      feedback.push(`🟡 ${r.sound} not clear`);
+      soundScore -= DIFFICULTY[difficulty].missingDeduct;
+    }
+  });
+
+  score += soundScore;
+
+  score = Math.max(0, Math.min(100, Math.round(score)));
+
+  // Stars & progress
+  let starsEarned = Math.floor(score / 20);
+  progress.stars += starsEarned;
+  progress.completed[target] = (progress.completed[target] || 0) + starsEarned;
+  saveProgress(progress.completed, progress.stars);
+  document.getElementById("totalStars").textContent = progress.stars;
+
+  // Visual reward
+  let emoji = score >= 85 ? "🌟🌟🌟🌟🌟" : score >= 65 ? "👍👍👍" : "💪";
+  if (score >= 85) launchConfetti();
+
+  let html = `
+    <div class="score">${score}%</div>
+    <div class="stars">★ ${starsEarned} ★</div>
+    <div style="font-size:2.2rem; text-align:center; margin:20px 0;">
+      ${emoji} <b>Fox says: ${score >= 85 ? "Amazing!" : score >= 65 ? "Good job!" : "Try again!"}</b>
+    </div>
+    <hr style="border:2px dashed #ffca3a">
+  `;
+
+  feedback.forEach(f => html += `<div class="feedback-item">${f}</div>`);
+
+  return html;
+}
+
+// Confetti
+function launchConfetti() {
+  const c = document.getElementById("confetti");
+  c.innerHTML = "";
+  for (let i = 0; i < 80; i++) {
+    const p = document.createElement("div");
+    p.className = "particle";
+    p.style.left = Math.random()*100 + "vw";
+    p.style.background = ["#ff6b81","#51cf66","#ffca3a","#4dabf7","#cc5de8"][Math.floor(Math.random()*5)];
+    p.style.animationDuration = (Math.random()*3 + 2) + "s";
+    c.appendChild(p);
+    setTimeout(() => p.remove(), 6000);
+  }
+}
+
+// ──────────────────────────────────────────────── Recording logic (your original + waveform)
+startBtn.onclick = async () => {
+  if (!recognition) {
+    if (!('SpeechRecognition' in window)) {
+      resultEl.innerHTML = "<p style='color:red'>Speech not supported in this browser.</p>";
+      return;
+    }
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = "en-US";
+  }
+
+  resultEl.innerHTML = "<p style='text-align:center; font-size:1.4rem;'>Listening... say <b>" + currentWord + "</b> !</p>";
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+
+  await startWaveform();
+  recognition.start();
+  isRecording = true;
+
+  recognition.onresult = e => {
+    const transcript = e.results[0][0].transcript.trim();
+    resultEl.innerHTML = scorePronunciation(transcript);
+  };
+
+  recognition.onend = () => {
+    isRecording = false;
+    if (mediaStream) {
+      mediaStream.getTracks().forEach(t => t.stop());
+    }
+    resetButtons();
+  };
+};
+
+stopBtn.onclick = () => {
+  if (recognition) recognition.stop();
+  if (mediaStream) mediaStream.getTracks().forEach(t => t.stop());
+  isRecording = false;
+  resetButtons();
+};
+
+function resetButtons() {
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+</script>
+</body>
+</html>
