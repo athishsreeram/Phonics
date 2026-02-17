@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phonics Pronunciation Coach – 42 Jolly Phonics Sounds</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 680px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f9f9fb;
+      color: #1a1a2e;
+      line-height: 1.5;
+    }
+    h1 { text-align: center; color: #0d47a1; margin-bottom: 0.4em; }
+    h2 { color: #1565c0; }
+    #target {
+      font-size: 3.4rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 30px 0 20px;
+      letter-spacing: 4px;
+      color: #e65100;
+      text-transform: uppercase;
+    }
+    #word-select {
+      text-align: center;
+      margin: 20px 0 30px;
+    }
+    select, button {
+      font-size: 1.1rem;
+      padding: 12px 24px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    select {
+      padding: 12px 16px;
+      background: white;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #1976d2;
+      color: white;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) { background: #1565c0; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    #controls { text-align: center; margin: 30px 0; }
+    #result {
+      min-height: 220px;
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.1);
+      line-height: 1.6;
+    }
+    .score {
+      font-size: 3.2rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 12px 0;
+    }
+    .great  { color: #2e7d32; }
+    .okay   { color: #f57c00; }
+    .poor   { color: #c62828; }
+    .emoji  { font-size: 2.2rem; margin: 0 8px; }
+    .tip    { color: #555; font-style: italic; margin-top: 16px; }
+    .feedback-item { margin: 10px 0; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Phonics Pronunciation Coach</h1>
+<h2 style="text-align:center">42 Jolly Phonics Sounds</h2>
+
+<div id="word-select">
+  <label for="wordSelect">Choose a word to practice: </label><br>
+  <select id="wordSelect">
+    <option value="sun">sun (s)</option>
+    <option value="ant">ant (short a)</option>
+    <option value="tap">tap (t)</option>
+    <option value="pig">pig (short i)</option>
+    <option value="net">net (n)</option>
+    <option value="clock">clock (ck)</option>
+    <option value="egg">egg (short e)</option>
+    <option value="hat">hat (h)</option>
+    <option value="rat">rat (r)</option>
+    <option value="mat">mat (m)</option>
+    <option value="dog">dog (d)</option>
+    <option value="goat">goat (hard g)</option>
+    <option value="otter">otter (short o)</option>
+    <option value="up">up (short u)</option>
+    <option value="lamp">lamp (l)</option>
+    <option value="fish">fish (f)</option>
+    <option value="bat">bat (b)</option>
+    <option value="rain">rain (ai)</option>
+    <option value="jet">jet (j)</option>
+    <option value="boat">boat (oa)</option>
+    <option value="tie">tie (ie)</option>
+    <option value="see">see (ee)</option>
+    <option value="for">for (or)</option>
+    <option value="zip">zip (z)</option>
+    <option value="wig">wig (w)</option>
+    <option value="ring">ring (ng)</option>
+    <option value="van">van (v)</option>
+    <option value="book">book (short oo)</option>
+    <option value="moon">moon (long oo)</option>
+    <option value="yawn">yawn (y)</option>
+    <option value="box">box (x)</option>
+    <option value="chin">chin (ch)</option>
+    <option value="ship">ship (sh)</option>
+    <option value="thin">thin (th unvoiced)</option>
+    <option value="this">this (th voiced)</option>
+    <option value="quiz">quiz (qu)</option>
+    <option value="out">out (ou)</option>
+    <option value="coin">coin (oi)</option>
+    <option value="blue">blue (ue)</option>
+    <option value="her">her (er)</option>
+    <option value="car">car (ar)</option>
+  </select>
+</div>
+
+<div id="target">— select a word —</div>
+
+<div id="controls">
+  <button id="startBtn">🎤 Start Recording</button>
+  <button id="stopBtn" disabled>⏹️ Stop & Score</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+// ────────────────────────────────────────────────
+const PHONICS_RULES = [
+  // Group 1
+  { pattern: /s/i,          sound: "s (sss)",       good: ["s", "ss"],            bad: ["z", "sh", "th"],           example: "sun" },
+  { pattern: /a(?![aeiouy])/i, sound: "short a (æ)", good: ["a"],                 bad: ["ay", "ai", "ar"],          example: "ant" },
+  { pattern: /t/i,          sound: "t",             good: ["t", "tt"],            bad: ["d", "th"],                 example: "tap" },
+  { pattern: /i(?![aeiouy])/i, sound: "short i (ĭ)", good: ["i"],                 bad: ["ee", "igh", "ie"],         example: "pig" },
+  { pattern: /p/i,          sound: "p",             good: ["p", "pp"],            bad: ["b"],                       example: "pig" },
+  { pattern: /n/i,          sound: "n",             good: ["n", "nn", "kn"],      bad: ["m"],                       example: "net" },
+
+  // Group 2
+  { pattern: /ck|\bk\b/i,   sound: "ck",            good: ["ck", "k", "c"],       bad: ["g", "ch"],                 example: "clock" },
+  { pattern: /e(?![aeiouy])/i, sound: "short e (ĕ)", good: ["e"],                 bad: ["ee", "ea", "a"],           example: "egg" },
+  { pattern: /h/i,          sound: "h",             good: ["h"],                  bad: ["f", "th"],                 example: "hat" },
+  { pattern: /r/i,          sound: "r",             good: ["r", "rr", "wr"],      bad: ["w", "l"],                  example: "rat" },
+  { pattern: /m/i,          sound: "m",             good: ["m", "mm"],            bad: ["n"],                       example: "mat" },
+  { pattern: /d/i,          sound: "d",             good: ["d", "dd"],            bad: ["t", "j"],                  example: "dog" },
+
+  // Group 3
+  { pattern: /g(?!e)/i,     sound: "hard g",        good: ["g", "gg"],            bad: ["j", "k"],                  example: "goat" },
+  { pattern: /o(?![aeiouy])/i, sound: "short o (ŏ)", good: ["o"],                 bad: ["oa", "ow", "u"],           example: "otter" },
+  { pattern: /u(?![aeiouy])/i, sound: "short u (ŭ)", good: ["u"],                 bad: ["oo", "you", "ue"],         example: "up" },
+  { pattern: /l/i,          sound: "l",             good: ["l", "ll"],            bad: ["r", "w"],                  example: "lamp" },
+  { pattern: /f/i,          sound: "f",             good: ["f", "ff", "ph"],      bad: ["v", "th"],                 example: "fish" },
+  { pattern: /b/i,          sound: "b",             good: ["b", "bb"],            bad: ["p"],                       example: "bat" },
+
+  // Group 4
+  { pattern: /ai|ay|a-e/i,  sound: "ai (long a)",   good: ["ai", "ay", "a-e", "a"], bad: ["a", "e", "i"],            example: "rain" },
+  { pattern: /j/i,          sound: "j",             good: ["j", "g(e)", "ge"],    bad: ["g(hard)", "ch"],           example: "jet" },
+  { pattern: /oa|ow|o-e|oe/i, sound: "oa (long o)", good: ["oa", "ow", "o-e", "oe"], bad: ["o", "u"],              example: "boat" },
+  { pattern: /ie|y/i,       sound: "ie (long i)",   good: ["ie", "i-e", "igh", "y"], bad: ["i", "ee"],            example: "tie" },
+  { pattern: /ee|ea|e-e|ey/i, sound: "ee (long e)", good: ["ee", "ea", "e-e", "ey"], bad: ["e", "i"],             example: "see" },
+  { pattern: /or|ore|oor/i, sound: "or",            good: ["or", "ore", "oor"],    bad: ["o", "ar"],                 example: "for" },
+
+  // Group 5
+  { pattern: /z/i,          sound: "z",             good: ["z", "zz", "s"],       bad: ["s", "sh"],                 example: "zip" },
+  { pattern: /w/i,          sound: "w",             good: ["w"],                  bad: ["r", "v"],                  example: "wig" },
+  { pattern: /ng/i,         sound: "ng",            good: ["ng"],                 bad: ["n", "g"],                  example: "ring" },
+  { pattern: /v/i,          sound: "v",             good: ["v"],                  bad: ["f", "w"],                  example: "van" },
+  { pattern: /oo(?=k|[^aeiou])/i, sound: "short oo (book)", good: ["oo", "u"],    bad: ["u(long)", "o", "w"],      example: "book" },
+  { pattern: /oo(?!k)/i,    sound: "long oo (moon)", good: ["oo", "u-e", "ue", "ew"], bad: ["u(short)", "o"],   example: "moon" },
+
+  // Group 6
+  { pattern: /y/i,          sound: "y (consonant)", good: ["y"],                  bad: ["w", "i"],                  example: "yawn" },
+  { pattern: /x/i,          sound: "x",             good: ["x", "cks"],           bad: ["ks", "gz"],                example: "box" },
+  { pattern: /ch|tch/i,     sound: "ch",            good: ["ch", "tch"],          bad: ["sh", "k", "t"],            example: "chin" },
+  { pattern: /sh/i,         sound: "sh",            good: ["sh", "ci", "ti"],     bad: ["s", "ch", "th"],           example: "ship" },
+  { pattern: /th(?![aeiou])/i, sound: "th (unvoiced thin)", good: ["th"],       bad: ["t", "d", "f", "v"],        example: "thin" },
+  { pattern: /th(?=[aeiou])/i, sound: "th (voiced this)", good: ["th"],         bad: ["d", "v", "z"],             example: "this" },
+
+  // Group 7
+  { pattern: /qu/i,         sound: "qu",            good: ["qu"],                 bad: ["k", "kw", "cw"],           example: "quiz" },
+  { pattern: /ou|ow/i,      sound: "ou (cow)",      good: ["ou", "ow"],           bad: ["o", "u", "oo"],            example: "out" },
+  { pattern: /oi|oy/i,      sound: "oi",            good: ["oi", "oy"],           bad: ["o", "i"],                  example: "coin" },
+  { pattern: /ue|u-e|ew/i,  sound: "ue (long u)",   good: ["ue", "u-e", "ew"],    bad: ["u(short)", "oo"],          example: "blue" },
+  { pattern: /er|ir|ur/i,   sound: "er",            good: ["er", "ir", "ur"],     bad: ["ar", "or", "e"],           example: "her" },
+  { pattern: /ar/i,         sound: "ar",            good: ["ar"],                 bad: ["a", "or", "er"],           example: "car" }
+];
+
+const MAX_SCORE = 100;
+const POINTS_PER_CORRECT = 25;
+const POINTS_DEDUCTION_WRONG = 18;
+const POINTS_DEDUCTION_MISSING = 22;
+
+let recognition = null;
+let isRecording = false;
+
+const startBtn   = document.getElementById("startBtn");
+const stopBtn    = document.getElementById("stopBtn");
+const resultEl   = document.getElementById("result");
+const targetEl   = document.getElementById("target");
+const wordSelect = document.getElementById("wordSelect");
+
+// ────────────────────────────────────────────────
+let currentWord = "ship";
+let currentDisplay = "sh i p";
+
+function updateTarget() {
+  const selected = wordSelect.options[wordSelect.selectedIndex];
+  currentWord = selected.value.toLowerCase();
+  currentDisplay = currentWord.split('').join(' ');
+  targetEl.textContent = currentDisplay;
+  resultEl.innerHTML = '';
+}
+
+wordSelect.addEventListener('change', updateTarget);
+updateTarget(); // init
+
+// ────────────────────────────────────────────────
+function initSpeechRecognition() {
+  if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+    resultEl.innerHTML = `<p style="color:#c62828">Speech Recognition not supported in this browser.<br>Please use Chrome or Edge.</p>`;
+    startBtn.disabled = true;
+    return false;
+  }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = "en-US"; // or "en-GB" depending on accent preference
+
+  return true;
+}
+
+// ────────────────────────────────────────────────
+function scorePronunciation(transcript) {
+  const spoken = transcript.toLowerCase().trim();
+  let score = MAX_SCORE;
+  let feedback = [];
+
+  // Find which rules apply to the current target word
+  const relevantRules = PHONICS_RULES.filter(rule => rule.pattern.test(currentWord));
+
+  if (relevantRules.length === 0) {
+    feedback.push(`<span class="tip">No specific phonics rule matched for "${currentWord}" in this version.</span>`);
+  }
+
+  relevantRules.forEach(rule => {
+    const hasGood = rule.good.some(g => spoken.includes(g.toLowerCase()));
+    const hasBad  = rule.bad.some(b => spoken.includes(b.toLowerCase()));
+
+    if (hasGood) {
+      feedback.push(`🟢 Great <b>"${rule.sound}"</b> sound!`);
+      score += POINTS_PER_CORRECT;
+    } else if (hasBad) {
+      score -= POINTS_DEDUCTION_WRONG;
+      const badFound = rule.bad.find(b => spoken.includes(b.toLowerCase())) || "?";
+      feedback.push(`🔴 Said <b>"${badFound}"</b> instead of <b>"${rule.sound}"</b>`);
+    } else {
+      score -= POINTS_DEDUCTION_MISSING;
+      feedback.push(`🟡 <b>"${rule.sound}"</b> sound unclear or missing`);
+    }
+  });
+
+  // Small bonus for exact match
+  if (spoken === currentWord || spoken.replace(/\s+/g,'') === currentWord) {
+    score += 20;
+    feedback.unshift(`🏆 Perfect word match – <b>${currentWord}</b>!`);
+  }
+
+  // Clamp score
+  score = Math.max(0, Math.min(MAX_SCORE, Math.round(score)));
+
+  // Overall rating
+  let overall = "";
+  let emoji = "";
+  if (score >= 85) {
+    overall = "<span class='great'>Excellent!</span>";
+    emoji = "🌟🌟🌟";
+  } else if (score >= 65) {
+    overall = "<span class='okay'>Good try!</span>";
+    emoji = "👍👍";
+  } else {
+    overall = "<span class='poor'>Keep practising!</span>";
+    emoji = "💪";
+  }
+
+  let html = `
+    <div class="score">${score}%</div>
+    <div style="text-align:center; font-size:1.4rem;">
+      ${emoji} <b>Pronunciation Score: ${score}%</b> — ${overall}
+    </div>
+    <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+  `;
+
+  feedback.forEach(item => {
+    html += `<div class="feedback-item">${item}</div>`;
+  });
+
+  if (feedback.length === 0) {
+    html += `<div class="tip">Say <b>${currentWord}</b> slowly and clearly</div>`;
+  }
+
+  html += `<div class="tip" style="margin-top:20px;">You said: <i>"${transcript}"</i></div>`;
+
+  return html;
+}
+
+// ────────────────────────────────────────────────
+startBtn.onclick = () => {
+  if (!recognition && !initSpeechRecognition()) return;
+
+  resultEl.innerHTML = `<p style="color:#555; text-align:center;">Listening… say <b>${currentWord}</b> clearly</p>`;
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+  isRecording = true;
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.trim();
+    resultEl.innerHTML = scorePronunciation(transcript);
+  };
+
+  recognition.onerror = (event) => {
+    resultEl.innerHTML = `<p style="color:#c62828">Error: ${event.error}</p>`;
+    resetButtons();
+  };
+
+  recognition.onend = () => {
+    if (isRecording) {
+      // Some browsers stop quickly → auto-restart if still supposed to listen
+      if (startBtn.disabled) recognition.start();
+    } else {
+      resetButtons();
+    }
+  };
+};
+
+stopBtn.onclick = () => {
+  if (recognition) recognition.stop();
+  isRecording = false;
+  resetButtons();
+};
+
+function resetButtons() {
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+</script>
+
+</body>
+</html>
