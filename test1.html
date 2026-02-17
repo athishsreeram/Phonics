@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Phonics Pronunciation Coach – Structured Modules</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 720px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #f9f9fb;
+      color: #1a1a2e;
+      line-height: 1.5;
+    }
+    h1 { text-align: center; color: #0d47a1; margin-bottom: 0.3em; }
+    h2 { color: #1565c0; text-align: center; }
+    #word-select {
+      text-align: center;
+      margin: 25px 0 35px;
+    }
+    select, button {
+      font-size: 1.1rem;
+      padding: 12px 24px;
+      margin: 8px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    select {
+      padding: 12px 20px;
+      background: white;
+      border: 1px solid #ccc;
+      width: 280px;
+    }
+    optgroup { font-weight: bold; color: #333; }
+    button {
+      background: #1976d2;
+      color: white;
+      transition: background 0.2s;
+    }
+    button:hover:not(:disabled) { background: #1565c0; }
+    button:disabled { background: #aaa; cursor: not-allowed; }
+    #controls { text-align: center; margin: 30px 0; }
+    #target {
+      font-size: 3.5rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 20px 0 30px;
+      letter-spacing: 5px;
+      color: #e65100;
+      text-transform: uppercase;
+    }
+    #result {
+      min-height: 240px;
+      margin-top: 20px;
+      padding: 24px;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.1);
+      line-height: 1.6;
+    }
+    .score {
+      font-size: 3.4rem;
+      font-weight: bold;
+      text-align: center;
+      margin: 12px 0;
+    }
+    .great  { color: #2e7d32; }
+    .okay   { color: #f57c00; }
+    .poor   { color: #c62828; }
+    .emoji  { font-size: 2.4rem; margin: 0 8px; }
+    .tip    { color: #555; font-style: italic; margin-top: 16px; }
+    .feedback-item { margin: 10px 0; font-size: 1.1rem; }
+  </style>
+</head>
+<body>
+
+<h1>Phonics Pronunciation Coach</h1>
+<h2>Structured by Teaching Modules & Days</h2>
+
+<div id="word-select">
+  <label for="wordSelect">Choose a word to practise: </label><br>
+  <select id="wordSelect">
+    <!-- Module 1: Basic Code (1 letter = 1 sound) -->
+    <optgroup label="Module 1 – Basic Code (Days 1–26)">
+      <option value="sat">sat (s,a,t – Days 1–5)</option>
+      <option value="pat">pat (p,i)</option>
+      <option value="pin">pin (p,i,n)</option>
+      <option value="mat">mat (m,a,t)</option>
+      <option value="dog">dog (d,o,g)</option>
+      <option value="cat">cat (c,a,t)</option>
+      <option value="kit">kit (k,i,t)</option>
+      <option value="rug">rug (r,u,g)</option>
+      <option value="hat">hat (h,a,t)</option>
+      <option value="bat">bat (b,a,t)</option>
+      <option value="fan">fan (f,a,n)</option>
+      <option value="lip">lip (l,i,p)</option>
+      <option value="jam">jam (j,a,m)</option>
+      <option value="van">van (v,a,n)</option>
+      <option value="win">win (w,i,n)</option>
+      <option value="box">box (x,o)</option>
+      <option value="yes">yes (y,e,s)</option>
+      <option value="zip">zip (z,i,p)</option>
+      <option value="quiz">quiz (qu,i,z)</option>
+    </optgroup>
+
+    <!-- Module 2: Consonant Digraphs -->
+    <optgroup label="Module 2 – Consonant Digraphs (Days 27–34)">
+      <option value="ship">ship (sh)</option>
+      <option value="chin">chin (ch)</option>
+      <option value="thin">thin (th unvoiced)</option>
+      <option value="this">this (th voiced)</option>
+      <option value="wheel">wheel (wh)</option>
+      <option value="ring">ring (ng)</option>
+      <option value="back">back (ck)</option>
+      <option value="phone">phone (ph)</option>
+    </optgroup>
+
+    <!-- Module 3: Consonant Blends -->
+    <optgroup label="Module 3 – Consonant Blends (Days 35–54)">
+      <option value="black">black (bl)</option>
+      <option value="clap">clap (cl)</option>
+      <option value="flag">flag (fl)</option>
+      <option value="glue">glue (gl)</option>
+      <option value="play">play (pl)</option>
+      <option value="slip">slip (sl)</option>
+      <option value="bread">bread (br)</option>
+      <option value="crab">crab (cr)</option>
+      <option value="drum">drum (dr)</option>
+      <option value="frog">frog (fr)</option>
+      <option value="green">green (gr)</option>
+      <option value="tree">tree (tr)</option>
+      <option value="skip">skip (sk)</option>
+      <option value="stop">stop (st)</option>
+      <option value="swim">swim (sw)</option>
+    </optgroup>
+
+    <!-- Module 4: Long Vowels & Magic E -->
+    <optgroup label="Module 4 – Long Vowels & Magic E (Days 55–68)">
+      <option value="cake">cake (a_e)</option>
+      <option value="kite">kite (i_e)</option>
+      <option value="rope">rope (o_e)</option>
+      <option value="mule">mule (u_e)</option>
+      <option value="rain">rain (ai)</option>
+      <option value="play">play (ay)</option>
+      <option value="tree">tree (ee)</option>
+      <option value="leaf">leaf (ea)</option>
+      <option value="night">night (igh)</option>
+      <option value="fly">fly (y long i)</option>
+      <option value="boat">boat (oa)</option>
+      <option value="snow">snow (ow long o)</option>
+      <option value="blue">blue (ue)</option>
+      <option value="stew">stew (ew)</option>
+    </optgroup>
+
+    <!-- Module 5: Diphthongs & Bossy R -->
+    <optgroup label="Module 5 – Diphthongs & Bossy R (Days 69–77)">
+      <option value="book">book (oo short)</option>
+      <option value="moon">moon (oo long)</option>
+      <option value="coin">coin (oi)</option>
+      <option value="boy">boy (oy)</option>
+      <option value="out">out (ou)</option>
+      <option value="cow">cow (ow diphthong)</option>
+      <option value="car">car (ar)</option>
+      <option value="fork">fork (or)</option>
+      <option value="her">her (er)</option>
+      <option value="bird">bird (ir)</option>
+      <option value="surf">surf (ur)</option>
+    </optgroup>
+
+    <!-- Module 6: Advanced & Tricky -->
+    <optgroup label="Module 6 – Advanced & Tricky Code (Days 78–84)">
+      <option value="city">city (soft c)</option>
+      <option value="giant">giant (soft g)</option>
+      <option value="knee">knee (kn silent)</option>
+      <option value="write">write (wr silent)</option>
+      <option value="match">match (tch)</option>
+      <option value="bridge">bridge (dge)</option>
+      <option value="about">about (schwa)</option>
+    </optgroup>
+  </select>
+</div>
+
+<div id="target">— select a word —</div>
+
+<div id="controls">
+  <button id="startBtn">🎤 Start Recording</button>
+  <button id="stopBtn" disabled>⏹️ Stop & Score</button>
+</div>
+
+<div id="result"></div>
+
+<script>
+// ────────────────────────────────────────────────
+// Expanded PHONICS_RULES to better cover the new modules
+const PHONICS_RULES = [
+  // Basic single letters (short vowels, consonants)
+  { pattern: /s/i,          sound: "s",               good: ["s","ss"],            bad: ["z","sh"],                  example: "sun" },
+  { pattern: /a(?![e])/i,   sound: "short a",         good: ["a"],                 bad: ["ay","ai","ar"],            example: "cat" },
+  { pattern: /t/i,          sound: "t",               good: ["t","tt"],            bad: ["d"],                       example: "tap" },
+  { pattern: /i(?![e])/i,   sound: "short i",         good: ["i"],                 bad: ["ee","igh","ie"],           example: "pig" },
+  { pattern: /p/i,          sound: "p",               good: ["p","pp"],            bad: ["b"],                       example: "pin" },
+  { pattern: /n/i,          sound: "n",               good: ["n","nn"],            bad: ["m"],                       example: "net" },
+  { pattern: /m/i,          sound: "m",               good: ["m","mm"],            bad: ["n"],                       example: "mat" },
+  { pattern: /d/i,          sound: "d",               good: ["d","dd"],            bad: ["t"],                       example: "dog" },
+  { pattern: /g(?!e)/i,     sound: "hard g",          good: ["g","gg"],            bad: ["j"],                       example: "goat" },
+  { pattern: /o(?![e])/i,   sound: "short o",         good: ["o"],                 bad: ["oa","ow"],                 example: "pot" },
+  { pattern: /c(?!h)/i,     sound: "hard c",          good: ["c","k","ck"],        bad: ["s"],                       example: "cat" },
+  { pattern: /k/i,          sound: "k",               good: ["k","c","ck"],        bad: ["g"],                       example: "kit" },
+  { pattern: /e(?![e])/i,   sound: "short e",         good: ["e"],                 bad: ["ee","ea"],                 example: "bed" },
+  { pattern: /u(?![e])/i,   sound: "short u",         good: ["u"],                 bad: ["oo","ue"],                 example: "rug" },
+  { pattern: /r/i,          sound: "r",               good: ["r","rr"],            bad: ["w","l"],                   example: "rat" },
+  { pattern: /h/i,          sound: "h",               good: ["h"],                 bad: ["f"],                       example: "hat" },
+  { pattern: /b/i,          sound: "b",               good: ["b","bb"],            bad: ["p"],                       example: "bat" },
+  { pattern: /f/i,          sound: "f",               good: ["f","ff","ph"],       bad: ["v"],                       example: "fan" },
+  { pattern: /l/i,          sound: "l",               good: ["l","ll"],            bad: ["r"],                       example: "lip" },
+  { pattern: /j/i,          sound: "j",               good: ["j","g(e)"],          bad: ["g(hard)"],                 example: "jam" },
+  { pattern: /v/i,          sound: "v",               good: ["v"],                 bad: ["f"],                       example: "van" },
+  { pattern: /w/i,          sound: "w",               good: ["w"],                 bad: ["r"],                       example: "win" },
+  { pattern: /x/i,          sound: "x",               good: ["x"],                 bad: [],                          example: "box" },
+  { pattern: /y(?![e])/i,   sound: "y consonant",     good: ["y"],                 bad: ["w"],                       example: "yes" },
+  { pattern: /z/i,          sound: "z",               good: ["z","zz"],            bad: ["s"],                       example: "zip" },
+  { pattern: /qu/i,         sound: "qu",              good: ["qu"],                bad: ["k","kw"],                  example: "quiz" },
+
+  // Digraphs
+  { pattern: /sh/i,         sound: "sh",              good: ["sh"],                bad: ["s","ch"],                  example: "ship" },
+  { pattern: /ch|tch/i,     sound: "ch",              good: ["ch","tch"],          bad: ["sh","k"],                  example: "chin" },
+  { pattern: /th/i,         sound: "th",              good: ["th"],                bad: ["t","d","f"],               example: "thin/this" },
+  { pattern: /wh/i,         sound: "wh",              good: ["wh","w"],            bad: ["h"],                       example: "wheel" },
+  { pattern: /ng/i,         sound: "ng",              good: ["ng"],                bad: ["n","g"],                   example: "ring" },
+  { pattern: /ck|\bk\b/i,   sound: "ck",              good: ["ck","k"],            bad: ["g"],                       example: "back" },
+  { pattern: /ph/i,         sound: "ph (f)",          good: ["ph","f"],            bad: ["p"],                       example: "phone" },
+
+  // Long vowels / magic e
+  { pattern: /a_e/i,        sound: "long a (a_e)",    good: ["a"],                 bad: ["short a"],                 example: "cake" },
+  { pattern: /i_e/i,        sound: "long i (i_e)",    good: ["i"],                 bad: ["short i"],                 example: "kite" },
+  { pattern: /o_e/i,        sound: "long o (o_e)",    good: ["o"],                 bad: ["short o"],                 example: "rope" },
+  { pattern: /u_e/i,        sound: "long u (u_e)",    good: ["u"],                 bad: ["short u"],                 example: "mule" },
+  { pattern: /ai|ay/i,      sound: "long a (ai/ay)",  good: ["ai","ay"],          bad: ["short a"],                 example: "rain" },
+  { pattern: /ee|ea/i,      sound: "long e (ee/ea)",  good: ["ee","ea"],          bad: ["short e"],                 example: "tree" },
+  { pattern: /igh|y$/i,     sound: "long i (igh/y)",  good: ["igh","y"],          bad: ["short i"],                 example: "night" },
+  { pattern: /oa|ow(?!n)/i, sound: "long o (oa/ow)",  good: ["oa","ow"],          bad: ["short o"],                 example: "boat" },
+  { pattern: /ue|ew/i,      sound: "long u (ue/ew)",  good: ["ue","ew"],          bad: ["short u"],                 example: "blue" },
+
+  // Diphthongs & r-controlled
+  { pattern: /oo(?=k)/i,    sound: "short oo (book)", good: ["oo"],                bad: ["long oo"],                 example: "book" },
+  { pattern: /oo(?!k)/i,    sound: "long oo (moon)",  good: ["oo"],                bad: ["short oo"],                example: "moon" },
+  { pattern: /oi|oy/i,      sound: "oi/oy",           good: ["oi","oy"],           bad: ["oy short"],                example: "coin" },
+  { pattern: /ou|ow/i,      sound: "ou/ow",           good: ["ou","ow"],           bad: ["long o"],                  example: "out" },
+  { pattern: /ar/i,         sound: "ar (bossy r)",    good: ["ar"],                bad: ["short a"],                 example: "car" },
+  { pattern: /or/i,         sound: "or (bossy r)",    good: ["or"],                bad: ["short o"],                 example: "fork" },
+  { pattern: /er|ir|ur/i,   sound: "er/ir/ur",        good: ["er","ir","ur"],      bad: ["short e"],                 example: "her" },
+
+  // Advanced
+  { pattern: /c(?=[eiy])/i, sound: "soft c",          good: ["c","s"],             bad: ["k"],                       example: "city" },
+  { pattern: /g(?=[eiy])/i, sound: "soft g",          good: ["g","j"],             bad: ["hard g"],                  example: "giant" },
+  { pattern: /kn/i,         sound: "kn (silent k)",   good: ["n"],                 bad: ["k n"],                     example: "knee" },
+  { pattern: /wr/i,         sound: "wr (silent w)",   good: ["r"],                 bad: ["w r"],                     example: "write" },
+  { pattern: /tch/i,        sound: "tch",             good: ["tch"],               bad: ["ch","k"],                  example: "match" },
+  { pattern: /dge/i,        sound: "dge",             good: ["dge","j"],           bad: ["g"],                       example: "bridge" },
+  // Schwa is very hard to reliably score via text → give general tip instead
+];
+
+// Scoring constants
+const MAX_SCORE = 100;
+const POINTS_PER_CORRECT = 28;
+const POINTS_DEDUCTION_WRONG = 20;
+const POINTS_DEDUCTION_MISSING = 24;
+
+let recognition = null;
+let isRecording = false;
+
+const startBtn   = document.getElementById("startBtn");
+const stopBtn    = document.getElementById("stopBtn");
+const resultEl   = document.getElementById("result");
+const targetEl   = document.getElementById("target");
+const wordSelect = document.getElementById("wordSelect");
+
+// ────────────────────────────────────────────────
+let currentWord = "sat";
+let currentDisplay = "s a t";
+
+function updateTarget() {
+  const selected = wordSelect.options[wordSelect.selectedIndex];
+  currentWord = selected.value.toLowerCase();
+  currentDisplay = currentWord.split('').join(' ');
+  targetEl.textContent = currentDisplay;
+  resultEl.innerHTML = '';
+}
+
+wordSelect.addEventListener('change', updateTarget);
+updateTarget(); // init
+
+// ────────────────────────────────────────────────
+function initSpeechRecognition() {
+  if (!('SpeechRecognition' in window) && !('webkitSpeechRecognition' in window)) {
+    resultEl.innerHTML = `<p style="color:#c62828">Speech Recognition not supported.<br>Use Chrome / Edge.</p>`;
+    startBtn.disabled = true;
+    return false;
+  }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.lang = "en-US";
+
+  return true;
+}
+
+// ────────────────────────────────────────────────
+function scorePronunciation(transcript) {
+  const spoken = transcript.toLowerCase().trim();
+  let score = MAX_SCORE;
+  let feedback = [];
+
+  const relevantRules = PHONICS_RULES.filter(rule => rule.pattern.test(currentWord));
+
+  if (relevantRules.length === 0) {
+    feedback.push(`<span class="tip">No specific rule matched for this word yet.</span>`);
+  }
+
+  relevantRules.forEach(rule => {
+    const hasGood = rule.good.some(g => spoken.includes(g.toLowerCase()));
+    const hasBad  = rule.bad.some(b => spoken.includes(b.toLowerCase()));
+
+    if (hasGood) {
+      feedback.push(`🟢 Great <b>"${rule.sound}"</b>!`);
+      score += POINTS_PER_CORRECT;
+    } else if (hasBad) {
+      score -= POINTS_DEDUCTION_WRONG;
+      const badFound = rule.bad.find(b => spoken.includes(b.toLowerCase())) || "?";
+      feedback.push(`🔴 You said <b>"${badFound}"</b> instead of <b>"${rule.sound}"</b>`);
+    } else {
+      score -= POINTS_DEDUCTION_MISSING;
+      feedback.push(`🟡 <b>"${rule.sound}"</b> unclear or missing`);
+    }
+  });
+
+  // Exact match bonus
+  if (spoken === currentWord || spoken.replace(/\s+/g,'') === currentWord) {
+    score += 25;
+    feedback.unshift(`🏆 Perfect – <b>${currentWord}</b>!`);
+  }
+
+  score = Math.max(0, Math.min(MAX_SCORE, Math.round(score)));
+
+  let overall = "";
+  let emoji = "";
+  if (score >= 85) {
+    overall = "<span class='great'>Excellent!</span>";
+    emoji = "🌟🌟🌟";
+  } else if (score >= 65) {
+    overall = "<span class='okay'>Good effort!</span>";
+    emoji = "👍👍";
+  } else {
+    overall = "<span class='poor'>Keep practising!</span>";
+    emoji = "💪";
+  }
+
+  let html = `
+    <div class="score">${score}%</div>
+    <div style="text-align:center; font-size:1.5rem;">
+      ${emoji} <b>Pronunciation Score: ${score}%</b> — ${overall}
+    </div>
+    <hr style="border:none; border-top:1px solid #eee; margin:20px 0;">
+  `;
+
+  feedback.forEach(item => html += `<div class="feedback-item">${item}</div>`);
+
+  if (currentWord === "about") {
+    html += `<div class="tip">Schwa (/ə/) is the unstressed "uh" sound – hard to score exactly, focus on natural unstressed vowels.</div>`;
+  }
+
+  html += `<div class="tip" style="margin-top:16px;">You said: <i>"${transcript}"</i></div>`;
+
+  return html;
+}
+
+// ────────────────────────────────────────────────
+startBtn.onclick = () => {
+  if (!recognition && !initSpeechRecognition()) return;
+
+  resultEl.innerHTML = `<p style="color:#555; text-align:center;">Listening… say <b>${currentWord}</b> clearly</p>`;
+  startBtn.disabled = true;
+  stopBtn.disabled = false;
+  isRecording = true;
+
+  recognition.start();
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript.trim();
+    resultEl.innerHTML = scorePronunciation(transcript);
+  };
+
+  recognition.onerror = (event) => {
+    resultEl.innerHTML = `<p style="color:#c62828">Error: ${event.error}</p>`;
+    resetButtons();
+  };
+
+  recognition.onend = () => {
+    if (isRecording && startBtn.disabled) recognition.start();
+    else resetButtons();
+  };
+};
+
+stopBtn.onclick = () => {
+  if (recognition) recognition.stop();
+  isRecording = false;
+  resetButtons();
+};
+
+function resetButtons() {
+  startBtn.disabled = false;
+  stopBtn.disabled = true;
+}
+
+</script>
+
+</body>
+</html>
