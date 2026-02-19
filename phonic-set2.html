@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Primary Phonics — Set 2 Stories</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+
+.book-list {
+  width: 30%;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.book-title {
+  padding: 10px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.book-title:hover {
+  background: #e6f2ff;
+}
+
+.story-box {
+  width: 70%;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 300px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📚 Primary Phonics — Set 2 Stories</h1>
+
+<div class="container">
+
+  <!-- Book Titles -->
+  <div class="book-list">
+    <h3>Choose a Story</h3>
+
+    <div class="book-title" onclick="showStory('macwell')">11. Mac Gets Well</div>
+    <div class="book-title" onclick="showStory('biggame')">12. The Big Game</div>
+    <div class="book-title" onclick="showStory('joke')">13. The Joke</div>
+    <div class="book-title" onclick="showStory('cake')">14. The Cake</div>
+    <div class="book-title" onclick="showStory('bee')">15. The Bee</div>
+    <div class="book-title" onclick="showStory('goat')">16. The Goat</div>
+    <div class="book-title" onclick="showStory('sail')">17. Sail</div>
+    <div class="book-title" onclick="showStory('seal')">18. The Seal</div>
+    <div class="book-title" onclick="showStory('seek')">19. Hide and Seek</div>
+    <div class="book-title" onclick="showStory('fire')">20. The Fire</div>
+  </div>
+
+  <!-- Story Display -->
+  <div class="story-box" id="story">
+    <h2>Select a book to start reading 📖</h2>
+  </div>
+
+</div>
+
+<script>
+
+const stories = {
+
+macwell: `
+<h2>Mac Gets Well</h2>
+<p>Mac is not well.</p>
+<p>Mac has a bad cold.</p>
+<p>Mac rests in bed.</p>
+<p>Mac gets well.</p>
+`,
+
+biggame: `
+<h2>The Big Game</h2>
+<p>Sam and Tim play a game.</p>
+<p>The game is big fun.</p>
+<p>Sam wins the game.</p>
+`,
+
+joke: `
+<h2>The Joke</h2>
+<p>Dad tells a joke.</p>
+<p>Meg can joke too.</p>
+<p>All laugh at the joke.</p>
+`,
+
+cake: `
+<h2>The Cake</h2>
+<p>Mom makes a cake.</p>
+<p>The cake is big.</p>
+<p>We bake and eat the cake.</p>
+`,
+
+bee: `
+<h2>The Bee</h2>
+<p>A bee can fly.</p>
+<p>The bee is on a tree.</p>
+<p>The bee sees me.</p>
+`,
+
+goat: `
+<h2>The Goat</h2>
+<p>The goat eats grass.</p>
+<p>The goat can run.</p>
+<p>The goat is happy.</p>
+`,
+
+sail: `
+<h2>Sail</h2>
+<p>The boat can sail.</p>
+<p>We sail on the sea.</p>
+<p>The wind helps us sail.</p>
+`,
+
+seal: `
+<h2>The Seal</h2>
+<p>A seal can swim.</p>
+<p>The seal sits on a rock.</p>
+<p>The seal dives in the sea.</p>
+`,
+
+seek: `
+<h2>Hide and Seek</h2>
+<p>We play hide and seek.</p>
+<p>Tim hides in a box.</p>
+<p>Meg seeks Tim.</p>
+`,
+
+fire: `
+<h2>The Fire</h2>
+<p>The fire is hot.</p>
+<p>Dad makes a fire.</p>
+<p>We sit by the fire.</p>
+`
+
+};
+
+function showStory(id) {
+  document.getElementById("story").innerHTML = stories[id];
+}
+
+</script>
+
+</body>
+</html>
