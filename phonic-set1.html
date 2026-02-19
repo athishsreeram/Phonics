@@ -1,165 +1,473 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Primary Phonics — Set 1 Stories</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primary Phonics Set 1 Stories</title>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-  padding: 20px;
-}
-
-h1 {
-  text-align: center;
-}
-
-.container {
-  display: flex;
-  gap: 20px;
-}
-
-/* Left side titles */
-.book-list {
-  width: 30%;
-  background: white;
-  padding: 15px;
-  border-radius: 10px;
-}
-
-.book-title {
-  padding: 10px;
-  margin: 5px 0;
-  cursor: pointer;
-  border-radius: 6px;
-}
-
-.book-title:hover {
-  background: #e6f2ff;
-}
-
-/* Right side story */
-.story-box {
-  width: 70%;
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  min-height: 300px;
-}
+  body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: #fff8dc;
+    color: #333;
+    padding: 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #ff6600;
+    font-size: 2em;
+  }
+  .tile-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .story-tile {
+    background: #ffcc99;
+    padding: 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 1.2em;
+    width: 150px;
+    transition: transform 0.2s, background 0.2s;
+  }
+  .story-tile:hover {
+    transform: scale(1.1);
+    background: #ffb366;
+  }
+  .story-content {
+    display: none;
+    background: #fff3e0;
+    border: 2px solid #ffcc99;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    text-align: left;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 1.1em;
+    line-height: 1.5em;
+  }
+  .close-btn {
+    display: block;
+    text-align: center;
+    margin-top: 10px;
+    padding: 5px 10px;
+    background: #ff6600;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    width: 80px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 </style>
 </head>
-
 <body>
 
-<h1>📚 Primary Phonics — Set 1 Stories</h1>
+<h1>Primary Phonics Set 1</h1>
+<p>Click a story to read!</p>
 
-<div class="container">
+<div class="tile-container">
+  <div class="story-tile" onclick="showStory(1)">1. Mac and Tab</div>
+  <div class="story-tile" onclick="showStory(2)">2. The Tin Man</div>
+  <div class="story-tile" onclick="showStory(3)">3. Al</div>
+  <div class="story-tile" onclick="showStory(4)">4. Tim</div>
+  <div class="story-tile" onclick="showStory(5)">5. The Jet</div>
+  <div class="story-tile" onclick="showStory(6)">6. Ben Bug</div>
+  <div class="story-tile" onclick="showStory(7)">7. Ed</div>
+  <div class="story-tile" onclick="showStory(8)">8. Meg</div>
+  <div class="story-tile" onclick="showStory(9)">9. Ted</div>
+  <div class="story-tile" onclick="showStory(10)">10. The Wig</div>
+</div>
 
-  <!-- Book Titles -->
-  <div class="book-list">
-    <h3>Choose a Story</h3>
-
-    <div class="book-title" onclick="showStory('mac')">1. Mac and Tab</div>
-    <div class="book-title" onclick="showStory('tin')">2. The Tin Man</div>
-    <div class="book-title" onclick="showStory('al')">3. Al</div>
-    <div class="book-title" onclick="showStory('tim')">4. Tim</div>
-    <div class="book-title" onclick="showStory('jet')">5. The Jet</div>
-    <div class="book-title" onclick="showStory('ben')">6. Ben Bug</div>
-    <div class="book-title" onclick="showStory('ed')">7. Ed</div>
-    <div class="book-title" onclick="showStory('meg')">8. Meg</div>
-    <div class="book-title" onclick="showStory('ted')">9. Ted</div>
-    <div class="book-title" onclick="showStory('wig')">10. The Wig</div>
-  </div>
-
-  <!-- Story Display -->
-  <div class="story-box" id="story">
-    <h2>Select a book to start reading 📖</h2>
-  </div>
-
+<div id="storyDisplay" class="story-content">
+  <div id="storyText"></div>
+  <div class="close-btn" onclick="closeStory()">Close</div>
 </div>
 
 <script>
-
 const stories = {
+  1: `### Mac and Tab
 
-mac: `
-<h2>Mac and Tab</h2>
-<p>Mac has a cat.</p>
-<p>The cat is Tab.</p>
-<p>Mac pats Tab.</p>
-<p>Tab sat on a mat.</p>
-`,
+Tab is a sad cat.
+Tab has a pal.
+His pal is Mac.
+Mac is a rat.
 
-tin: `
-<h2>The Tin Man</h2>
-<p>The tin man can run.</p>
-<p>The tin man can sit.</p>
-<p>The tin man has a hat.</p>
-`,
+"I got mad at Mac," said Tab.
+"I ate Mac up."
 
-al: `
-<h2>Al</h2>
-<p>Al has a bag.</p>
-<p>Al has a cap.</p>
-<p>Al ran and sat.</p>
-`,
+"I did like Mac," said Tab.
+"I am a bad cat."
 
-tim: `
-<h2>Tim</h2>
-<p>Tim has a pig.</p>
-<p>The pig is big.</p>
-<p>Tim is glad.</p>
-`,
+Tab ran to get the vet.
+"I can save Mac," said the vet.
 
-jet: `
-<h2>The Jet</h2>
-<p>A jet can go.</p>
-<p>The jet is fast.</p>
-<p>The jet can fly.</p>
-`,
+The vet made Tab take a nap.
+The vet made a hole in Tab.
 
-ben: `
-<h2>Ben Bug</h2>
-<p>Ben has a bug.</p>
-<p>The bug is red.</p>
-<p>Ben can tap the bug.</p>
-`,
+"Mac is safe," said the vet.
+"I am fine," said Mac.
+"The hole in Tab is fine," said the vet.
 
-ed: `
-<h2>Ed</h2>
-<p>Ed has a bed.</p>
-<p>Ed can hop.</p>
-<p>Ed is in bed.</p>
-`,
+"I hope Tab can get up," said Mac.
+"Wake up Tab," said Mac.
 
-meg: `
-<h2>Meg</h2>
-<p>Meg has a pet.</p>
-<p>The pet can run.</p>
-<p>Meg is happy.</p>
-`,
+Tab woke up.
+"I am fine," said Tab.
 
-ted: `
-<h2>Ted</h2>
-<p>Ted has a hat.</p>
-<p>Ted sat on a mat.</p>
-<p>Ted can nap.</p>
-`,
+Mac gave Tab a hug.
+"I like Tab," said Mac.
+"I am not mad at him."
 
-wig: `
-<h2>The Wig</h2>
-<p>The wig is big.</p>
-<p>The wig is on a man.</p>
-<p>The man can run.</p>
-`
+Mac and Tab ran home.
+It is time to take a nap.`,
+  
+  2: `### The Tin Man
 
+The Tin Man is sad.
+"It is rain," said the Tin Man.
+"I am a red man.
+I am a tin man.
+I am a sad man."
+
+Mac and Tab ran to the Tin Man.
+"Do not be sad," said Mac.
+"We can get a can.
+We can get a can of yellow."
+
+"We can get a can of yellow," said Tab.
+"We can paint the Tin Man."
+
+Mac got the can.
+Tab got the can.
+"Is it a can of yellow?" said Mac.
+"It is a can of yellow," said Tab.
+
+"See the Tin Man," said Mac.
+"I am a tin man," said the Tin Man.
+"I am a yellow man.
+I am a tin man.
+I am not sad."`,
+
+  3: `### Al
+
+Al is a big cat.
+Al is on a mat.
+Al had a nap on the mat.
+
+A pig ran to the mat.
+The pig sat on the mat.
+Al sat up.
+"I am Al," he said.
+"I am a cat.
+I nap on the mat.
+A pig is on the mat."
+
+Al ran to a log.
+Al had a nap on the log.
+A dog ran to the log.
+The dog sat on the log.
+Al sat up.
+"I am Al," he said.
+"I am a cat.
+I nap on the log.
+A dog is on the log."
+
+Al ran and ran.
+Al sat on a lap.
+Al had a nap on the lap.
+A pig and a dog ran to the lap.
+They sat on the lap.
+Al did not sit up.
+Al did not get up.
+Al is a pal.`,
+
+  4: `### Tim
+
+Tim is a pig.
+Tim sat on a log.
+Tim had a wig in a bag.
+Tim put on the wig.
+
+Tim ran to Sam.
+Sam is a cat.
+"Are you a pig?" said Sam.
+"I am a pig," said Tim.
+"I am not a pig on a log.
+I am a pig with a wig."
+
+"Is it a wig?" said Sam.
+"It is a wig," said Tim.
+"Tim is a pig.
+I am Tim!"
+
+Tim and Sam sat on the log.
+Tim had a nap.
+Sam had a nap.
+Tim is a pal.
+Sam is a pal.`,
+
+  5: `### The Jet
+
+A man had a jet.
+The jet is on a big log.
+The man sat in the jet.
+The jet went up, up, up.
+
+"I am up in the jet," said the man.
+"I can go to the sun."
+The jet went and went.
+The man did not get to the sun.
+The sun is hot.
+
+"I can go to the moon," said the man.
+The jet went and went.
+The man did not get to the moon.
+The moon is a long way off.
+
+The jet ran out of gas.
+The jet went down, down, down.
+The jet fell on a log.
+The man got out.
+
+"I am on the log," said the man.
+"The jet is on the log.
+It is time to go home."
+
+The man ran home.
+He got in bed.
+The man had a nap.
+He had a dream.
+He was in the jet.
+He went to the sun and the moon.`,
+
+  6: `### Ben Bug
+
+Ben Bug sat on a rock.
+A frog sat on a rock.
+"Get off the rock," said the frog.
+"The sun is hot.
+I will sit on the rock."
+
+Ben got off the rock.
+Ben sat on a log.
+A dog ran up.
+"Get off the log," said the dog.
+"I sat on a log.
+I will sit on the log."
+
+Ben got off the log.
+Ben ran and ran.
+Ben sat under a big leaf.
+A frog and a dog ran up.
+
+"Get off the leaf," said the frog.
+"No," said Ben.
+"I sat on a rock.
+A frog sat on the rock.
+I sat on a log.
+A dog sat on the log.
+I will sit under the big leaf.
+A frog and a dog can not sit here."
+
+Ben sat under the leaf.
+The frog sat on the rock.
+The dog sat on the log.
+Ben had a nap.
+Ben is a big bug.`,
+
+  7: `### Ed
+
+Ed is a hen.
+Ed is a red hen.
+Ed sat on a log.
+A pig ran to the log.
+The pig sat on the log.
+
+"I am Ed," said Ed.
+"I am a red hen.
+I sat on a log."
+
+The pig had a wig.
+"I have a wig," said the pig.
+"I will put on the wig."
+
+The pig put on the wig.
+"I am a pig with a wig," he said.
+"I am a big pig with a wig."
+
+Ed got up.
+"I like the wig," said Ed.
+"I will put on the wig."
+
+Ed put on the wig.
+Ed sat on the log.
+"I am a red hen with a wig," said Ed.
+"I am a red hen.
+I am a big red hen with a wig."
+
+The pig got the wig.
+The pig put it on.
+The pig sat on the log.
+"I am a pig," he said.
+"I am a pig with a wig."
+
+Ed and the pig sat on the log.
+Ed had a nap.
+The pig had a nap.
+The wig fell off.
+Ed and the pig did not get up.
+They had a nap.`,
+
+  8: `### Meg
+
+Meg sat on a mat.
+Meg had a pad.
+Meg had a pen.
+
+A cat sat on the mat.
+The cat is Meg's cat.
+
+Meg drew a cat on the pad.
+"See the cat," said Meg.
+The cat sat up.
+"I do not like the cat," said the cat.
+
+Meg drew a bug on the pad.
+"See the bug," said Meg.
+The cat sat up.
+"I do not like the bug," said the cat.
+
+Meg drew a dog on the pad.
+The dog is a red dog.
+"See the dog," said Meg.
+"See the red dog."
+
+The cat sat up.
+"I like the dog," said the cat.
+"The dog is red.
+I like the red dog."
+
+Meg and the cat sat on the mat.
+Meg had a nap.
+The cat had a nap.
+The red dog sat on the mat.
+He did not nap.
+He sat on the mat and had a wiggle.`,
+
+  9: `### Ted
+
+Ted is a bear.
+Ted is a red bear.
+Ted sat in a bed.
+The bed is a big bed.
+Ted had a nap in the bed.
+
+A cat ran up.
+The cat is Meg.
+Meg sat on the bed.
+"Get up, Ted," said Meg.
+"Do not nap.
+I will get Ted."
+
+Meg got Ted.
+Meg put Ted on her back.
+Meg ran with Ted.
+Ted sat up.
+"Where am I?" said Ted.
+"I am on a cat.
+I am on Meg."
+
+Meg ran to a big log.
+Meg put Ted on the log.
+"Am I on a log?" said Ted.
+"I am on a big log.
+I can not nap here."
+
+Meg got Ted.
+Meg ran to a big rock.
+Meg put Ted on the rock.
+"Am I on a rock?" said Ted.
+"I am on a big rock.
+I can not nap here."
+
+Meg got Ted.
+Meg ran back to the bed.
+Meg put Ted in the bed.
+Ted sat up.
+"Am I in my bed?" said Ted.
+"I am in my bed.
+I will nap here."
+
+Meg sat on the bed.
+Ted had a nap.
+Meg had a nap.
+Ted and Meg nap in the bed.`,
+
+  10: `### The Wig
+
+A pig sat on a log.
+A wig sat on a rock.
+The pig got the wig.
+The pig put on the wig.
+
+"A wig!" said the pig.
+"I am a pig with a wig.
+I am a big pig with a wig."
+
+A hen ran up.
+The hen is Ed.
+"See the pig," said Ed.
+"See the pig with a wig."
+
+The pig sat on the log.
+Ed sat on the log.
+A cat ran up.
+The cat is Meg.
+"See the pig," said Meg.
+"See the pig with a wig."
+
+"Get the wig," said Ed.
+Meg got the wig.
+Meg put on the wig.
+"I am a cat with a wig," said Meg.
+"I am a big cat with a wig."
+
+Ed got the wig.
+Ed put on the wig.
+"I am a hen with a wig," said Ed.
+"I am a red hen with a wig."
+
+The pig got the wig.
+The pig put it on.
+"Let us sit," said the pig.
+So they sat.
+The pig sat on the log.
+Ed sat on the log.
+Meg sat on the log.
+
+"Let us nap," said Ed.
+So they had a nap.
+The pig had a nap.
+Ed had a nap.
+Meg had a nap.
+The wig fell off.
+They did not get up.
+They are pals.`
 };
 
-function showStory(id) {
-  document.getElementById("story").innerHTML = stories[id];
+function showStory(num) {
+  document.getElementById('storyText').innerText = stories[num];
+  document.getElementById('storyDisplay').style.display = 'block';
 }
 
+function closeStory() {
+  document.getElementById('storyDisplay').style.display = 'none';
+}
 </script>
 
 </body>
