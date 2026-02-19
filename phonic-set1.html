@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Primary Phonics — Set 1 Stories</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+}
+
+/* Left side titles */
+.book-list {
+  width: 30%;
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.book-title {
+  padding: 10px;
+  margin: 5px 0;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.book-title:hover {
+  background: #e6f2ff;
+}
+
+/* Right side story */
+.story-box {
+  width: 70%;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  min-height: 300px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>📚 Primary Phonics — Set 1 Stories</h1>
+
+<div class="container">
+
+  <!-- Book Titles -->
+  <div class="book-list">
+    <h3>Choose a Story</h3>
+
+    <div class="book-title" onclick="showStory('mac')">1. Mac and Tab</div>
+    <div class="book-title" onclick="showStory('tin')">2. The Tin Man</div>
+    <div class="book-title" onclick="showStory('al')">3. Al</div>
+    <div class="book-title" onclick="showStory('tim')">4. Tim</div>
+    <div class="book-title" onclick="showStory('jet')">5. The Jet</div>
+    <div class="book-title" onclick="showStory('ben')">6. Ben Bug</div>
+    <div class="book-title" onclick="showStory('ed')">7. Ed</div>
+    <div class="book-title" onclick="showStory('meg')">8. Meg</div>
+    <div class="book-title" onclick="showStory('ted')">9. Ted</div>
+    <div class="book-title" onclick="showStory('wig')">10. The Wig</div>
+  </div>
+
+  <!-- Story Display -->
+  <div class="story-box" id="story">
+    <h2>Select a book to start reading 📖</h2>
+  </div>
+
+</div>
+
+<script>
+
+const stories = {
+
+mac: `
+<h2>Mac and Tab</h2>
+<p>Mac has a cat.</p>
+<p>The cat is Tab.</p>
+<p>Mac pats Tab.</p>
+<p>Tab sat on a mat.</p>
+`,
+
+tin: `
+<h2>The Tin Man</h2>
+<p>The tin man can run.</p>
+<p>The tin man can sit.</p>
+<p>The tin man has a hat.</p>
+`,
+
+al: `
+<h2>Al</h2>
+<p>Al has a bag.</p>
+<p>Al has a cap.</p>
+<p>Al ran and sat.</p>
+`,
+
+tim: `
+<h2>Tim</h2>
+<p>Tim has a pig.</p>
+<p>The pig is big.</p>
+<p>Tim is glad.</p>
+`,
+
+jet: `
+<h2>The Jet</h2>
+<p>A jet can go.</p>
+<p>The jet is fast.</p>
+<p>The jet can fly.</p>
+`,
+
+ben: `
+<h2>Ben Bug</h2>
+<p>Ben has a bug.</p>
+<p>The bug is red.</p>
+<p>Ben can tap the bug.</p>
+`,
+
+ed: `
+<h2>Ed</h2>
+<p>Ed has a bed.</p>
+<p>Ed can hop.</p>
+<p>Ed is in bed.</p>
+`,
+
+meg: `
+<h2>Meg</h2>
+<p>Meg has a pet.</p>
+<p>The pet can run.</p>
+<p>Meg is happy.</p>
+`,
+
+ted: `
+<h2>Ted</h2>
+<p>Ted has a hat.</p>
+<p>Ted sat on a mat.</p>
+<p>Ted can nap.</p>
+`,
+
+wig: `
+<h2>The Wig</h2>
+<p>The wig is big.</p>
+<p>The wig is on a man.</p>
+<p>The man can run.</p>
+`
+
+};
+
+function showStory(id) {
+  document.getElementById("story").innerHTML = stories[id];
+}
+
+</script>
+
+</body>
+</html>
