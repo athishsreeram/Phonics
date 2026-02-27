@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Primary Phonics — Set 2 Stories</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --sky: #e8f4fd;
+    --navy: #1a3a5c;
+    --teal: #2a9d8f;
+    --sun: #f4a261;
+    --rose: #e76f51;
+    --cream: #fffdf8;
+    --card: #ffffff;
+    --shadow: 0 4px 20px rgba(26,58,92,0.10);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--sky);
+    min-height: 100vh;
+    padding: 24px 16px;
+    background-image: radial-gradient(circle at 10% 20%, #cde9f6 0%, transparent 50%),
+                      radial-gradient(circle at 90% 80%, #fde8d8 0%, transparent 50%);
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    text-align: center;
+    font-size: 2.2rem;
+    color: var(--navy);
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+  }
+
+  .container {
+    display: flex;
+    gap: 20px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  /* Book List */
+  .book-list {
+    width: 28%;
+    background: var(--card);
+    padding: 18px 14px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    height: fit-content;
+  }
+
+  .book-list h3 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--navy);
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--sky);
+  }
+
+  .book-title {
+    padding: 9px 12px;
+    margin: 4px 0;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    color: var(--navy);
+    font-weight: 600;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .book-title:hover { background: var(--sky); transform: translateX(3px); }
+  .book-title.active { background: var(--teal); color: white; }
+
+  /* Story Box */
+  .story-box {
+    width: 72%;
+    background: var(--card);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .story-box h2 {
+    font-family: 'Fredoka One', cursive;
+    color: var(--navy);
+    font-size: 1.6rem;
+    margin-bottom: 16px;
+  }
+
+  /* Controls Bar */
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    background: var(--sky);
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+
+  .controls label {
+    font-weight: 700;
+    color: var(--navy);
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+
+  .controls select {
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy);
+    background: white;
+    border: 2px solid #cce3f5;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .controls select:focus { border-color: var(--teal); }
+
+  .btn {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 20px;
+    cursor: pointer;
+    transition: transform 0.1s, opacity 0.2s;
+    letter-spacing: 0.4px;
+  }
+  .btn:active { transform: scale(0.96); }
+
+  .btn-start { background: var(--teal); color: white; }
+  .btn-stop  { background: var(--rose); color: white; }
+  .btn:disabled { opacity: 0.45; cursor: default; }
+
+  /* Story Text */
+  .story-text p {
+    font-size: 1.25rem;
+    line-height: 1.9;
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+
+  /* Word highlighting */
+  .word {
+    display: inline;
+    border-radius: 4px;
+    padding: 0 2px;
+    transition: background 0.1s;
+    cursor: default;
+  }
+
+  .word.highlight-word {
+    background: #ffe066;
+    color: #1a1a1a;
+    font-weight: 700;
+    border-radius: 4px;
+  }
+
+  .word.highlight-sentence {
+    background: #b2f0e8;
+    color: #0d2d28;
+    border-radius: 4px;
+  }
+
+  .placeholder {
+    color: #aaa;
+    font-size: 1.1rem;
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .container { flex-direction: column; }
+    .book-list, .story-box { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<h1>📚 Primary Phonics — Set 2 Stories</h1>
+
+<div class="container">
+
+  <div class="book-list">
+    <h3>Choose a Story</h3>
+    <div class="book-title" onclick="showStory('macwell', this)">11. Mac Gets Well</div>
+    <div class="book-title" onclick="showStory('biggame', this)">12. The Big Game</div>
+    <div class="book-title" onclick="showStory('joke', this)">13. The Joke</div>
+    <div class="book-title" onclick="showStory('cake', this)">14. The Cake</div>
+    <div class="book-title" onclick="showStory('bee', this)">15. The Bee</div>
+    <div class="book-title" onclick="showStory('goat', this)">16. The Goat</div>
+    <div class="book-title" onclick="showStory('sail', this)">17. Sail</div>
+    <div class="book-title" onclick="showStory('seal', this)">18. The Seal</div>
+    <div class="book-title" onclick="showStory('seek', this)">19. Hide and Seek</div>
+    <div class="book-title" onclick="showStory('fire', this)">20. The Fire</div>
+  </div>
+
+  <div class="story-box">
+
+    <div class="controls">
+      <label for="highlightMode">Highlight:</label>
+      <select id="highlightMode" onchange="onHighlightModeChange()">
+        <option value="word">Word by Word</option>
+        <option value="sentence">Sentence</option>
+        <option value="none">None</option>
+      </select>
+
+      <label for="rateSelect">Speed:</label>
+      <select id="rateSelect">
+        <option value="0.7">Slow</option>
+        <option value="1" selected>Normal</option>
+        <option value="1.4">Fast</option>
+      </select>
+
+      <button class="btn btn-start" id="btnStart" onclick="startReading()" disabled>▶ Start</button>
+      <button class="btn btn-stop"  id="btnStop"  onclick="stopReading()"  disabled>■ Stop</button>
+    </div>
+
+    <div id="storyContent">
+      <p class="placeholder">Select a book to start reading 📖</p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+const stories = {
+  macwell: {
+    title: "Mac Gets Well",
+    paragraphs: [
+      "Mac is not well.",
+      "Mac has a bad cold.",
+      "Mac rests in bed.",
+      "Mac gets well."
+    ]
+  },
+  biggame: {
+    title: "The Big Game",
+    paragraphs: [
+      "Sam and Tim play a game.",
+      "The game is big fun.",
+      "Sam wins the game."
+    ]
+  },
+  joke: {
+    title: "The Joke",
+    paragraphs: [
+      "Dad tells a joke.",
+      "Meg can joke too.",
+      "All laugh at the joke."
+    ]
+  },
+  cake: {
+    title: "The Cake",
+    paragraphs: [
+      "Mom makes a cake.",
+      "The cake is big.",
+      "We bake and eat the cake."
+    ]
+  },
+  bee: {
+    title: "The Bee",
+    paragraphs: [
+      "A bee can fly.",
+      "The bee is on a tree.",
+      "The bee sees me."
+    ]
+  },
+  goat: {
+    title: "The Goat",
+    paragraphs: [
+      "The goat eats grass.",
+      "The goat can run.",
+      "The goat is happy."
+    ]
+  },
+  sail: {
+    title: "Sail",
+    paragraphs: [
+      "The boat can sail.",
+      "We sail on the sea.",
+      "The wind helps us sail."
+    ]
+  },
+  seal: {
+    title: "The Seal",
+    paragraphs: [
+      "A seal can swim.",
+      "The seal sits on a rock.",
+      "The seal dives in the sea."
+    ]
+  },
+  seek: {
+    title: "Hide and Seek",
+    paragraphs: [
+      "We play hide and seek.",
+      "Tim hides in a box.",
+      "Meg seeks Tim."
+    ]
+  },
+  fire: {
+    title: "The Fire",
+    paragraphs: [
+      "The fire is hot.",
+      "Dad makes a fire.",
+      "We sit by the fire."
+    ]
+  }
+};
+
+let currentStory = null;
+let utterance = null;
+let allWordSpans = [];   // flat list of all word <span> elements
+let allSentenceSpans = []; // list of sentence <span> wrappers
+let isReading = false;
+
+// ── Show story ──────────────────────────────────────────────
+function showStory(id, el) {
+  stopReading();
+  currentStory = id;
+
+  // Highlight active title
+  document.querySelectorAll('.book-title').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+
+  const data = stories[id];
+  const container = document.getElementById('storyContent');
+
+  // Build HTML with tagged spans
+  let html = `<h2>${data.title}</h2><div class="story-text">`;
+  data.paragraphs.forEach((para, pIdx) => {
+    const words = para.split(/(\s+)/);
+    let sentenceHTML = '';
+    let wIdx = 0;
+    words.forEach(token => {
+      if (/^\s+$/.test(token)) {
+        sentenceHTML += token;
+      } else {
+        sentenceHTML += `<span class="word" data-p="${pIdx}" data-w="${wIdx}">${token}</span>`;
+        wIdx++;
+      }
+    });
+    html += `<p><span class="sentence-wrap" data-p="${pIdx}">${sentenceHTML}</span></p>`;
+  });
+  html += '</div>';
+
+  container.innerHTML = html;
+
+  // Cache spans
+  allWordSpans = Array.from(container.querySelectorAll('.word'));
+  allSentenceSpans = Array.from(container.querySelectorAll('.sentence-wrap'));
+
+  document.getElementById('btnStart').disabled = false;
+  document.getElementById('btnStop').disabled = true;
+}
+
+// ── Highlight helpers ────────────────────────────────────────
+function clearHighlights() {
+  allWordSpans.forEach(s => s.classList.remove('highlight-word'));
+  allSentenceSpans.forEach(s => s.classList.remove('highlight-sentence'));
+}
+
+function highlightWord(charIndex, charLength) {
+  clearHighlights();
+  const mode = document.getElementById('highlightMode').value;
+  if (mode === 'none') return;
+
+  // Find the word span whose text matches charIndex in the full text
+  // We use a different approach: map charIndex into the flat word list
+  const storyDiv = document.querySelector('.story-text');
+  const fullText = storyDiv.innerText; // natural text with newlines
+
+  // Walk through word spans and find which one contains charIndex
+  let pos = 0;
+  let found = false;
+  const paraEls = storyDiv.querySelectorAll('p');
+
+  outer:
+  for (let pi = 0; pi < paraEls.length; pi++) {
+    const paraText = paraEls[pi].innerText;
+    const paraStart = fullText.indexOf(paraText, pos);
+    const wordSpansInPara = paraEls[pi].querySelectorAll('.word');
+
+    let localPos = paraStart;
+    for (let wi = 0; wi < wordSpansInPara.length; wi++) {
+      const wEl = wordSpansInPara[wi];
+      const wText = wEl.innerText;
+      const wStart = fullText.indexOf(wText, localPos);
+      const wEnd = wStart + wText.length;
+
+      if (charIndex >= wStart && charIndex < wEnd) {
+        if (mode === 'word') {
+          wEl.classList.add('highlight-word');
+          wEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else if (mode === 'sentence') {
+          allSentenceSpans[pi].classList.add('highlight-sentence');
+          allSentenceSpans[pi].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        found = true;
+        break outer;
+      }
+      localPos = wEnd;
+    }
+    pos = paraStart + paraText.length;
+  }
+}
+
+// ── Read aloud ───────────────────────────────────────────────
+function startReading() {
+  if (!currentStory) return;
+  stopReading();
+
+  const data = stories[currentStory];
+  const fullText = data.paragraphs.join('\n');
+  const rate = parseFloat(document.getElementById('rateSelect').value);
+
+  utterance = new SpeechSynthesisUtterance(fullText);
+  utterance.rate = rate;
+  utterance.lang = 'en-US';
+
+  utterance.onboundary = (e) => {
+    if (e.name === 'word') {
+      highlightWord(e.charIndex, e.charLength);
+    }
+  };
+
+  utterance.onend = () => {
+    clearHighlights();
+    setButtons(false);
+    isReading = false;
+  };
+
+  utterance.onerror = () => {
+    clearHighlights();
+    setButtons(false);
+    isReading = false;
+  };
+
+  window.speechSynthesis.speak(utterance);
+  isReading = true;
+  setButtons(true);
+}
+
+function stopReading() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  clearHighlights();
+  setButtons(false);
+  isReading = false;
+  utterance = null;
+}
+
+function setButtons(reading) {
+  document.getElementById('btnStart').disabled = reading || !currentStory;
+  document.getElementById('btnStop').disabled = !reading;
+}
+
+function onHighlightModeChange() {
+  // If currently reading, restart so the new mode takes effect cleanly
+  if (isReading) {
+    startReading();
+  }
+}
+</script>
+
+</body>
+</html>
