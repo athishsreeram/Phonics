@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reading Highlighter</title>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Literata:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg: #f0ebe3;
+    --surface: #fffcf7;
+    --surface2: #f7f2ea;
+    --ink: #1c1612;
+    --ink2: #6b5e52;
+    --accent: #c0392b;
+    --accent2: #e74c3c;
+    --teal: #1a6b5a;
+    --teal2: #27ae60;
+    --amber: #d68910;
+    --border: #ddd5c8;
+    --shadow: 0 2px 16px rgba(28,22,18,0.10);
+    --radius: 14px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lexend', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    background-image:
+      radial-gradient(ellipse at 15% 10%, #e8dfd3 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 90%, #dff0eb 0%, transparent 55%);
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  header h1 {
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.5px;
+  }
+
+  header p {
+    color: var(--ink2);
+    font-size: 0.95rem;
+    margin-top: 4px;
+  }
+
+  .card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    width: 100%;
+    max-width: 740px;
+    padding: clamp(18px, 4vw, 32px);
+  }
+
+  /* ── Page 1 ── */
+  #page1 h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  textarea {
+    width: 100%;
+    height: clamp(180px, 30vw, 260px);
+    font-family: 'Literata', Georgia, serif;
+    font-size: clamp(15px, 2.5vw, 18px);
+    line-height: 1.75;
+    color: var(--ink);
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  textarea:focus { border-color: var(--teal); }
+  textarea::placeholder { color: #b5a99a; }
+
+  .start-btn {
+    display: block;
+    width: 100%;
+    margin-top: 16px;
+    padding: 15px;
+    font-family: 'Lexend', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 0.3px;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .start-btn:hover { background: var(--teal2); }
+  .start-btn:active { transform: scale(0.98); }
+
+  /* ── Page 2 ── */
+  .reading-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .progress-info {
+    font-size: 0.82rem;
+    color: var(--ink2);
+    font-weight: 500;
+  }
+
+  .back-link {
+    font-size: 0.82rem;
+    color: var(--teal);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--teal2); }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    height: 5px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--teal2));
+    border-radius: 99px;
+    transition: width 0.3s ease;
+    width: 0%;
+  }
+
+  /* Reading area */
+  .reading-area {
+    font-family: 'Literata', Georgia, serif;
+    font-size: clamp(19px, 3.5vw, 26px);
+    line-height: 2;
+    color: var(--ink);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: clamp(14px, 3vw, 24px);
+    min-height: clamp(160px, 28vw, 240px);
+    word-spacing: 3px;
+  }
+
+  .word { color: var(--ink); transition: color 0.08s; }
+
+  .word.active {
+    color: var(--accent);
+    font-weight: 700;
+    font-style: italic;
+  }
+
+  /* Controls */
+  .controls {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .ctrl-btn {
+    font-family: 'Lexend', sans-serif;
+    font-size: clamp(0.85rem, 2.2vw, 1rem);
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: transform 0.1s, opacity 0.15s, background 0.15s;
+    white-space: nowrap;
+    flex: 1 1 auto;
+    justify-content: center;
+    min-width: 80px;
+    max-width: 140px;
+  }
+  .ctrl-btn:active { transform: scale(0.95); }
+  .ctrl-btn:disabled { opacity: 0.38; cursor: default; }
+
+  .btn-back  { background: #e8f0fe; color: #1a56b0; }
+  .btn-play  { background: var(--teal); color: white; }
+  .btn-stop  { background: #fde8e8; color: var(--accent); }
+  .btn-next  { background: #e8f0fe; color: #1a56b0; }
+
+  .btn-play:hover { background: var(--teal2); }
+  .btn-stop:hover { background: #f9c8c8; }
+  .btn-back:hover, .btn-next:hover { background: #d0e2fc; }
+
+  /* Speed row */
+  .speed-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .speed-row label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink2);
+  }
+
+  .speed-row select {
+    font-family: 'Lexend', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b5e52' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 32px;
+  }
+  .speed-row select:focus { border-color: var(--teal); }
+
+  /* Utility */
+  .hidden { display: none !important; }
+
+  @media (max-width: 480px) {
+    .ctrl-btn { padding: 11px 14px; max-width: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📖 Reading Highlighter</h1>
+  <p>Follow along word by word at your own pace</p>
+</header>
+
+<!-- Page 1: Input -->
+<div class="card" id="page1">
+  <h2>Paste Your Passage</h2>
+  <textarea id="inputText" placeholder="Paste or type your passage here…"></textarea>
+  <button class="start-btn" onclick="startReading()">Start Reading →</button>
+</div>
+
+<!-- Page 2: Reader -->
+<div class="card hidden" id="page2">
+
+  <div class="reading-header">
+    <span class="back-link" onclick="goBack()">← Edit Passage</span>
+    <span class="progress-info" id="progressInfo">Word 0 of 0</span>
+  </div>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+
+  <div class="reading-area" id="readingArea"></div>
+
+  <div class="controls">
+    <div class="btn-row">
+      <button class="ctrl-btn btn-back" onclick="backWord()">◀ Back</button>
+      <button class="ctrl-btn btn-play" id="btnPlay" onclick="togglePlay()">▶ Play</button>
+      <button class="ctrl-btn btn-stop" id="btnStop" onclick="stopReading()" disabled>■ Stop</button>
+      <button class="ctrl-btn btn-next" onclick="nextWord()">Next ▶</button>
+    </div>
+
+    <div class="speed-row">
+      <label for="speedControl">Speed:</label>
+      <select id="speedControl" onchange="onSpeedChange()">
+        <option value="800">Very Slow</option>
+        <option value="550">Slow</option>
+        <option value="380" selected>Normal</option>
+        <option value="240">Fast</option>
+        <option value="140">Very Fast</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<script>
+  let words = [];
+  let currentIndex = 0;
+  let interval = null;
+  let isPlaying = false;
+
+  function startReading() {
+    const text = document.getElementById('inputText').value.trim();
+    if (!text) {
+      document.getElementById('inputText').focus();
+      return;
+    }
+
+    words = text.split(/\s+/).filter(w => w.length > 0);
+    currentIndex = 0;
+
+    document.getElementById('page1').classList.add('hidden');
+    document.getElementById('page2').classList.remove('hidden');
+
+    renderText();
+    updateProgress();
+  }
+
+  function goBack() {
+    stopReading();
+    document.getElementById('page2').classList.add('hidden');
+    document.getElementById('page1').classList.remove('hidden');
+  }
+
+  function renderText() {
+    const area = document.getElementById('readingArea');
+    area.innerHTML = '';
+
+    words.forEach((word, i) => {
+      const span = document.createElement('span');
+      span.className = 'word' + (i === currentIndex ? ' active' : '');
+      span.textContent = word;
+      span.dataset.index = i;
+
+      // Click a word to jump to it
+      span.style.cursor = 'pointer';
+      span.addEventListener('click', () => {
+        currentIndex = i;
+        renderText();
+        updateProgress();
+      });
+
+      area.appendChild(span);
+      if (i < words.length - 1) area.appendChild(document.createTextNode(' '));
+    });
+
+    // Scroll active word into view smoothly
+    const activeSpan = area.querySelector('.active');
+    if (activeSpan) {
+      activeSpan.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const total = words.length;
+    const current = Math.min(currentIndex + 1, total);
+    document.getElementById('progressInfo').textContent = `Word ${current} of ${total}`;
+    const pct = total > 0 ? ((currentIndex) / (total - 1)) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+
+  function togglePlay() {
+    if (isPlaying) {
+      pauseReading();
+    } else {
+      playReading();
+    }
+  }
+
+  function playReading() {
+    if (isPlaying) return;
+    // If at end, restart
+    if (currentIndex >= words.length - 1) {
+      currentIndex = 0;
+      renderText();
+    }
+
+    isPlaying = true;
+    document.getElementById('btnPlay').textContent = '⏸ Pause';
+    document.getElementById('btnStop').disabled = false;
+
+    const speed = parseInt(document.getElementById('speedControl').value);
+    startInterval(speed);
+  }
+
+  function startInterval(speed) {
+    clearInterval(interval);
+    interval = setInterval(() => {
+      if (currentIndex < words.length - 1) {
+        currentIndex++;
+        renderText();
+      } else {
+        stopReading();
+      }
+    }, speed);
+  }
+
+  function pauseReading() {
+    clearInterval(interval);
+    isPlaying = false;
+    document.getElementById('btnPlay').textContent = '▶ Play';
+  }
+
+  function stopReading() {
+    clearInterval(interval);
+    isPlaying = false;
+    currentIndex = 0;
+    document.getElementById('btnPlay').textContent = '▶ Play';
+    document.getElementById('btnStop').disabled = true;
+    renderText();
+  }
+
+  function nextWord() {
+    if (currentIndex < words.length - 1) {
+      currentIndex++;
+      renderText();
+      // If playing, reset the interval timer so it doesn't jump too quickly
+      if (isPlaying) {
+        const speed = parseInt(document.getElementById('speedControl').value);
+        startInterval(speed);
+      }
+    }
+  }
+
+  function backWord() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      renderText();
+      if (isPlaying) {
+        const speed = parseInt(document.getElementById('speedControl').value);
+        startInterval(speed);
+      }
+    }
+  }
+
+  function onSpeedChange() {
+    if (isPlaying) {
+      const speed = parseInt(document.getElementById('speedControl').value);
+      startInterval(speed);
+    }
+  }
+</script>
+
+</body>
+</html>
