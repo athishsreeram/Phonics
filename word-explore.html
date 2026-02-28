@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Word Explorer</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+  background: #FFF5DC;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 20px 16px 40px;
+}
+
+.screen {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* ======== ENTRY SCREEN ======== */
+.entry-box {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 22px;
+  width: 100%;
+  box-shadow: 0 6px 0 #FFD93D, 0 8px 30px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.title {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  font-weight: 900;
+  color: #FF6B6B;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #AAA;
+  text-align: center;
+  line-height: 1.5;
+}
+
+#wordInput {
+  width: 100%;
+  min-height: 190px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: Arial, sans-serif;
+  color: #333;
+  padding: 14px 16px;
+  border: 3px solid #EEE;
+  border-radius: 16px;
+  resize: vertical;
+  outline: none;
+  background: #FAFAFA;
+  line-height: 2;
+  transition: border-color 0.2s;
+}
+#wordInput:focus { border-color: #3B9EFF; background: white; }
+#wordInput::placeholder { color: #CCC; font-weight: 400; }
+
+#wordCount {
+  font-weight: 700;
+  color: #999;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+#previewWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  justify-content: center;
+  width: 100%;
+  min-height: 10px;
+}
+
+.chip {
+  background: #E8F4FF;
+  color: #3B9EFF;
+  font-size: 0.9rem;
+  font-weight: 900;
+  padding: 4px 13px;
+  border-radius: 999px;
+}
+.chip-more {
+  background: #F3F3F3;
+  color: #BBB;
+}
+
+#startBtn {
+  font-size: 1.25rem;
+  font-weight: 900;
+  padding: 14px 40px;
+  background: #FF6B6B;
+  color: white;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #CC3333;
+  transition: transform 0.12s, box-shadow 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+#startBtn:hover:not(:disabled) { transform: scale(1.04); }
+#startBtn:active { transform: scale(0.95); box-shadow: 0 2px 0 #CC3333; }
+#startBtn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+
+/* ======== LEARN SCREEN ======== */
+#learnScreen { display: none; }
+
+#pageNum {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #CCC;
+  letter-spacing: 2px;
+}
+
+.word-card {
+  background: white;
+  border-radius: 28px;
+  padding: 36px 28px 30px;
+  width: 100%;
+  box-shadow: 0 6px 0 #FFD93D, 0 8px 30px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+}
+
+#emoji {
+  font-size: 3.2rem;
+  line-height: 1;
+  animation: wiggle 2.5s ease-in-out infinite;
+}
+@keyframes wiggle {
+  0%,100% { transform: rotate(-7deg); }
+  50%      { transform: rotate(7deg); }
+}
+
+#letters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0;
+  user-select: none;
+}
+
+.letter {
+  font-size: clamp(3.8rem, 15vw, 7.5rem);
+  font-weight: 900;
+  line-height: 1;
+  color: #E0D8CC;
+  transition: color 0.1s, text-shadow 0.1s;
+}
+.letter.on {
+  color: #3B9EFF;
+  text-shadow: 0 0 20px rgba(59,158,255,0.4);
+}
+
+.slider-hint {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #CCC;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.slider-outer {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  display: flex;
+  align-items: center;
+}
+
+#track {
+  width: 100%;
+  height: 22px;
+  background: #EEE8DC;
+  border-radius: 999px;
+  overflow: hidden;
+  cursor: pointer;
+  touch-action: none;
+  position: relative;
+}
+
+#fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #3B9EFF, #82CCFF);
+  border-radius: 999px;
+  pointer-events: none;
+  transition: width 0.03s;
+}
+
+#thumb {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 52px;
+  height: 52px;
+  background: white;
+  border: 4px solid #3B9EFF;
+  border-radius: 50%;
+  box-shadow: 0 3px 14px rgba(59,158,255,0.45);
+  cursor: grab;
+  touch-action: none;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: box-shadow 0.1s, transform 0.05s;
+}
+#thumb:active { cursor: grabbing; box-shadow: 0 5px 22px rgba(59,158,255,0.6); }
+
+/* Nav */
+.nav-row {
+  display: flex;
+  gap: 14px;
+  width: 100%;
+  justify-content: center;
+}
+
+.nav-btn {
+  font-size: 1.15rem;
+  font-weight: 900;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  min-width: 110px;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s;
+}
+.nav-btn:active:not(:disabled) { transform: scale(0.92); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+#backBtn {
+  background: white;
+  color: #FF6B6B;
+  border: 3px solid #FF6B6B;
+  box-shadow: 0 4px 0 #BB3333;
+}
+#backBtn:hover:not(:disabled) { transform: scale(1.04); }
+
+#nextBtn {
+  background: #FF6B6B;
+  color: white;
+  box-shadow: 0 4px 0 #BB3333;
+}
+#nextBtn:hover:not(:disabled) { transform: scale(1.04); }
+
+#dots {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #DDD;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.2s, transform 0.15s;
+}
+.dot.on { background: #3B9EFF; transform: scale(1.55); }
+
+#editBtn {
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 10px 22px;
+  background: #F0ECE4;
+  color: #AAA;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+#editBtn:hover { background: #E5E0D8; }
+
+/* Animations */
+@keyframes cardPop {
+  from { transform: scale(0.87); opacity: 0.4; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+@keyframes cardBounce {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.07) rotate(2deg); }
+  65%  { transform: scale(1.04) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+.anim-pop     { animation: cardPop    0.3s cubic-bezier(.34,1.56,.64,1); }
+.anim-bounce  { animation: cardBounce 0.45s cubic-bezier(.34,1.56,.64,1); }
+</style>
+</head>
+<body>
+
+<!-- ====== ENTRY SCREEN ====== -->
+<div class="screen" id="entryScreen">
+  <div class="entry-box">
+    <div class="title">✏️ Type Your Word List!</div>
+    <div class="subtitle">One word per line — or comma / space separated</div>
+
+    <textarea id="wordInput" placeholder="Type your words here...
+
+Example:
+CAT
+DOG
+ANT
+SUN
+BEE"></textarea>
+
+    <div id="wordCount">No words yet — start typing!</div>
+    <div id="previewWrap"></div>
+    <button id="startBtn" disabled>Let's Go! 🚀</button>
+  </div>
+</div>
+
+<!-- ====== LEARN SCREEN ====== -->
+<div class="screen" id="learnScreen">
+  <div id="pageNum">1 / 1</div>
+
+  <div class="word-card" id="wordCard">
+    <div id="emoji">🌟</div>
+    <div id="letters"></div>
+    <div class="slider-hint">👆 Slide to light up the letters!</div>
+    <div class="slider-outer">
+      <div id="track"><div id="fill"></div></div>
+      <div id="thumb">👆</div>
+    </div>
+  </div>
+
+  <div id="dots"></div>
+
+  <div class="nav-row">
+    <button class="nav-btn" id="backBtn">◀ Back</button>
+    <button class="nav-btn" id="nextBtn">Next ▶</button>
+  </div>
+
+  <button id="editBtn">✏️ Edit Word List</button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- emoji lookup ---------- */
+  var EMAP = {
+    CAT:'🐱',DOG:'🐶',SUN:'☀️',RUN:'🏃',ANT:'🐜',BEE:'🐝',JAM:'🍇',FLY:'🪰',
+    RED:'🔴',HAT:'🎩',COW:'🐄',PIG:'🐷',HEN:'🐔',FOX:'🦊',OWL:'🦉',APE:'🐒',
+    EGG:'🥚',CUP:'☕',BUS:'🚌',CAR:'🚗',BAT:'🦇',RAT:'🐀',MAP:'🗺️',CAP:'🧢',
+    NUT:'🥜',ZAP:'⚡',BOX:'📦',VAN:'🚐',HOT:'🔥',ICE:'🧊',SKY:'☁️',SEA:'🌊',
+    ZOO:'🦁',GEM:'💎',TOP:'🪀',LOG:'🪵',PEN:'🖊️',EYE:'👁️',EAR:'👂',BED:'🛏️',
+    HOP:'🐇',WEB:'🕸️',ARM:'💪',LEG:'🦵',POT:'🍲',JAR:'🫙',CUB:'🐻',KID:'👶'
+  };
+  var FALLBACK = ['🌟','🎈','🎉','🌈','🍎','🚀','⭐','🎵','🌸','🦕','🏆','🍦','🌍','🐠','🌻','🦋','🎯','🎪'];
+  var eCache = {};
+  var eFallIdx = 0;
+  function emoji(word) {
+    if (!eCache[word]) eCache[word] = EMAP[word] || FALLBACK[eFallIdx++ % FALLBACK.length];
+    return eCache[word];
+  }
+
+  /* ---------- parse ---------- */
+  function parse(text) {
+    var seen = {}, out = [];
+    text.split(/[\n,\s]+/).forEach(function(w) {
+      var c = w.trim().toUpperCase().replace(/[^A-Z]/g,'');
+      if (c && !seen[c]) { seen[c]=1; out.push(c); }
+    });
+    return out;
+  }
+
+  /* ---------- DOM ---------- */
+  var entryScreen = document.getElementById('entryScreen');
+  var learnScreen = document.getElementById('learnScreen');
+  var wordInput   = document.getElementById('wordInput');
+  var wordCount   = document.getElementById('wordCount');
+  var previewWrap = document.getElementById('previewWrap');
+  var startBtn    = document.getElementById('startBtn');
+  var pageNum     = document.getElementById('pageNum');
+  var wordCard    = document.getElementById('wordCard');
+  var emojiEl     = document.getElementById('emoji');
+  var lettersEl   = document.getElementById('letters');
+  var track       = document.getElementById('track');
+  var fill        = document.getElementById('fill');
+  var thumb       = document.getElementById('thumb');
+  var dotsEl      = document.getElementById('dots');
+  var backBtn     = document.getElementById('backBtn');
+  var nextBtn     = document.getElementById('nextBtn');
+  var editBtn     = document.getElementById('editBtn');
+
+  /* ---------- state ---------- */
+  var words = [];
+  var cur   = 0;
+  var drag  = false;
+
+  /* ---------- entry screen ---------- */
+  wordInput.addEventListener('input', refreshPreview);
+
+  function refreshPreview() {
+    var parsed = parse(wordInput.value);
+    previewWrap.innerHTML = '';
+    if (!parsed.length) {
+      wordCount.textContent = 'No words yet — start typing!';
+      startBtn.disabled = true;
+      return;
+    }
+    wordCount.textContent = '✅ ' + parsed.length + ' word' + (parsed.length>1?'s':'') + ' ready!';
+    startBtn.disabled = false;
+    parsed.slice(0,20).forEach(function(w) {
+      var s = document.createElement('span');
+      s.className = 'chip';
+      s.textContent = w;
+      previewWrap.appendChild(s);
+    });
+    if (parsed.length > 20) {
+      var m = document.createElement('span');
+      m.className = 'chip chip-more';
+      m.textContent = '+' + (parsed.length-20) + ' more';
+      previewWrap.appendChild(m);
+    }
+  }
+
+  startBtn.addEventListener('click', function() {
+    words = parse(wordInput.value);
+    if (!words.length) return;
+    cur = 0;
+    entryScreen.style.display = 'none';
+    learnScreen.style.display = 'flex';
+    renderWord();
+  });
+
+  editBtn.addEventListener('click', function() {
+    learnScreen.style.display = 'none';
+    entryScreen.style.display = 'flex';
+  });
+
+  /* ---------- learn screen ---------- */
+  function renderWord() {
+    var word = words[cur];
+    // letters
+    lettersEl.innerHTML = '';
+    word.split('').forEach(function(ch) {
+      var s = document.createElement('span');
+      s.className = 'letter';
+      s.textContent = ch;
+      lettersEl.appendChild(s);
+    });
+    emojiEl.textContent = emoji(word);
+    pageNum.textContent = (cur+1) + ' / ' + words.length;
+    setProgress(0);
+    renderDots();
+    backBtn.disabled = (cur === 0);
+    nextBtn.disabled = (cur === words.length-1);
+  }
+
+  function setProgress(pct) {
+    var word = words[cur];
+    var n    = word.length;
+    var lit  = Math.round(pct * n);
+    var lels = lettersEl.querySelectorAll('.letter');
+    lels.forEach(function(l,i){ i < lit ? l.classList.add('on') : l.classList.remove('on'); });
+    var p = (pct*100).toFixed(2) + '%';
+    fill.style.width  = p;
+    thumb.style.left  = p;
+    if (pct >= 1) bounce();
+  }
+
+  function bounce() {
+    wordCard.classList.remove('anim-bounce');
+    void wordCard.offsetWidth;
+    wordCard.classList.add('anim-bounce');
+  }
+
+  function pop() {
+    wordCard.classList.remove('anim-pop');
+    void wordCard.offsetWidth;
+    wordCard.classList.add('anim-pop');
+  }
+
+  function renderDots() {
+    dotsEl.innerHTML = '';
+    words.forEach(function(_,i) {
+      var d = document.createElement('div');
+      d.className = 'dot' + (i===cur?' on':'');
+      d.addEventListener('click', function(){ goTo(i); });
+      dotsEl.appendChild(d);
+    });
+  }
+
+  function goTo(idx) {
+    if (idx < 0 || idx >= words.length) return;
+    cur = idx;
+    pop();
+    renderWord();
+  }
+
+  backBtn.addEventListener('click', function(){ goTo(cur-1); });
+  nextBtn.addEventListener('click', function(){ goTo(cur+1); });
+
+  /* ---------- slider ---------- */
+  function pctFromX(clientX) {
+    var r = track.getBoundingClientRect();
+    return Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+  }
+  function snap(raw) {
+    var n = words[cur] ? words[cur].length : 1;
+    return Math.round(raw * n) / n;
+  }
+
+  /* mouse */
+  track.addEventListener('mousedown', function(e) {
+    drag = true; setProgress(snap(pctFromX(e.clientX)));
+  });
+  thumb.addEventListener('mousedown', function(e) {
+    drag = true; e.stopPropagation();
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (drag) setProgress(snap(pctFromX(e.clientX)));
+  });
+  document.addEventListener('mouseup', function() { drag = false; });
+
+  /* touch */
+  track.addEventListener('touchstart', function(e) {
+    drag = true; setProgress(snap(pctFromX(e.touches[0].clientX)));
+  }, {passive:true});
+  thumb.addEventListener('touchstart', function(e) {
+    drag = true; e.stopPropagation();
+  }, {passive:true});
+  document.addEventListener('touchmove', function(e) {
+    if (drag) setProgress(snap(pctFromX(e.touches[0].clientX)));
+  }, {passive:true});
+  document.addEventListener('touchend', function() { drag = false; });
+
+})();
+</script>
+</body>
+</html>
