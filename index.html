@@ -1,73 +1,330 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Phonics Learning Hub</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Phonics Learning Hub 🌟</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
 <style>
-body {
-  font-family: Arial;
-  text-align: center;
-  background: #f5f5f5;
-  padding: 40px;
-}
+  :root {
+    --yellow: #FFD93D;
+    --coral:  #FF6B6B;
+    --blue:   #3B9EFF;
+    --green:  #6BCB77;
+    --purple: #C77DFF;
+    --orange: #FF9F43;
+    --bg:     #FFF8E7;
+  }
 
-h1 {
-  margin-bottom: 40px;
-}
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
-.menu {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 300px;
-  margin: auto;
-}
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+    overflow-x: hidden;
+    position: relative;
+  }
 
-a {
-  text-decoration: none;
-  background: #1976d2;
-  color: white;
-  padding: 20px;
-  border-radius: 12px;
-  font-size: 22px;
-}
+  /* floating stars background */
+  .star {
+    position: fixed;
+    pointer-events: none;
+    font-size: 1.4rem;
+    opacity: 0.18;
+    animation: drift linear infinite;
+    z-index: 0;
+  }
+  @keyframes drift {
+    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
+    8%   { opacity: 0.18; }
+    92%  { opacity: 0.18; }
+    100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+  }
 
-a:hover {
-  background: #1259a7;
-}
+  /* ---- header ---- */
+  header {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    margin-bottom: 32px;
+    animation: slideDown 0.6s cubic-bezier(.34,1.56,.64,1);
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-40px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+  }
+
+  .logo-emoji {
+    font-size: 4rem;
+    display: block;
+    animation: bounce 2s ease-in-out infinite;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 8vw, 3rem);
+    color: var(--coral);
+    line-height: 1.1;
+    text-shadow: 3px 3px 0 rgba(255,107,107,0.2);
+  }
+
+  .tagline {
+    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+    font-weight: 700;
+    color: #AAAAAA;
+    margin-top: 6px;
+  }
+
+  /* ---- section labels ---- */
+  .section-label {
+    position: relative;
+    z-index: 1;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    color: #CCC;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 12px;
+    margin-top: 8px;
+  }
+
+  /* ---- grid ---- */
+  .grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    max-width: 520px;
+    margin: 0 auto 14px;
+  }
+
+  .grid.single {
+    grid-template-columns: 1fr;
+  }
+
+  /* ---- cards ---- */
+  .card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 22px 14px 18px;
+    border-radius: 24px;
+    text-decoration: none;
+    color: white;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.1rem, 4vw, 1.35rem);
+    text-align: center;
+    line-height: 1.2;
+    transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
+    position: relative;
+    overflow: hidden;
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
+
+  /* shine sweep on tap */
+  .card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0s;
+  }
+  .card:active::after { transform: translateX(100%); transition: transform 0.4s ease; }
+
+  .card:active   { transform: scale(0.94); }
+  .card:hover    { transform: scale(1.04); }
+
+  .card-emoji {
+    font-size: 2.4rem;
+    line-height: 1;
+    display: block;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+  }
+
+  /* coming-soon style */
+  .card.soon {
+    opacity: 0.55;
+    cursor: default;
+    pointer-events: none;
+  }
+  .card.soon::before {
+    content: 'SOON';
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(255,255,255,0.3);
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+  }
+
+  /* colour themes */
+  .c-blue   { background: var(--blue);   box-shadow: 0 6px 0 #1E78D4, 0 8px 20px rgba(59,158,255,0.35); }
+  .c-coral  { background: var(--coral);  box-shadow: 0 6px 0 #D44444, 0 8px 20px rgba(255,107,107,0.35); }
+  .c-green  { background: var(--green);  box-shadow: 0 6px 0 #44A34F, 0 8px 20px rgba(107,203,119,0.35); }
+  .c-purple { background: var(--purple); box-shadow: 0 6px 0 #9B4FD8, 0 8px 20px rgba(199,125,255,0.35); }
+  .c-orange { background: var(--orange); box-shadow: 0 6px 0 #D47A1E, 0 8px 20px rgba(255,159,67,0.35); }
+  .c-yellow { background: #FFBA08;       box-shadow: 0 6px 0 #CC8F00, 0 8px 20px rgba(255,186,8,0.35); }
+  .c-teal   { background: #20C997;       box-shadow: 0 6px 0 #149975, 0 8px 20px rgba(32,201,151,0.35); }
+  .c-pink   { background: #FF79C6;       box-shadow: 0 6px 0 #D44A9A, 0 8px 20px rgba(255,121,198,0.35); }
+
+  /* staggered entrance */
+  .card { animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1) both; }
+  .card:nth-child(1)  { animation-delay: 0.08s; }
+  .card:nth-child(2)  { animation-delay: 0.14s; }
+  .card:nth-child(3)  { animation-delay: 0.20s; }
+  .card:nth-child(4)  { animation-delay: 0.26s; }
+  .card:nth-child(5)  { animation-delay: 0.32s; }
+  .card:nth-child(6)  { animation-delay: 0.38s; }
+  @keyframes popIn {
+    from { transform: scale(0.6) translateY(20px); opacity: 0; }
+    to   { transform: scale(1)   translateY(0);    opacity: 1; }
+  }
+
+  /* divider */
+  .divider {
+    position: relative;
+    z-index: 1;
+    max-width: 520px;
+    margin: 6px auto 18px;
+    border: none;
+    border-top: 3px dashed #EEE4CC;
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: #CCC;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-top: 20px;
+  }
 </style>
 </head>
-
 <body>
 
-<h1>Phonics Learning Hub</h1>
+<script>
+  /* floating background stars */
+  var icons = ['⭐','🌟','✨','🎵','🎈','💫','🌈'];
+  for (var i = 0; i < 16; i++) {
+    var s = document.createElement('div');
+    s.className = 'star';
+    s.textContent = icons[i % icons.length];
+    s.style.left = (Math.random()*100) + 'vw';
+    s.style.fontSize = (1 + Math.random()*1.2) + 'rem';
+    s.style.animationDuration = (10 + Math.random()*14) + 's';
+    s.style.animationDelay    = (Math.random()*14) + 's';
+    document.body.appendChild(s);
+  }
+</script>
 
-<div class="menu">
-  <a href="digraphs.html">Digraph Practice</a>
-  <a href="digraph_fill.html">Digraph Test</a>
+<header>
+  <span class="logo-emoji">🔤</span>
+  <h1>Phonics Learning Hub</h1>
+  <p class="tagline">Tap a card to start learning! 🚀</p>
+</header>
 
-  <a href="vowels.html">Vowels Practice</a>
-  <a href="vowels_fill.html">Vowels Test</a>
- 
-  <a href="blends.html">Consonant Blends (Coming Soon)</a>
-  <a href="vowels.html">Vowel Sounds (Coming Soon)</a>
-  <a href="magic-e.html">Magic E (Coming Soon)</a>
-
-
-
-<a href="phonic-set1.html">Phonic Set 1</a>
-  <a href="phonic-set2.html">Phonic Set 2</a>
-  <a href="read.html">Read 1</a>
-<a href="read2.html">Read custom</a>
-
-
-<a href="word-explore.html">Word Explorer</a>
-
+<!-- PRACTICE -->
+<p class="section-label">🎯 Practice</p>
+<div class="grid">
+  <a class="card c-blue" href="digraphs.html">
+    <span class="card-emoji">🔠</span>
+    Digraph Practice
+  </a>
+  <a class="card c-coral" href="digraph_fill.html">
+    <span class="card-emoji">✏️</span>
+    Digraph Test
+  </a>
+  <a class="card c-green" href="vowels.html">
+    <span class="card-emoji">🗣️</span>
+    Vowels Practice
+  </a>
+  <a class="card c-purple" href="vowels_fill.html">
+    <span class="card-emoji">📝</span>
+    Vowels Test
+  </a>
 </div>
 
+<hr class="divider">
 
+<!-- PHONICS SETS -->
+<p class="section-label">📚 Phonics Sets</p>
+<div class="grid">
+  <a class="card c-orange" href="phonic-set1.html">
+    <span class="card-emoji">1️⃣</span>
+    Phonic Set 1
+  </a>
+  <a class="card c-teal" href="phonic-set2.html">
+    <span class="card-emoji">2️⃣</span>
+    Phonic Set 2
+  </a>
+</div>
+
+<hr class="divider">
+
+<!-- READING -->
+<p class="section-label">📖 Reading</p>
+<div class="grid">
+  <a class="card c-yellow" href="read.html">
+    <span class="card-emoji">📗</span>
+    Read 1
+  </a>
+  <a class="card c-pink" href="read2.html">
+    <span class="card-emoji">🔤</span>
+    Read Custom
+  </a>
+</div>
+
+<hr class="divider">
+
+<!-- TOOLS -->
+<p class="section-label">🛠️ Tools</p>
+<div class="grid single">
+  <a class="card c-blue" href="word-explore.html">
+    <span class="card-emoji">🌟</span>
+    Word Explorer
+  </a>
+</div>
+
+<hr class="divider">
+
+<!-- COMING SOON -->
+<p class="section-label">🔜 Coming Soon</p>
+<div class="grid">
+  <a class="card c-green soon" href="blends.html">
+    <span class="card-emoji">🧩</span>
+    Consonant Blends
+  </a>
+  <a class="card c-purple soon" href="vowels.html">
+    <span class="card-emoji">🔊</span>
+    Vowel Sounds
+  </a>
+  <a class="card c-coral soon" href="magic-e.html">
+    <span class="card-emoji">✨</span>
+    Magic E
+  </a>
+</div>
+
+<footer>Happy Learning! 🌈⭐</footer>
 
 </body>
 </html>
