@@ -1,190 +1,419 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Phonics Digraph Practice</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🌟 Phonics Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #FFF9EC;
+    --card-sh: #FF6B6B;
+    --card-ch: #FF9F43;
+    --card-th-soft: #54A0FF;
+    --card-th-hard: #5F27CD;
+    --card-ph: #00D2D3;
+    --card-gh: #1DD1A1;
+    --card-wh: #FF6FA2;
+    --card-ck: #F368E0;
+    --card-end: #786fa6;
+    --text-dark: #2d3436;
+    --highlight: #FDCB6E;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #f5f5f5;
-  padding: 30px;
+font-family: ‘Nunito’, sans-serif;
+background: var(–bg);
+min-height: 100vh;
+padding: 16px;
+background-image: radial-gradient(circle at 20% 20%, #FFE8F7 0%, transparent 40%),
+radial-gradient(circle at 80% 80%, #E8F4FF 0%, transparent 40%);
 }
 
-h2 {
-  margin-top: 50px;
+header {
+text-align: center;
+padding: 20px 10px 10px;
+}
+
+header h1 {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3.5rem);
+color: #e17055;
+text-shadow: 3px 3px 0 #fab1a0;
+letter-spacing: 1px;
+}
+
+header p {
+font-size: clamp(1rem, 4vw, 1.3rem);
+color: #636e72;
+margin-top: 6px;
+}
+
+.section {
+margin: 24px auto;
+max-width: 900px;
+}
+
+.section-title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.5rem, 6vw, 2.4rem);
+text-align: center;
+margin-bottom: 14px;
+padding: 10px 20px;
+border-radius: 50px;
+display: inline-block;
+width: 100%;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+}
+
+.cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(min(160px, 45vw), 1fr));
+gap: 14px;
+padding: 0 4px;
 }
 
 .word-card {
-  background: #1976d2;
-  padding: 25px;
-  margin: 15px auto;
-  width: 320px;
-  border-radius: 12px;
-  font-size: 48px;
+border-radius: 20px;
+padding: 18px 10px 14px;
+text-align: center;
+position: relative;
+box-shadow: 0 6px 0 rgba(0,0,0,0.18), 0 8px 20px rgba(0,0,0,0.1);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+cursor: default;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+}
+
+.word-card:active {
+transform: translateY(3px);
+box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+}
+
+.sounds-row {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-wrap: wrap;
+gap: 2px;
 }
 
 .sound {
-  color: white;
-  cursor: pointer;
-  padding: 2px 4px;
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3rem);
+color: white;
+cursor: pointer;
+padding: 2px 4px;
+border-radius: 8px;
+transition: all 0.15s;
+display: inline-block;
+line-height: 1.1;
+position: relative;
 }
 
-.red {
-  color: red !important;
+.sound:active,
+.sound.tapped {
+color: #FDCB6E;
+transform: scale(1.25);
+text-shadow: 0 0 12px rgba(253,203,110,0.8);
+}
+
+.phonetic-label {
+font-size: clamp(0.75rem, 3vw, 1rem);
+color: rgba(255,255,255,0.85);
+font-weight: 700;
+letter-spacing: 0.5px;
+background: rgba(0,0,0,0.15);
+padding: 3px 10px;
+border-radius: 20px;
+}
+
+.speak-btn {
+background: white;
+border: none;
+border-radius: 50%;
+width: clamp(44px, 12vw, 54px);
+height: clamp(44px, 12vw, 54px);
+font-size: clamp(1.3rem, 5vw, 1.8rem);
+cursor: pointer;
+box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.1s, box-shadow 0.1s;
+flex-shrink: 0;
+}
+
+.speak-btn:active {
+transform: scale(0.9) translateY(2px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.speak-btn.speaking {
+animation: pulse-btn 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-btn {
+from { transform: scale(1); }
+to   { transform: scale(1.12); }
+}
+
+/* Section colors */
+.sec-sh  .section-title { background: var(–card-sh); }
+.sec-ch  .section-title { background: var(–card-ch); }
+.sec-th-soft .section-title { background: var(–card-th-soft); }
+.sec-th-hard .section-title { background: var(–card-th-hard); }
+.sec-ph  .section-title { background: var(–card-ph); color: #2d3436; text-shadow: none; }
+.sec-gh  .section-title { background: var(–card-gh); color: #2d3436; text-shadow: none; }
+.sec-wh  .section-title { background: var(–card-wh); }
+.sec-ck  .section-title { background: var(–card-ck); }
+.sec-end .section-title { background: var(–card-end); }
+
+.sec-sh  .word-card { background: var(–card-sh); }
+.sec-ch  .word-card { background: var(–card-ch); }
+.sec-th-soft .word-card { background: var(–card-th-soft); }
+.sec-th-hard .word-card { background: var(–card-th-hard); }
+.sec-ph  .word-card { background: var(–card-ph); }
+.sec-gh  .word-card { background: var(–card-gh); }
+.sec-wh  .word-card { background: var(–card-wh); }
+.sec-ck  .word-card { background: var(–card-ck); }
+.sec-end .word-card { background: var(–card-end); }
+
+.sec-ph  .sound,
+.sec-gh  .sound { color: #2d3436; }
+.sec-ph  .speak-btn,
+.sec-gh  .speak-btn { background: rgba(255,255,255,0.7); }
+
+@media (max-width: 480px) {
+body { padding: 10px; }
+.cards-grid { gap: 10px; }
+}
+
+.bounce-in {
+animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes bounceIn {
+0%   { transform: scale(1); }
+30%  { transform: scale(1.15); }
+60%  { transform: scale(0.95); }
+100% { transform: scale(1); }
+}
+
+footer {
+text-align: center;
+padding: 30px 10px 16px;
+color: #b2bec3;
+font-size: 0.9rem;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<h1>Phonics Digraph Practice</h1>
-<p>Tap any sound to highlight</p>
+<header>
+  <h1>🌟 Phonics Fun!</h1>
+  <p>👆 Tap sounds to highlight &bull; 🔊 Press the button to hear the word!</p>
+</header>
 
-<!-- SH -->
-<h2>/sh/</h2>
+<div id="app"></div>
 
-<div class="word-card"><span class="sound">sh</span><span class="sound">i</span><span class="sound">p</span></div>
-<div class="word-card"><span class="sound">sh</span><span class="sound">o</span><span class="sound">p</span></div>
-<div class="word-card"><span class="sound">sh</span><span class="sound">e</span><span class="sound">ll</span></div>
-<div class="word-card"><span class="sound">sh</span><span class="sound">i</span><span class="sound">n</span><span class="sound">e</span></div>
-<div class="word-card"><span class="sound">sh</span><span class="sound">o</span><span class="sound">e</span></div>
-
-<!-- CH -->
-<h2>/ch/</h2>
-
-<div class="word-card"><span class="sound">ch</span><span class="sound">air</span></div>
-<div class="word-card"><span class="sound">ch</span><span class="sound">i</span><span class="sound">p</span></div>
-<div class="word-card"><span class="sound">ch</span><span class="sound">e</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">ch</span><span class="sound">i</span><span class="sound">n</span></div>
-<div class="word-card"><span class="sound">ch</span><span class="sound">a</span><span class="sound">t</span></div>
-
-<!-- TH SOFT -->
-<h2>/th/ (soft)</h2>
-
-<div class="word-card"><span class="sound">th</span><span class="sound">i</span><span class="sound">n</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">i</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">i</span><span class="sound">ng</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">u</span><span class="sound">mb</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">r</span><span class="sound">ee</span></div>
-
-<!-- TH HARD -->
-<h2>/th/ (hard)</h2>
-
-<div class="word-card"><span class="sound">th</span><span class="sound">i</span><span class="sound">s</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">a</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">e</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">o</span><span class="sound">se</span></div>
-<div class="word-card"><span class="sound">th</span><span class="sound">e</span><span class="sound">n</span></div>
-
-<!-- PH -->
-<h2>/ph/ (f sound)</h2>
-
-<div class="word-card"><span class="sound">ph</span><span class="sound">o</span><span class="sound">ne</span></div>
-<div class="word-card"><span class="sound">ph</span><span class="sound">o</span><span class="sound">to</span></div>
-<div class="word-card"><span class="sound">ph</span><span class="sound">i</span><span class="sound">sh</span></div>
-<div class="word-card"><span class="sound">ph</span><span class="sound">o</span><span class="sound">nic</span></div>
-<div class="word-card"><span class="sound">ph</span><span class="sound">a</span><span class="sound">se</span></div>
-
-<!-- GH -->
-<h2>/gh/</h2>
-
-<div class="word-card"><span class="sound">l</span><span class="sound">i</span><span class="sound">gh</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">n</span><span class="sound">i</span><span class="sound">gh</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">r</span><span class="sound">i</span><span class="sound">gh</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">hi</span><span class="sound">gh</span></div>
-<div class="word-card"><span class="sound">si</span><span class="sound">gh</span></div>
-
-<!-- WH -->
-<h2>/wh/</h2>
-
-<div class="word-card"><span class="sound">wh</span><span class="sound">a</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">wh</span><span class="sound">e</span><span class="sound">n</span></div>
-<div class="word-card"><span class="sound">wh</span><span class="sound">i</span><span class="sound">ch</span></div>
-<div class="word-card"><span class="sound">wh</span><span class="sound">e</span><span class="sound">el</span></div>
-<div class="word-card"><span class="sound">wh</span><span class="sound">y</span></div>
-
-<!-- CK -->
-<h2>/ck/</h2>
-
-<div class="word-card"><span class="sound">b</span><span class="sound">a</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">l</span><span class="sound">u</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">du</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">ro</span><span class="sound">ck</span></div>
-<div class="word-card"><span class="sound">so</span><span class="sound">ck</span></div>
-
-
-<!-- DIGRAPH ENDING WORDS -->
-<h2>Digraph Ending Words Practice</h2>
-
-<!-- SH ending -->
-<div class="word-card">
-  <span class="sound">f</span><span class="sound">i</span><span class="sound">sh</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">d</span><span class="sound">i</span><span class="sound">sh</span>
-</div>
-
-<!-- CH ending -->
-<div class="word-card">
-  <span class="sound">r</span><span class="sound">i</span><span class="sound">ch</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">m</span><span class="sound">a</span><span class="sound">t</span><span class="sound">ch</span>
-</div>
-
-<!-- TH ending -->
-<div class="word-card">
-  <span class="sound">b</span><span class="sound">a</span><span class="sound">th</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">w</span><span class="sound">i</span><span class="sound">th</span>
-</div>
-
-<!-- CK ending -->
-<div class="word-card">
-  <span class="sound">b</span><span class="sound">a</span><span class="sound">ck</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">du</span><span class="sound">ck</span>
-</div>
-
-<!-- GH ending -->
-<div class="word-card">
-  <span class="sound">lau</span><span class="sound">gh</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">tou</span><span class="sound">gh</span>
-</div>
-
-<!-- PH ending -->
-<div class="word-card">
-  <span class="sound">ra</span><span class="sound">ph</span>
-</div>
-
-<div class="word-card">
-  <span class="sound">jo</span><span class="sound">se</span><span class="sound">ph</span>
-</div>
-
+<footer>Keep practising — you're doing amazing! ⭐</footer>
 
 <script>
-document.querySelectorAll(".sound").forEach(sound => {
-  sound.addEventListener("click", function(e) {
-    e.stopPropagation();
+const sections = [
+  {
+    id: 'sh', label: '🐚 /sh/ words', secClass: 'sec-sh',
+    words: [
+      { text: 'ship',  parts: ['sh','i','p'],     phonetic: '/ʃɪp/' },
+      { text: 'shop',  parts: ['sh','o','p'],     phonetic: '/ʃɒp/' },
+      { text: 'shell', parts: ['sh','e','ll'],    phonetic: '/ʃɛl/' },
+      { text: 'shine', parts: ['sh','i','n','e'], phonetic: '/ʃaɪn/' },
+      { text: 'shoe',  parts: ['sh','oe'],        phonetic: '/ʃuː/' },
+    ]
+  },
+  {
+    id: 'ch', label: '🐔 /ch/ words', secClass: 'sec-ch',
+    words: [
+      { text: 'chair', parts: ['ch','air'],      phonetic: '/tʃɛr/' },
+      { text: 'chip',  parts: ['ch','i','p'],    phonetic: '/tʃɪp/' },
+      { text: 'check', parts: ['ch','e','ck'],   phonetic: '/tʃɛk/' },
+      { text: 'chin',  parts: ['ch','i','n'],    phonetic: '/tʃɪn/' },
+      { text: 'chat',  parts: ['ch','a','t'],    phonetic: '/tʃæt/' },
+    ]
+  },
+  {
+    id: 'th-soft', label: '👅 /th/ soft', secClass: 'sec-th-soft',
+    words: [
+      { text: 'thin',  parts: ['th','i','n'],    phonetic: '/θɪn/' },
+      { text: 'thick', parts: ['th','i','ck'],   phonetic: '/θɪk/' },
+      { text: 'thing', parts: ['th','i','ng'],   phonetic: '/θɪŋ/' },
+      { text: 'thumb', parts: ['th','u','mb'],   phonetic: '/θʌm/' },
+      { text: 'three', parts: ['th','r','ee'],   phonetic: '/θriː/' },
+    ]
+  },
+  {
+    id: 'th-hard', label: '👄 /th/ hard', secClass: 'sec-th-hard',
+    words: [
+      { text: 'this',  parts: ['th','i','s'],    phonetic: '/ðɪs/' },
+      { text: 'that',  parts: ['th','a','t'],    phonetic: '/ðæt/' },
+      { text: 'the',   parts: ['th','e'],        phonetic: '/ðə/' },
+      { text: 'those', parts: ['th','o','se'],   phonetic: '/ðoʊz/' },
+      { text: 'then',  parts: ['th','e','n'],    phonetic: '/ðɛn/' },
+    ]
+  },
+  {
+    id: 'ph', label: '📞 /ph/ = f sound', secClass: 'sec-ph',
+    words: [
+      { text: 'phone', parts: ['ph','o','ne'],   phonetic: '/foʊn/' },
+      { text: 'photo', parts: ['ph','o','to'],   phonetic: '/ˈfoʊ.toʊ/' },
+      { text: 'phish', parts: ['ph','i','sh'],   phonetic: '/fɪʃ/' },
+      { text: 'phonic',parts: ['ph','o','nic'],  phonetic: '/ˈfɒn.ɪk/' },
+      { text: 'phase', parts: ['ph','a','se'],   phonetic: '/feɪz/' },
+    ]
+  },
+  {
+    id: 'gh', label: '✨ /gh/ silent', secClass: 'sec-gh',
+    words: [
+      { text: 'light', parts: ['l','i','gh','t'], phonetic: '/laɪt/' },
+      { text: 'night', parts: ['n','i','gh','t'], phonetic: '/naɪt/' },
+      { text: 'right', parts: ['r','i','gh','t'], phonetic: '/raɪt/' },
+      { text: 'high',  parts: ['hi','gh'],        phonetic: '/haɪ/' },
+      { text: 'sigh',  parts: ['si','gh'],        phonetic: '/saɪ/' },
+    ]
+  },
+  {
+    id: 'wh', label: '💨 /wh/ words', secClass: 'sec-wh',
+    words: [
+      { text: 'what',  parts: ['wh','a','t'],    phonetic: '/wɒt/' },
+      { text: 'when',  parts: ['wh','e','n'],    phonetic: '/wɛn/' },
+      { text: 'which', parts: ['wh','i','ch'],   phonetic: '/wɪtʃ/' },
+      { text: 'wheel', parts: ['wh','ee','l'],   phonetic: '/wiːl/' },
+      { text: 'why',   parts: ['wh','y'],        phonetic: '/waɪ/' },
+    ]
+  },
+  {
+    id: 'ck', label: '🔑 /ck/ words', secClass: 'sec-ck',
+    words: [
+      { text: 'back',  parts: ['b','a','ck'],    phonetic: '/bæk/' },
+      { text: 'luck',  parts: ['l','u','ck'],    phonetic: '/lʌk/' },
+      { text: 'duck',  parts: ['du','ck'],       phonetic: '/dʌk/' },
+      { text: 'rock',  parts: ['ro','ck'],       phonetic: '/rɒk/' },
+      { text: 'sock',  parts: ['so','ck'],       phonetic: '/sɒk/' },
+    ]
+  },
+  {
+    id: 'end', label: '🎯 Digraph Endings!', secClass: 'sec-end',
+    words: [
+      { text: 'fish',   parts: ['f','i','sh'],      phonetic: '/fɪʃ/' },
+      { text: 'dish',   parts: ['d','i','sh'],      phonetic: '/dɪʃ/' },
+      { text: 'rich',   parts: ['r','i','ch'],      phonetic: '/rɪtʃ/' },
+      { text: 'match',  parts: ['m','a','t','ch'],  phonetic: '/mætʃ/' },
+      { text: 'bath',   parts: ['b','a','th'],      phonetic: '/bæθ/' },
+      { text: 'with',   parts: ['w','i','th'],      phonetic: '/wɪð/' },
+      { text: 'back',   parts: ['b','a','ck'],      phonetic: '/bæk/' },
+      { text: 'duck',   parts: ['du','ck'],         phonetic: '/dʌk/' },
+      { text: 'laugh',  parts: ['lau','gh'],        phonetic: '/lɑːf/' },
+      { text: 'tough',  parts: ['tou','gh'],        phonetic: '/tʌf/' },
+    ]
+  },
+];
 
-    this.classList.add("red");
+function buildPage() {
+  const app = document.getElementById('app');
 
-    setTimeout(() => {
-      this.classList.remove("red");
-    }, 3000);
+  sections.forEach(sec => {
+    const section = document.createElement('div');
+    section.className = `section ${sec.secClass}`;
+
+    const h2 = document.createElement('h2');
+    h2.className = 'section-title';
+    h2.textContent = sec.label;
+    section.appendChild(h2);
+
+    const grid = document.createElement('div');
+    grid.className = 'cards-grid';
+
+    sec.words.forEach(word => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+
+      // Sounds row
+      const soundsRow = document.createElement('div');
+      soundsRow.className = 'sounds-row';
+      word.parts.forEach(part => {
+        const s = document.createElement('span');
+        s.className = 'sound';
+        s.textContent = part;
+        s.addEventListener('click', (e) => {
+          e.stopPropagation();
+          s.classList.add('tapped');
+          s.classList.add('bounce-in');
+          setTimeout(() => {
+            s.classList.remove('tapped');
+            s.classList.remove('bounce-in');
+          }, 600);
+        });
+        soundsRow.appendChild(s);
+      });
+
+      // Phonetic label
+      const label = document.createElement('div');
+      label.className = 'phonetic-label';
+      label.textContent = word.phonetic;
+
+      // Speak button
+      const btn = document.createElement('button');
+      btn.className = 'speak-btn';
+      btn.setAttribute('aria-label', `Hear ${word.text}`);
+      btn.textContent = '🔊';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speakWord(word.text, btn);
+      });
+
+      card.appendChild(soundsRow);
+      card.appendChild(label);
+      card.appendChild(btn);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    app.appendChild(section);
   });
-});
+}
+
+function speakWord(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.75;
+  utter.pitch = 1.1;
+  utter.volume = 1;
+
+  btn.classList.add('speaking');
+  btn.textContent = '🎵';
+
+  utter.onend = () => {
+    btn.classList.remove('speaking');
+    btn.textContent = '🔊';
+  };
+  utter.onerror = () => {
+    btn.classList.remove('speaking');
+    btn.textContent = '🔊';
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+buildPage();
 </script>
 
 </body>
