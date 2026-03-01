@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>✨ Magic E Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF8DC;
+
+```
+/* A-E family */
+--ae: #E84393;
+
+/* I-E family */
+--ie: #2980B9;
+
+/* O-E family */
+--oe: #27AE60;
+
+/* U-E family */
+--ue: #8E44AD;
+
+/* Before & After comparison */
+--cmp: #E67E22;
+```
+
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: ‘Nunito’, sans-serif;
+background: var(–bg);
+min-height: 100vh;
+padding: 16px;
+background-image:
+radial-gradient(circle at 10% 10%, #FFE4E1 0%, transparent 35%),
+radial-gradient(circle at 90% 90%, #E0F7FA 0%, transparent 35%),
+radial-gradient(circle at 50% 50%, #FFF9C4 0%, transparent 60%);
+}
+
+header { text-align: center; padding: 20px 10px 14px; }
+
+header h1 {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3.5rem);
+color: #E84393;
+text-shadow: 3px 3px 0 #FFB3D9;
+letter-spacing: 1px;
+}
+
+header p {
+font-size: clamp(1rem, 4vw, 1.3rem);
+color: #555;
+margin-top: 6px;
+font-weight: 700;
+}
+
+/* ── MAGIC E EXPLAINER ───────────────────────── */
+.magic-box {
+display: flex;
+justify-content: center;
+gap: 10px;
+flex-wrap: wrap;
+margin: 14px auto 4px;
+max-width: 640px;
+}
+
+.magic-pill {
+background: #fff;
+border-radius: 50px;
+padding: 10px 20px;
+font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+font-weight: 800;
+color: #333;
+box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+display: flex;
+align-items: center;
+gap: 8px;
+}
+
+.magic-pill .vowel-letter {
+font-family: ‘Fredoka One’, cursive;
+font-size: 1.4em;
+color: #E84343;
+}
+
+.magic-pill .arrow {
+font-size: 1.2em;
+color: #aaa;
+}
+
+.magic-pill .long-vowel {
+font-family: ‘Fredoka One’, cursive;
+font-size: 1.4em;
+color: #8E44AD;
+}
+
+.magic-pill .silent-e {
+font-family: ‘Fredoka One’, cursive;
+font-size: 1.4em;
+color: #ccc;
+text-decoration: line-through;
+}
+
+/* ── KEY BAR ─────────────────────────────────── */
+.key-bar {
+display: flex;
+justify-content: center;
+gap: 14px;
+flex-wrap: wrap;
+margin: 12px auto 4px;
+max-width: 600px;
+}
+
+.key-item {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: clamp(0.82rem, 3vw, 1rem);
+font-weight: 800;
+color: #444;
+}
+
+.key-dot {
+width: 18px; height: 18px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+.key-dot.long  { background: #8E44AD; }
+.key-dot.cons  { background: #555; }
+.key-dot.magic { background: #FFB700; border: 2px solid #E67E22; }
+
+/* ── GROUP HEADING ───────────────────────────── */
+.group-heading {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.6rem, 6vw, 2.6rem);
+text-align: center;
+margin: 32px 0 6px;
+letter-spacing: 0.5px;
+}
+
+.group-heading span {
+display: inline-block;
+color: white;
+padding: 6px 26px;
+border-radius: 50px;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+.gh-ae span  { background: linear-gradient(135deg, #E84393, #FF6EB4); }
+.gh-ie span  { background: linear-gradient(135deg, #2980B9, #5DADE2); }
+.gh-oe span  { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.gh-ue span  { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
+.gh-cmp span { background: linear-gradient(135deg, #E67E22, #F39C12); }
+
+/* ── SECTION ─────────────────────────────────── */
+.section { margin: 18px auto; max-width: 960px; }
+
+.section-title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+text-align: center;
+margin-bottom: 14px;
+padding: 12px 20px;
+border-radius: 50px;
+display: inline-block;
+width: 100%;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+letter-spacing: 0.5px;
+}
+
+.sec-ae1  .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
+.sec-ae2  .section-title { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+.sec-ae3  .section-title { background: linear-gradient(135deg, #D63031, #FF7675); }
+.sec-ie1  .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
+.sec-ie2  .section-title { background: linear-gradient(135deg, #1A6DA8, #5499C7); }
+.sec-ie3  .section-title { background: linear-gradient(135deg, #154360, #2E86C1); }
+.sec-oe1  .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.sec-oe2  .section-title { background: linear-gradient(135deg, #1E8449, #27AE60); }
+.sec-oe3  .section-title { background: linear-gradient(135deg, #0E6655, #1ABC9C); }
+.sec-ue1  .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
+.sec-ue2  .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
+.sec-cmp  .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); color: #5D4037; text-shadow: none; }
+
+/* ── GRID ────────────────────────────────────── */
+.cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(min(160px, 44vw), 1fr));
+gap: 14px;
+padding: 0 4px;
+}
+
+/* wider grid for compare pairs */
+.cards-grid.pairs {
+grid-template-columns: repeat(auto-fill, minmax(min(280px, 90vw), 1fr));
+}
+
+/* ── CARD ────────────────────────────────────── */
+.word-card {
+background: #FFFFFF;
+border-radius: 20px;
+padding: 18px 10px 14px;
+text-align: center;
+box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+cursor: default;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+border-bottom: 6px solid transparent;
+}
+
+.word-card:active {
+transform: translateY(3px);
+box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+}
+
+.sec-ae1 .word-card  { border-bottom-color: #E84393; }
+.sec-ae2 .word-card  { border-bottom-color: #C0392B; }
+.sec-ae3 .word-card  { border-bottom-color: #D63031; }
+.sec-ie1 .word-card  { border-bottom-color: #2980B9; }
+.sec-ie2 .word-card  { border-bottom-color: #1A6DA8; }
+.sec-ie3 .word-card  { border-bottom-color: #154360; }
+.sec-oe1 .word-card  { border-bottom-color: #27AE60; }
+.sec-oe2 .word-card  { border-bottom-color: #1E8449; }
+.sec-oe3 .word-card  { border-bottom-color: #0E6655; }
+.sec-ue1 .word-card  { border-bottom-color: #8E44AD; }
+.sec-ue2 .word-card  { border-bottom-color: #6C3483; }
+.sec-cmp .word-card  { border-bottom-color: #E67E22; }
+
+/* ── PAIR CARD ───────────────────────────────── */
+.pair-card {
+background: #FFFFFF;
+border-radius: 20px;
+padding: 18px 16px 14px;
+box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+display: flex;
+align-items: center;
+gap: 12px;
+border-bottom: 6px solid #E67E22;
+flex-wrap: wrap;
+justify-content: center;
+}
+
+.pair-card:active {
+transform: translateY(3px);
+box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+}
+
+.pair-word {
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 6px;
+flex: 1;
+min-width: 110px;
+}
+
+.pair-arrow {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.8rem, 7vw, 2.5rem);
+color: #FFB700;
+flex-shrink: 0;
+}
+
+.pair-label {
+font-size: clamp(0.65rem, 2.5vw, 0.8rem);
+font-weight: 900;
+padding: 3px 10px;
+border-radius: 20px;
+color: white;
+letter-spacing: 0.5px;
+}
+
+.pair-label.short { background: #888; }
+.pair-label.long  { background: #8E44AD; }
+
+/* ── SOUNDS ROW ──────────────────────────────── */
+.sounds-row {
+display: flex;
+justify-content: center;
+align-items: flex-end;
+flex-wrap: nowrap;
+gap: 0;
+}
+
+.sound {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2.2rem, 9vw, 3.2rem);
+cursor: pointer;
+padding: 2px 3px;
+border-radius: 8px;
+transition: all 0.15s;
+display: inline-block;
+line-height: 1.1;
+}
+
+/* consonant = dark; long vowel = purple; magic e = gold faded */
+.sound.cons  { color: #444; }
+
+.sound.magic-e {
+color: #FFB700;
+font-size: clamp(1.6rem, 7vw, 2.4rem);
+opacity: 0.75;
+vertical-align: super;
+line-height: 1;
+}
+
+/* long vowel colours per family */
+.sec-ae1 .sound.long-vowel,
+.sec-ae2 .sound.long-vowel,
+.sec-ae3 .sound.long-vowel { color: #A5003B; }
+
+.sec-ie1 .sound.long-vowel,
+.sec-ie2 .sound.long-vowel,
+.sec-ie3 .sound.long-vowel { color: #1A5276; }
+
+.sec-oe1 .sound.long-vowel,
+.sec-oe2 .sound.long-vowel,
+.sec-oe3 .sound.long-vowel { color: #145A32; }
+
+.sec-ue1 .sound.long-vowel,
+.sec-ue2 .sound.long-vowel { color: #5B2C6F; }
+
+.sec-cmp .sound.long-vowel { color: #5B2C6F; }
+.sec-cmp .sound.cons       { color: #555; }
+
+/* short vowel in pair cards */
+.sound.short-vowel { color: #888; }
+
+.sound:active,
+.sound.tapped {
+color: #FF6B00 !important;
+transform: scale(1.3);
+text-shadow: 0 0 14px rgba(255,107,0,0.5);
+background: #FFF3CD;
+border-radius: 10px;
+opacity: 1 !important;
+}
+
+/* ── VOWEL TAG ───────────────────────────────── */
+.vowel-tag {
+display: inline-block;
+padding: 3px 12px;
+border-radius: 20px;
+font-size: clamp(0.68rem, 2.6vw, 0.85rem);
+font-weight: 900;
+color: white;
+letter-spacing: 0.5px;
+}
+
+.sec-ae1 .vowel-tag { background: #E84393; }
+.sec-ae2 .vowel-tag { background: #C0392B; }
+.sec-ae3 .vowel-tag { background: #D63031; }
+.sec-ie1 .vowel-tag { background: #2980B9; }
+.sec-ie2 .vowel-tag { background: #1A6DA8; }
+.sec-ie3 .vowel-tag { background: #154360; }
+.sec-oe1 .vowel-tag { background: #27AE60; }
+.sec-oe2 .vowel-tag { background: #1E8449; }
+.sec-oe3 .vowel-tag { background: #0E6655; }
+.sec-ue1 .vowel-tag { background: #8E44AD; }
+.sec-ue2 .vowel-tag { background: #6C3483; }
+.sec-cmp .vowel-tag { background: #E67E22; }
+
+/* ── PHONETIC ─────────────────────────────────── */
+.phonetic-label {
+font-size: clamp(0.68rem, 2.6vw, 0.85rem);
+color: #888;
+font-weight: 800;
+letter-spacing: 0.5px;
+background: #F4F4F4;
+padding: 3px 10px;
+border-radius: 20px;
+}
+
+/* ── SPEAK BUTTON ────────────────────────────── */
+.speak-btn {
+border: none;
+border-radius: 50%;
+width: clamp(44px, 12vw, 54px);
+height: clamp(44px, 12vw, 54px);
+font-size: clamp(1.3rem, 5vw, 1.8rem);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.1s, box-shadow 0.1s;
+flex-shrink: 0;
+color: white;
+}
+
+.sec-ae1 .speak-btn { background: #E84393; box-shadow: 0 4px 0 #A5003B; }
+.sec-ae2 .speak-btn { background: #C0392B; box-shadow: 0 4px 0 #7B241C; }
+.sec-ae3 .speak-btn { background: #D63031; box-shadow: 0 4px 0 #922B21; }
+.sec-ie1 .speak-btn { background: #2980B9; box-shadow: 0 4px 0 #1A5276; }
+.sec-ie2 .speak-btn { background: #1A6DA8; box-shadow: 0 4px 0 #154360; }
+.sec-ie3 .speak-btn { background: #154360; box-shadow: 0 4px 0 #0D2E46; }
+.sec-oe1 .speak-btn { background: #27AE60; box-shadow: 0 4px 0 #145A32; }
+.sec-oe2 .speak-btn { background: #1E8449; box-shadow: 0 4px 0 #0E5230; }
+.sec-oe3 .speak-btn { background: #0E6655; box-shadow: 0 4px 0 #0B5345; }
+.sec-ue1 .speak-btn { background: #8E44AD; box-shadow: 0 4px 0 #5B2C6F; }
+.sec-ue2 .speak-btn { background: #6C3483; box-shadow: 0 4px 0 #4A235A; }
+.sec-cmp .speak-btn { background: #E67E22; box-shadow: 0 4px 0 #A04000; }
+
+/* pair card speak buttons */
+.pair-speak-btn {
+border: none;
+border-radius: 50%;
+width: clamp(36px, 10vw, 46px);
+height: clamp(36px, 10vw, 46px);
+font-size: clamp(1.1rem, 4vw, 1.5rem);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.1s, box-shadow 0.1s;
+flex-shrink: 0;
+color: white;
+background: #E67E22;
+box-shadow: 0 3px 0 #A04000;
+}
+
+.speak-btn:active,
+.pair-speak-btn:active {
+transform: scale(0.9) translateY(3px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.3) !important;
+}
+
+.speak-btn.speaking,
+.pair-speak-btn.speaking {
+animation: pulse-btn 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-btn {
+from { transform: scale(1); }
+to   { transform: scale(1.12); }
+}
+
+.bounce-in { animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+@keyframes bounceIn {
+0%   { transform: scale(1); }
+30%  { transform: scale(1.3); }
+60%  { transform: scale(0.95); }
+100% { transform: scale(1.3); }
+}
+
+/* ── MAGIC E STAR BADGE ──────────────────────── */
+.magic-badge {
+display: inline-flex;
+align-items: center;
+gap: 4px;
+background: linear-gradient(135deg, #FFB700, #FF6B00);
+color: white;
+font-size: clamp(0.68rem, 2.6vw, 0.85rem);
+font-weight: 900;
+padding: 3px 12px;
+border-radius: 20px;
+letter-spacing: 0.5px;
+box-shadow: 0 2px 0 #A04000;
+}
+
+@media (max-width: 480px) {
+body { padding: 10px; }
+.cards-grid { gap: 10px; }
+.pair-card { gap: 8px; }
+}
+
+footer {
+text-align: center;
+padding: 30px 10px 16px;
+color: #aaa;
+font-size: 0.9rem;
+font-weight: 700;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>✨ Magic E!</h1>
+  <p>The silent E at the end makes the vowel say its <em>name!</em></p>
+
+  <div class="magic-box">
+    <div class="magic-pill">
+      <span class="vowel-letter">short a</span>
+      <span class="arrow">➜</span>
+      <span class="long-vowel">long A</span>
+      <span class="arrow">+</span>
+      <span class="silent-e">e</span>
+    </div>
+    <div class="magic-pill">
+      🌟 The E is <strong>silent</strong> but <strong>powerful!</strong>
+    </div>
+  </div>
+
+  <div class="key-bar">
+    <div class="key-item"><div class="key-dot long"></div> Long vowel</div>
+    <div class="key-item"><div class="key-dot cons"></div> Consonant</div>
+    <div class="key-item"><div class="key-dot magic"></div> Magic E (silent)</div>
+  </div>
+</header>
+
+<div id="app"></div>
+
+<footer>The Magic E changes everything! ⭐✨</footer>
+
+<script>
+const LV = 'long-vowel';
+const C  = 'cons';
+const ME = 'magic-e';
+const SV = 'short-vowel';
+
+/* ── DATA ─────────────────────────────────────────────── */
+const groups = [
+  /* ===== A_E ===== */
+  {
+    groupLabel: '💗 A _ E  →  Long A',
+    ghClass: 'gh-ae',
+    sections: [
+      {
+        id: 'ae1', secClass: 'sec-ae1',
+        label: '🎂 A_E words — cake, make, take',
+        vowelTag: 'Long A • a_e',
+        words: [
+          { text: 'cake',  parts: [['c',C],['a',LV],['k',C],['e',ME]], phonetic: '/keɪk/' },
+          { text: 'make',  parts: [['m',C],['a',LV],['k',C],['e',ME]], phonetic: '/meɪk/' },
+          { text: 'take',  parts: [['t',C],['a',LV],['k',C],['e',ME]], phonetic: '/teɪk/' },
+          { text: 'lake',  parts: [['l',C],['a',LV],['k',C],['e',ME]], phonetic: '/leɪk/' },
+          { text: 'bake',  parts: [['b',C],['a',LV],['k',C],['e',ME]], phonetic: '/beɪk/' },
+          { text: 'fake',  parts: [['f',C],['a',LV],['k',C],['e',ME]], phonetic: '/feɪk/' },
+        ]
+      },
+      {
+        id: 'ae2', secClass: 'sec-ae2',
+        label: '🐍 A_E words — name, game, same',
+        vowelTag: 'Long A • a_e',
+        words: [
+          { text: 'name',  parts: [['n',C],['a',LV],['m',C],['e',ME]], phonetic: '/neɪm/' },
+          { text: 'game',  parts: [['g',C],['a',LV],['m',C],['e',ME]], phonetic: '/geɪm/' },
+          { text: 'same',  parts: [['s',C],['a',LV],['m',C],['e',ME]], phonetic: '/seɪm/' },
+          { text: 'came',  parts: [['c',C],['a',LV],['m',C],['e',ME]], phonetic: '/keɪm/' },
+          { text: 'fame',  parts: [['f',C],['a',LV],['m',C],['e',ME]], phonetic: '/feɪm/' },
+          { text: 'tame',  parts: [['t',C],['a',LV],['m',C],['e',ME]], phonetic: '/teɪm/' },
+        ]
+      },
+      {
+        id: 'ae3', secClass: 'sec-ae3',
+        label: '🏠 A_E words — safe, cave, wave',
+        vowelTag: 'Long A • a_e',
+        words: [
+          { text: 'safe',  parts: [['s',C],['a',LV],['f',C],['e',ME]], phonetic: '/seɪf/' },
+          { text: 'cave',  parts: [['c',C],['a',LV],['v',C],['e',ME]], phonetic: '/keɪv/' },
+          { text: 'wave',  parts: [['w',C],['a',LV],['v',C],['e',ME]], phonetic: '/weɪv/' },
+          { text: 'gave',  parts: [['g',C],['a',LV],['v',C],['e',ME]], phonetic: '/geɪv/' },
+          { text: 'save',  parts: [['s',C],['a',LV],['v',C],['e',ME]], phonetic: '/seɪv/' },
+          { text: 'date',  parts: [['d',C],['a',LV],['t',C],['e',ME]], phonetic: '/deɪt/' },
+        ]
+      },
+    ]
+  },
+
+  /* ===== I_E ===== */
+  {
+    groupLabel: '🔵 I _ E  →  Long I',
+    ghClass: 'gh-ie',
+    sections: [
+      {
+        id: 'ie1', secClass: 'sec-ie1',
+        label: '🚲 I_E words — bike, like, hike',
+        vowelTag: 'Long I • i_e',
+        words: [
+          { text: 'bike',  parts: [['b',C],['i',LV],['k',C],['e',ME]], phonetic: '/baɪk/' },
+          { text: 'like',  parts: [['l',C],['i',LV],['k',C],['e',ME]], phonetic: '/laɪk/' },
+          { text: 'hike',  parts: [['h',C],['i',LV],['k',C],['e',ME]], phonetic: '/haɪk/' },
+          { text: 'mike',  parts: [['m',C],['i',LV],['k',C],['e',ME]], phonetic: '/maɪk/' },
+          { text: 'dike',  parts: [['d',C],['i',LV],['k',C],['e',ME]], phonetic: '/daɪk/' },
+          { text: 'pike',  parts: [['p',C],['i',LV],['k',C],['e',ME]], phonetic: '/paɪk/' },
+        ]
+      },
+      {
+        id: 'ie2', secClass: 'sec-ie2',
+        label: '🌟 I_E words — fine, mine, vine',
+        vowelTag: 'Long I • i_e',
+        words: [
+          { text: 'fine',  parts: [['f',C],['i',LV],['n',C],['e',ME]], phonetic: '/faɪn/' },
+          { text: 'mine',  parts: [['m',C],['i',LV],['n',C],['e',ME]], phonetic: '/maɪn/' },
+          { text: 'vine',  parts: [['v',C],['i',LV],['n',C],['e',ME]], phonetic: '/vaɪn/' },
+          { text: 'dine',  parts: [['d',C],['i',LV],['n',C],['e',ME]], phonetic: '/daɪn/' },
+          { text: 'line',  parts: [['l',C],['i',LV],['n',C],['e',ME]], phonetic: '/laɪn/' },
+          { text: 'pine',  parts: [['p',C],['i',LV],['n',C],['e',ME]], phonetic: '/paɪn/' },
+        ]
+      },
+      {
+        id: 'ie3', secClass: 'sec-ie3',
+        label: '🔥 I_E words — fire, tide, ride',
+        vowelTag: 'Long I • i_e',
+        words: [
+          { text: 'tide',  parts: [['t',C],['i',LV],['d',C],['e',ME]], phonetic: '/taɪd/' },
+          { text: 'ride',  parts: [['r',C],['i',LV],['d',C],['e',ME]], phonetic: '/raɪd/' },
+          { text: 'side',  parts: [['s',C],['i',LV],['d',C],['e',ME]], phonetic: '/saɪd/' },
+          { text: 'hide',  parts: [['h',C],['i',LV],['d',C],['e',ME]], phonetic: '/haɪd/' },
+          { text: 'wide',  parts: [['w',C],['i',LV],['d',C],['e',ME]], phonetic: '/waɪd/' },
+          { text: 'kite',  parts: [['k',C],['i',LV],['t',C],['e',ME]], phonetic: '/kaɪt/' },
+        ]
+      },
+    ]
+  },
+
+  /* ===== O_E ===== */
+  {
+    groupLabel: '🟢 O _ E  →  Long O',
+    ghClass: 'gh-oe',
+    sections: [
+      {
+        id: 'oe1', secClass: 'sec-oe1',
+        label: '🦴 O_E words — bone, cone, tone',
+        vowelTag: 'Long O • o_e',
+        words: [
+          { text: 'bone',  parts: [['b',C],['o',LV],['n',C],['e',ME]], phonetic: '/boʊn/' },
+          { text: 'cone',  parts: [['c',C],['o',LV],['n',C],['e',ME]], phonetic: '/koʊn/' },
+          { text: 'tone',  parts: [['t',C],['o',LV],['n',C],['e',ME]], phonetic: '/toʊn/' },
+          { text: 'zone',  parts: [['z',C],['o',LV],['n',C],['e',ME]], phonetic: '/zoʊn/' },
+          { text: 'lone',  parts: [['l',C],['o',LV],['n',C],['e',ME]], phonetic: '/loʊn/' },
+          { text: 'phone', parts: [['ph',C],['o',LV],['n',C],['e',ME]],phonetic: '/foʊn/' },
+        ]
+      },
+      {
+        id: 'oe2', secClass: 'sec-oe2',
+        label: '🏠 O_E words — home, hope, mole',
+        vowelTag: 'Long O • o_e',
+        words: [
+          { text: 'home',  parts: [['h',C],['o',LV],['m',C],['e',ME]], phonetic: '/hoʊm/' },
+          { text: 'hope',  parts: [['h',C],['o',LV],['p',C],['e',ME]], phonetic: '/hoʊp/' },
+          { text: 'mole',  parts: [['m',C],['o',LV],['l',C],['e',ME]], phonetic: '/moʊl/' },
+          { text: 'hole',  parts: [['h',C],['o',LV],['l',C],['e',ME]], phonetic: '/hoʊl/' },
+          { text: 'pole',  parts: [['p',C],['o',LV],['l',C],['e',ME]], phonetic: '/poʊl/' },
+          { text: 'role',  parts: [['r',C],['o',LV],['l',C],['e',ME]], phonetic: '/roʊl/' },
+        ]
+      },
+      {
+        id: 'oe3', secClass: 'sec-oe3',
+        label: '🎵 O_E words — note, vote, woke',
+        vowelTag: 'Long O • o_e',
+        words: [
+          { text: 'note',  parts: [['n',C],['o',LV],['t',C],['e',ME]], phonetic: '/noʊt/' },
+          { text: 'vote',  parts: [['v',C],['o',LV],['t',C],['e',ME]], phonetic: '/voʊt/' },
+          { text: 'woke',  parts: [['w',C],['o',LV],['k',C],['e',ME]], phonetic: '/woʊk/' },
+          { text: 'coke',  parts: [['c',C],['o',LV],['k',C],['e',ME]], phonetic: '/koʊk/' },
+          { text: 'joke',  parts: [['j',C],['o',LV],['k',C],['e',ME]], phonetic: '/dʒoʊk/' },
+          { text: 'poke',  parts: [['p',C],['o',LV],['k',C],['e',ME]], phonetic: '/poʊk/' },
+        ]
+      },
+    ]
+  },
+
+  /* ===== U_E ===== */
+  {
+    groupLabel: '🟣 U _ E  →  Long U',
+    ghClass: 'gh-ue',
+    sections: [
+      {
+        id: 'ue1', secClass: 'sec-ue1',
+        label: '🎵 U_E words — tune, dune, fume',
+        vowelTag: 'Long U • u_e',
+        words: [
+          { text: 'tune',  parts: [['t',C],['u',LV],['n',C],['e',ME]], phonetic: '/tjuːn/' },
+          { text: 'dune',  parts: [['d',C],['u',LV],['n',C],['e',ME]], phonetic: '/djuːn/' },
+          { text: 'fume',  parts: [['f',C],['u',LV],['m',C],['e',ME]], phonetic: '/fjuːm/' },
+          { text: 'mule',  parts: [['m',C],['u',LV],['l',C],['e',ME]], phonetic: '/mjuːl/' },
+          { text: 'rule',  parts: [['r',C],['u',LV],['l',C],['e',ME]], phonetic: '/ruːl/' },
+          { text: 'rude',  parts: [['r',C],['u',LV],['d',C],['e',ME]], phonetic: '/ruːd/' },
+        ]
+      },
+      {
+        id: 'ue2', secClass: 'sec-ue2',
+        label: '🦄 U_E words — cube, cute, huge',
+        vowelTag: 'Long U • u_e',
+        words: [
+          { text: 'cube',  parts: [['c',C],['u',LV],['b',C],['e',ME]], phonetic: '/kjuːb/' },
+          { text: 'cute',  parts: [['c',C],['u',LV],['t',C],['e',ME]], phonetic: '/kjuːt/' },
+          { text: 'huge',  parts: [['h',C],['u',LV],['g',C],['e',ME]], phonetic: '/hjuːdʒ/' },
+          { text: 'fuse',  parts: [['f',C],['u',LV],['s',C],['e',ME]], phonetic: '/fjuːz/' },
+          { text: 'muse',  parts: [['m',C],['u',LV],['s',C],['e',ME]], phonetic: '/mjuːz/' },
+          { text: 'nude',  parts: [['n',C],['u',LV],['d',C],['e',ME]], phonetic: '/njuːd/' },
+        ]
+      },
+    ]
+  },
+
+  /* ===== SHORT vs LONG PAIRS ===== */
+  {
+    groupLabel: '⚡ Before & After Magic E!',
+    ghClass: 'gh-cmp',
+    sections: [
+      {
+        id: 'cmp', secClass: 'sec-cmp',
+        label: '🔄 Short ➜ Long — Add Magic E!',
+        vowelTag: 'Magic E changes everything!',
+        isPairs: true,
+        pairs: [
+          {
+            short: { text: 'cap',  parts: [['c',C],['a',SV],['p',C]],          phonetic: '/kæp/' },
+            long:  { text: 'cape', parts: [['c',C],['a',LV],['p',C],['e',ME]], phonetic: '/keɪp/' },
+          },
+          {
+            short: { text: 'hat',  parts: [['h',C],['a',SV],['t',C]],          phonetic: '/hæt/' },
+            long:  { text: 'hate', parts: [['h',C],['a',LV],['t',C],['e',ME]], phonetic: '/heɪt/' },
+          },
+          {
+            short: { text: 'kit',  parts: [['k',C],['i',SV],['t',C]],          phonetic: '/kɪt/' },
+            long:  { text: 'kite', parts: [['k',C],['i',LV],['t',C],['e',ME]], phonetic: '/kaɪt/' },
+          },
+          {
+            short: { text: 'pin',  parts: [['p',C],['i',SV],['n',C]],          phonetic: '/pɪn/' },
+            long:  { text: 'pine', parts: [['p',C],['i',LV],['n',C],['e',ME]], phonetic: '/paɪn/' },
+          },
+          {
+            short: { text: 'hop',  parts: [['h',C],['o',SV],['p',C]],          phonetic: '/hɒp/' },
+            long:  { text: 'hope', parts: [['h',C],['o',LV],['p',C],['e',ME]], phonetic: '/hoʊp/' },
+          },
+          {
+            short: { text: 'not',  parts: [['n',C],['o',SV],['t',C]],          phonetic: '/nɒt/' },
+            long:  { text: 'note', parts: [['n',C],['o',LV],['t',C],['e',ME]], phonetic: '/noʊt/' },
+          },
+          {
+            short: { text: 'cub',  parts: [['c',C],['u',SV],['b',C]],          phonetic: '/kʌb/' },
+            long:  { text: 'cube', parts: [['c',C],['u',LV],['b',C],['e',ME]], phonetic: '/kjuːb/' },
+          },
+          {
+            short: { text: 'cut',  parts: [['c',C],['u',SV],['t',C]],          phonetic: '/kʌt/' },
+            long:  { text: 'cute', parts: [['c',C],['u',LV],['t',C],['e',ME]], phonetic: '/kjuːt/' },
+          },
+        ]
+      }
+    ]
+  }
+];
+
+/* ── BUILD PAGE ───────────────────────────────────────── */
+function buildPage() {
+  const app = document.getElementById('app');
+
+  groups.forEach(group => {
+    const gh = document.createElement('div');
+    gh.className = `group-heading ${group.ghClass}`;
+    gh.innerHTML = `<span>${group.groupLabel}</span>`;
+    app.appendChild(gh);
+
+    group.sections.forEach(sec => {
+      const section = document.createElement('div');
+      section.className = `section ${sec.secClass}`;
+
+      const h2 = document.createElement('h2');
+      h2.className = 'section-title';
+      h2.textContent = sec.label;
+      section.appendChild(h2);
+
+      if (sec.isPairs) {
+        /* ── PAIRS GRID ── */
+        const grid = document.createElement('div');
+        grid.className = 'cards-grid pairs';
+
+        sec.pairs.forEach(pair => {
+          const card = document.createElement('div');
+          card.className = 'pair-card';
+
+          /* short word side */
+          const shortSide = buildPairWord(pair.short, 'Short vowel', 'short');
+          const arrow = document.createElement('div');
+          arrow.className = 'pair-arrow';
+          arrow.textContent = '✨';
+          const longSide = buildPairWord(pair.long, 'Long vowel', 'long');
+
+          card.appendChild(shortSide);
+          card.appendChild(arrow);
+          card.appendChild(longSide);
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+      } else {
+        /* ── REGULAR GRID ── */
+        const grid = document.createElement('div');
+        grid.className = 'cards-grid';
+
+        sec.words.forEach(word => {
+          const card = document.createElement('div');
+          card.className = 'word-card';
+
+          const soundsRow = buildSoundsRow(word.parts);
+
+          const badge = document.createElement('div');
+          badge.className = 'magic-badge';
+          badge.textContent = '✨ Magic E';
+
+          const tag = document.createElement('div');
+          tag.className = 'vowel-tag';
+          tag.textContent = sec.vowelTag;
+
+          const phonetic = document.createElement('div');
+          phonetic.className = 'phonetic-label';
+          phonetic.textContent = word.phonetic;
+
+          const btn = makeSpeakBtn(word.text, 'speak-btn');
+
+          card.appendChild(soundsRow);
+          card.appendChild(badge);
+          card.appendChild(tag);
+          card.appendChild(phonetic);
+          card.appendChild(btn);
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+      }
+
+      app.appendChild(section);
+    });
+  });
+}
+
+function buildSoundsRow(parts) {
+  const row = document.createElement('div');
+  row.className = 'sounds-row';
+  parts.forEach(([letter, type]) => {
+    const s = document.createElement('span');
+    s.className = `sound ${type}`;
+    s.textContent = letter;
+    s.addEventListener('click', e => {
+      e.stopPropagation();
+      s.classList.add('tapped', 'bounce-in');
+      setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
+    });
+    row.appendChild(s);
+  });
+  return row;
+}
+
+function buildPairWord(wordData, labelText, labelClass) {
+  const wrap = document.createElement('div');
+  wrap.className = 'pair-word';
+
+  const row = buildSoundsRow(wordData.parts);
+  const lbl = document.createElement('div');
+  lbl.className = `pair-label ${labelClass}`;
+  lbl.textContent = labelText;
+
+  const ph = document.createElement('div');
+  ph.className = 'phonetic-label';
+  ph.textContent = wordData.phonetic;
+
+  const btn = makeSpeakBtn(wordData.text, 'pair-speak-btn');
+
+  wrap.appendChild(row);
+  wrap.appendChild(lbl);
+  wrap.appendChild(ph);
+  wrap.appendChild(btn);
+  return wrap;
+}
+
+function makeSpeakBtn(text, className) {
+  const btn = document.createElement('button');
+  btn.className = className;
+  btn.setAttribute('aria-label', `Hear ${text}`);
+  btn.textContent = '🔊';
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    speakWord(text, btn);
+  });
+  return btn;
+}
+
+function speakWord(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.75;
+  utter.pitch = 1.1;
+  utter.volume = 1;
+  btn.classList.add('speaking');
+  btn.textContent = '🎵';
+  utter.onend  = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+  window.speechSynthesis.speak(utter);
+}
+
+buildPage();
+</script>
+
+</body>
+</html>
