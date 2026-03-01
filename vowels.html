@@ -1,82 +1,321 @@
 <!DOCTYPE html>
-<html>
+
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Vowel Sounds Practice</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🎵 Vowel Sounds Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --bg: #F0FFF4;
+    --card-short: #e55039;
+    --card-long:  #8e44ad;
+    --card-other: #2980b9;
+    --highlight: #FDCB6E;
+  }
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  background: #f5f5f5;
-  padding: 30px;
+font-family: ‘Nunito’, sans-serif;
+background: var(–bg);
+min-height: 100vh;
+padding: 16px;
+background-image: radial-gradient(circle at 15% 25%, #FFF0F6 0%, transparent 40%),
+radial-gradient(circle at 85% 75%, #EEF2FF 0%, transparent 40%);
 }
 
-h2 { margin-top: 50px; }
+header {
+text-align: center;
+padding: 20px 10px 10px;
+}
+
+header h1 {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3.5rem);
+color: #8e44ad;
+text-shadow: 3px 3px 0 #d7aefb;
+letter-spacing: 1px;
+}
+
+header p {
+font-size: clamp(1rem, 4vw, 1.3rem);
+color: #636e72;
+margin-top: 6px;
+}
+
+.section {
+margin: 24px auto;
+max-width: 900px;
+}
+
+.section-title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.5rem, 6vw, 2.4rem);
+text-align: center;
+margin-bottom: 14px;
+padding: 10px 20px;
+border-radius: 50px;
+display: inline-block;
+width: 100%;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+}
+
+.sec-short .section-title { background: var(–card-short); }
+.sec-long  .section-title { background: var(–card-long); }
+.sec-other .section-title { background: var(–card-other); }
+
+.cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(min(160px, 45vw), 1fr));
+gap: 14px;
+padding: 0 4px;
+}
 
 .word-card {
-  background: #1976d2;
-  padding: 25px;
-  margin: 15px auto;
-  width: 350px;
-  border-radius: 12px;
-  font-size: 48px;
+border-radius: 20px;
+padding: 18px 10px 14px;
+text-align: center;
+position: relative;
+box-shadow: 0 6px 0 rgba(0,0,0,0.18), 0 8px 20px rgba(0,0,0,0.1);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+}
+
+.word-card:active {
+transform: translateY(3px);
+box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+}
+
+.sec-short .word-card { background: var(–card-short); }
+.sec-long  .word-card { background: var(–card-long); }
+.sec-other .word-card { background: var(–card-other); }
+
+.sounds-row {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-wrap: wrap;
+gap: 2px;
 }
 
 .sound {
-  color: white;
-  cursor: pointer;
-  padding: 2px 4px;
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3rem);
+color: white;
+cursor: pointer;
+padding: 2px 4px;
+border-radius: 8px;
+transition: all 0.15s;
+display: inline-block;
+line-height: 1.1;
 }
 
-.red {
-  color: red !important;
+.sound.tapped {
+color: #FDCB6E;
+transform: scale(1.25);
+text-shadow: 0 0 12px rgba(253,203,110,0.8);
+}
+
+.phonetic-label {
+font-size: clamp(0.75rem, 3vw, 1rem);
+color: rgba(255,255,255,0.85);
+font-weight: 700;
+letter-spacing: 0.5px;
+background: rgba(0,0,0,0.15);
+padding: 3px 10px;
+border-radius: 20px;
+}
+
+.speak-btn {
+background: white;
+border: none;
+border-radius: 50%;
+width: clamp(44px, 12vw, 54px);
+height: clamp(44px, 12vw, 54px);
+font-size: clamp(1.3rem, 5vw, 1.8rem);
+cursor: pointer;
+box-shadow: 0 3px 0 rgba(0,0,0,0.2);
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.1s, box-shadow 0.1s;
+flex-shrink: 0;
+}
+
+.speak-btn:active {
+transform: scale(0.9) translateY(2px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+}
+
+.speak-btn.speaking {
+animation: pulse-btn 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-btn {
+from { transform: scale(1); }
+to   { transform: scale(1.12); }
+}
+
+.bounce-in {
+animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes bounceIn {
+0%   { transform: scale(1); }
+30%  { transform: scale(1.2); }
+60%  { transform: scale(0.95); }
+100% { transform: scale(1.25); }
+}
+
+@media (max-width: 480px) {
+body { padding: 10px; }
+.cards-grid { gap: 10px; }
+}
+
+footer {
+text-align: center;
+padding: 30px 10px 16px;
+color: #b2bec3;
+font-size: 0.9rem;
 }
 </style>
-</head>
 
+</head>
 <body>
 
-<h1>Vowel Sounds Practice</h1>
-<p>Tap any vowel sound to highlight</p>
+<header>
+  <h1>🎵 Vowel Sounds Fun!</h1>
+  <p>👆 Tap sounds to highlight &bull; 🔊 Press the button to hear the word!</p>
+</header>
 
-<!-- Short Vowels -->
-<h2>Short Vowels</h2>
-<div class="word-card"><span class="sound">c</span><span class="sound">a</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">b</span><span class="sound">e</span><span class="sound">d</span></div>
-<div class="word-card"><span class="sound">s</span><span class="sound">i</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">h</span><span class="sound">o</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">c</span><span class="sound">u</span><span class="sound">p</span></div>
+<div id="app"></div>
 
-<!-- Long Vowels -->
-<h2>Long Vowels</h2>
-<div class="word-card"><span class="sound">c</span><span class="sound">a</span><span class="sound">k</span><span class="sound">e</span></div>
-<div class="word-card"><span class="sound">t</span><span class="sound">r</span><span class="sound">e</span><span class="sound">e</span></div>
-<div class="word-card"><span class="sound">b</span><span class="sound">i</span><span class="sound">k</span><span class="sound">e</span></div>
-<div class="word-card"><span class="sound">b</span><span class="sound">o</span><span class="sound">a</span><span class="sound">t</span></div>
-<div class="word-card"><span class="sound">c</span><span class="sound">u</span><span class="sound">b</span><span class="sound">e</span></div>
-
-<!-- Other Vowel Sounds -->
-<h2>Other Vowel Sounds</h2>
-<div class="word-card"><span class="sound">m</span><span class="sound">o</span><span class="sound">o</span><span class="sound">n</span></div>
-<div class="word-card"><span class="sound">b</span><span class="sound">o</span><span class="sound">o</span><span class="sound">k</span></div>
-<div class="word-card"><span class="sound">c</span><span class="sound">o</span><span class="sound">w</span></div>
-<div class="word-card"><span class="sound">c</span><span class="sound">o</span><span class="sound">i</span><span class="sound">n</span></div>
-<div class="word-card"><span class="sound">c</span><span class="sound">a</span><span class="sound">r</span></div>
-<div class="word-card"><span class="sound">f</span><span class="sound">o</span><span class="sound">r</span><span class="sound">k</span></div>
-<div class="word-card"><span class="sound">h</span><span class="sound">e</span><span class="sound">r</span></div>
-<div class="word-card"><span class="sound">h</span><span class="sound">a</span><span class="sound">i</span><span class="sound">r</span></div>
-<div class="word-card"><span class="sound">e</span><span class="sound">a</span><span class="sound">r</span></div>
-<div class="word-card"><span class="sound">p</span><span class="sound">u</span><span class="sound">r</span><span class="sound">e</span></div>
+<footer>You're a superstar reader! ⭐</footer>
 
 <script>
-document.querySelectorAll(".sound").forEach(sound => {
-  sound.addEventListener("click", function(e) {
-    e.stopPropagation();
-    this.classList.add("red");
-    setTimeout(() => { this.classList.remove("red"); }, 3000);
+const sections = [
+  {
+    id: 'short', label: '🐱 Short Vowels', secClass: 'sec-short',
+    words: [
+      { text: 'cat', parts: ['c','a','t'], phonetic: '/kæt/' },
+      { text: 'bed', parts: ['b','e','d'], phonetic: '/bɛd/' },
+      { text: 'sit', parts: ['s','i','t'], phonetic: '/sɪt/' },
+      { text: 'hot', parts: ['h','o','t'], phonetic: '/hɒt/' },
+      { text: 'cup', parts: ['c','u','p'], phonetic: '/kʌp/' },
+    ]
+  },
+  {
+    id: 'long', label: '🎂 Long Vowels', secClass: 'sec-long',
+    words: [
+      { text: 'cake', parts: ['c','a','k','e'], phonetic: '/keɪk/' },
+      { text: 'tree', parts: ['t','r','ee'],    phonetic: '/triː/' },
+      { text: 'bike', parts: ['b','i','k','e'], phonetic: '/baɪk/' },
+      { text: 'boat', parts: ['b','oa','t'],    phonetic: '/boʊt/' },
+      { text: 'cube', parts: ['c','u','b','e'], phonetic: '/kjuːb/' },
+    ]
+  },
+  {
+    id: 'other', label: '🌙 Other Vowel Sounds', secClass: 'sec-other',
+    words: [
+      { text: 'moon', parts: ['m','oo','n'],   phonetic: '/muːn/' },
+      { text: 'book', parts: ['b','oo','k'],   phonetic: '/bʊk/' },
+      { text: 'cow',  parts: ['c','ow'],       phonetic: '/kaʊ/' },
+      { text: 'coin', parts: ['c','oi','n'],   phonetic: '/kɔɪn/' },
+      { text: 'car',  parts: ['c','ar'],       phonetic: '/kɑːr/' },
+      { text: 'fork', parts: ['f','or','k'],   phonetic: '/fɔːrk/' },
+      { text: 'her',  parts: ['h','er'],       phonetic: '/hɜːr/' },
+      { text: 'hair', parts: ['h','air'],      phonetic: '/hɛr/' },
+      { text: 'ear',  parts: ['ear'],          phonetic: '/ɪər/' },
+      { text: 'pure', parts: ['p','ure'],      phonetic: '/pjʊər/' },
+    ]
+  },
+];
+
+function buildPage() {
+  const app = document.getElementById('app');
+
+  sections.forEach(sec => {
+    const section = document.createElement('div');
+    section.className = `section ${sec.secClass}`;
+
+    const h2 = document.createElement('h2');
+    h2.className = 'section-title';
+    h2.textContent = sec.label;
+    section.appendChild(h2);
+
+    const grid = document.createElement('div');
+    grid.className = 'cards-grid';
+
+    sec.words.forEach(word => {
+      const card = document.createElement('div');
+      card.className = 'word-card';
+
+      // Sounds row
+      const soundsRow = document.createElement('div');
+      soundsRow.className = 'sounds-row';
+      word.parts.forEach(part => {
+        const s = document.createElement('span');
+        s.className = 'sound';
+        s.textContent = part;
+        s.addEventListener('click', (e) => {
+          e.stopPropagation();
+          s.classList.add('tapped', 'bounce-in');
+          setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
+        });
+        soundsRow.appendChild(s);
+      });
+
+      // Phonetic label
+      const label = document.createElement('div');
+      label.className = 'phonetic-label';
+      label.textContent = word.phonetic;
+
+      // Speak button
+      const btn = document.createElement('button');
+      btn.className = 'speak-btn';
+      btn.setAttribute('aria-label', `Hear ${word.text}`);
+      btn.textContent = '🔊';
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        speakWord(word.text, btn);
+      });
+
+      card.appendChild(soundsRow);
+      card.appendChild(label);
+      card.appendChild(btn);
+      grid.appendChild(card);
+    });
+
+    section.appendChild(grid);
+    app.appendChild(section);
   });
-});
+}
+
+function speakWord(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.75;
+  utter.pitch = 1.1;
+  utter.volume = 1;
+
+  btn.classList.add('speaking');
+  btn.textContent = '🎵';
+
+  utter.onend = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+
+  window.speechSynthesis.speak(utter);
+}
+
+buildPage();
 </script>
 
 </body>
