@@ -8,18 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #FFF9EC;
-    --card-sh: #FF6B6B;
-    --card-ch: #FF9F43;
-    --card-th-soft: #54A0FF;
-    --card-th-hard: #5F27CD;
-    --card-ph: #00D2D3;
-    --card-gh: #1DD1A1;
-    --card-wh: #FF6FA2;
-    --card-ck: #F368E0;
-    --card-end: #786fa6;
-    --text-dark: #2d3436;
-    --highlight: #FDCB6E;
+    --bg:      #FFF8DC;
+    --sh:      #E84393;
+    --ch:      #E67E22;
+    --th-soft: #2980B9;
+    --th-hard: #8E44AD;
+    --ph:      #16A085;
+    --gh:      #27AE60;
+    --wh:      #D63031;
+    --ck:      #6C3483;
+    --end:     #2C3E50;
   }
 
 - { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,46 +27,54 @@ font-family: ‘Nunito’, sans-serif;
 background: var(–bg);
 min-height: 100vh;
 padding: 16px;
-background-image: radial-gradient(circle at 20% 20%, #FFE8F7 0%, transparent 40%),
-radial-gradient(circle at 80% 80%, #E8F4FF 0%, transparent 40%);
+background-image:
+radial-gradient(circle at 10% 10%, #FFE4E1 0%, transparent 35%),
+radial-gradient(circle at 90% 90%, #E0F7FA 0%, transparent 35%),
+radial-gradient(circle at 50% 50%, #FFF9C4 0%, transparent 60%);
 }
 
-header {
-text-align: center;
-padding: 20px 10px 10px;
-}
+header { text-align: center; padding: 20px 10px 10px; }
 
 header h1 {
 font-family: ‘Fredoka One’, cursive;
 font-size: clamp(2rem, 8vw, 3.5rem);
-color: #e17055;
-text-shadow: 3px 3px 0 #fab1a0;
+color: #E84393;
+text-shadow: 3px 3px 0 #FFB3D9;
 letter-spacing: 1px;
 }
 
 header p {
 font-size: clamp(1rem, 4vw, 1.3rem);
-color: #636e72;
+color: #555;
 margin-top: 6px;
+font-weight: 700;
 }
 
-.section {
-margin: 24px auto;
-max-width: 900px;
-}
+.section { margin: 24px auto; max-width: 900px; }
 
 .section-title {
 font-family: ‘Fredoka One’, cursive;
 font-size: clamp(1.5rem, 6vw, 2.4rem);
 text-align: center;
 margin-bottom: 14px;
-padding: 10px 20px;
+padding: 12px 20px;
 border-radius: 50px;
 display: inline-block;
 width: 100%;
 color: white;
-text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+letter-spacing: 0.5px;
 }
+
+.sec-sh      .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
+.sec-ch      .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); }
+.sec-th-soft .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
+.sec-th-hard .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
+.sec-ph      .section-title { background: linear-gradient(135deg, #16A085, #1ABC9C); }
+.sec-gh      .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.sec-wh      .section-title { background: linear-gradient(135deg, #D63031, #E74C3C); }
+.sec-ck      .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
+.sec-end     .section-title { background: linear-gradient(135deg, #2C3E50, #34495E); }
 
 .cards-grid {
 display: grid;
@@ -77,12 +83,13 @@ gap: 14px;
 padding: 0 4px;
 }
 
+/* WHITE cards — letters crystal clear */
 .word-card {
+background: #FFFFFF;
 border-radius: 20px;
 padding: 18px 10px 14px;
 text-align: center;
-position: relative;
-box-shadow: 0 6px 0 rgba(0,0,0,0.18), 0 8px 20px rgba(0,0,0,0.1);
+box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
 transition: transform 0.1s, box-shadow 0.1s;
 user-select: none;
 cursor: default;
@@ -90,12 +97,23 @@ display: flex;
 flex-direction: column;
 align-items: center;
 gap: 10px;
+border-bottom: 6px solid transparent;
 }
 
 .word-card:active {
 transform: translateY(3px);
-box-shadow: 0 3px 0 rgba(0,0,0,0.18);
+box-shadow: 0 3px 0 rgba(0,0,0,0.15);
 }
+
+.sec-sh      .word-card { border-bottom-color: var(–sh); }
+.sec-ch      .word-card { border-bottom-color: var(–ch); }
+.sec-th-soft .word-card { border-bottom-color: var(–th-soft); }
+.sec-th-hard .word-card { border-bottom-color: var(–th-hard); }
+.sec-ph      .word-card { border-bottom-color: var(–ph); }
+.sec-gh      .word-card { border-bottom-color: var(–gh); }
+.sec-wh      .word-card { border-bottom-color: var(–wh); }
+.sec-ck      .word-card { border-bottom-color: var(–ck); }
+.sec-end     .word-card { border-bottom-color: var(–end); }
 
 .sounds-row {
 display: flex;
@@ -105,10 +123,10 @@ flex-wrap: wrap;
 gap: 2px;
 }
 
+/* Dark text per section — maximum contrast on white */
 .sound {
 font-family: ‘Fredoka One’, cursive;
-font-size: clamp(2rem, 8vw, 3rem);
-color: white;
+font-size: clamp(2.2rem, 9vw, 3.2rem);
 cursor: pointer;
 padding: 2px 4px;
 border-radius: 8px;
@@ -118,42 +136,63 @@ line-height: 1.1;
 position: relative;
 }
 
+.sec-sh      .sound { color: #A5003B; }
+.sec-ch      .sound { color: #A04000; }
+.sec-th-soft .sound { color: #1A5276; }
+.sec-th-hard .sound { color: #5B2C6F; }
+.sec-ph      .sound { color: #0E6655; }
+.sec-gh      .sound { color: #145A32; }
+.sec-wh      .sound { color: #922B21; }
+.sec-ck      .sound { color: #4A235A; }
+.sec-end     .sound { color: #1C2833; }
+
 .sound:active,
 .sound.tapped {
-color: #FDCB6E;
-transform: scale(1.25);
-text-shadow: 0 0 12px rgba(253,203,110,0.8);
+color: #FF6B00 !important;
+transform: scale(1.3);
+text-shadow: 0 0 14px rgba(255,107,0,0.5);
+background: #FFF3CD;
+border-radius: 10px;
 }
 
 .phonetic-label {
-font-size: clamp(0.75rem, 3vw, 1rem);
-color: rgba(255,255,255,0.85);
-font-weight: 700;
+font-size: clamp(0.75rem, 3vw, 0.95rem);
+color: #888;
+font-weight: 800;
 letter-spacing: 0.5px;
-background: rgba(0,0,0,0.15);
+background: #F4F4F4;
 padding: 3px 10px;
 border-radius: 20px;
 }
 
 .speak-btn {
-background: white;
 border: none;
 border-radius: 50%;
 width: clamp(44px, 12vw, 54px);
 height: clamp(44px, 12vw, 54px);
 font-size: clamp(1.3rem, 5vw, 1.8rem);
 cursor: pointer;
-box-shadow: 0 3px 0 rgba(0,0,0,0.2);
 display: flex;
 align-items: center;
 justify-content: center;
 transition: transform 0.1s, box-shadow 0.1s;
 flex-shrink: 0;
+color: white;
 }
 
+.sec-sh      .speak-btn { background: var(–sh);      box-shadow: 0 4px 0 #A5003B; }
+.sec-ch      .speak-btn { background: var(–ch);      box-shadow: 0 4px 0 #A04000; }
+.sec-th-soft .speak-btn { background: var(–th-soft); box-shadow: 0 4px 0 #1A5276; }
+.sec-th-hard .speak-btn { background: var(–th-hard); box-shadow: 0 4px 0 #5B2C6F; }
+.sec-ph      .speak-btn { background: var(–ph);      box-shadow: 0 4px 0 #0E6655; }
+.sec-gh      .speak-btn { background: var(–gh);      box-shadow: 0 4px 0 #145A32; }
+.sec-wh      .speak-btn { background: var(–wh);      box-shadow: 0 4px 0 #922B21; }
+.sec-ck      .speak-btn { background: var(–ck);      box-shadow: 0 4px 0 #4A235A; }
+.sec-end     .speak-btn { background: var(–end);     box-shadow: 0 4px 0 #1C2833; }
+
 .speak-btn:active {
-transform: scale(0.9) translateY(2px);
-box-shadow: 0 1px 0 rgba(0,0,0,0.2);
+transform: scale(0.9) translateY(3px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.3) !important;
 }
 
 .speak-btn.speaking {
@@ -165,32 +204,6 @@ from { transform: scale(1); }
 to   { transform: scale(1.12); }
 }
 
-/* Section colors */
-.sec-sh  .section-title { background: var(–card-sh); }
-.sec-ch  .section-title { background: var(–card-ch); }
-.sec-th-soft .section-title { background: var(–card-th-soft); }
-.sec-th-hard .section-title { background: var(–card-th-hard); }
-.sec-ph  .section-title { background: var(–card-ph); color: #2d3436; text-shadow: none; }
-.sec-gh  .section-title { background: var(–card-gh); color: #2d3436; text-shadow: none; }
-.sec-wh  .section-title { background: var(–card-wh); }
-.sec-ck  .section-title { background: var(–card-ck); }
-.sec-end .section-title { background: var(–card-end); }
-
-.sec-sh  .word-card { background: var(–card-sh); }
-.sec-ch  .word-card { background: var(–card-ch); }
-.sec-th-soft .word-card { background: var(–card-th-soft); }
-.sec-th-hard .word-card { background: var(–card-th-hard); }
-.sec-ph  .word-card { background: var(–card-ph); }
-.sec-gh  .word-card { background: var(–card-gh); }
-.sec-wh  .word-card { background: var(–card-wh); }
-.sec-ck  .word-card { background: var(–card-ck); }
-.sec-end .word-card { background: var(–card-end); }
-
-.sec-ph  .sound,
-.sec-gh  .sound { color: #2d3436; }
-.sec-ph  .speak-btn,
-.sec-gh  .speak-btn { background: rgba(255,255,255,0.7); }
-
 @media (max-width: 480px) {
 body { padding: 10px; }
 .cards-grid { gap: 10px; }
@@ -199,18 +212,20 @@ body { padding: 10px; }
 .bounce-in {
 animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
 }
+
 @keyframes bounceIn {
 0%   { transform: scale(1); }
-30%  { transform: scale(1.15); }
+30%  { transform: scale(1.3); }
 60%  { transform: scale(0.95); }
-100% { transform: scale(1); }
+100% { transform: scale(1.3); }
 }
 
 footer {
 text-align: center;
 padding: 30px 10px 16px;
-color: #b2bec3;
+color: #aaa;
 font-size: 0.9rem;
+font-weight: 700;
 }
 </style>
 
@@ -271,11 +286,11 @@ const sections = [
   {
     id: 'ph', label: '📞 /ph/ = f sound', secClass: 'sec-ph',
     words: [
-      { text: 'phone', parts: ['ph','o','ne'],   phonetic: '/foʊn/' },
-      { text: 'photo', parts: ['ph','o','to'],   phonetic: '/ˈfoʊ.toʊ/' },
-      { text: 'phish', parts: ['ph','i','sh'],   phonetic: '/fɪʃ/' },
-      { text: 'phonic',parts: ['ph','o','nic'],  phonetic: '/ˈfɒn.ɪk/' },
-      { text: 'phase', parts: ['ph','a','se'],   phonetic: '/feɪz/' },
+      { text: 'phone', parts: ['ph','o','ne'],    phonetic: '/foʊn/' },
+      { text: 'photo', parts: ['ph','o','to'],    phonetic: '/ˈfoʊ.toʊ/' },
+      { text: 'phish', parts: ['ph','i','sh'],    phonetic: '/fɪʃ/' },
+      { text: 'phonic',parts: ['ph','o','nic'],   phonetic: '/ˈfɒn.ɪk/' },
+      { text: 'phase', parts: ['ph','a','se'],    phonetic: '/feɪz/' },
     ]
   },
   {
@@ -311,16 +326,16 @@ const sections = [
   {
     id: 'end', label: '🎯 Digraph Endings!', secClass: 'sec-end',
     words: [
-      { text: 'fish',   parts: ['f','i','sh'],      phonetic: '/fɪʃ/' },
-      { text: 'dish',   parts: ['d','i','sh'],      phonetic: '/dɪʃ/' },
-      { text: 'rich',   parts: ['r','i','ch'],      phonetic: '/rɪtʃ/' },
-      { text: 'match',  parts: ['m','a','t','ch'],  phonetic: '/mætʃ/' },
-      { text: 'bath',   parts: ['b','a','th'],      phonetic: '/bæθ/' },
-      { text: 'with',   parts: ['w','i','th'],      phonetic: '/wɪð/' },
-      { text: 'back',   parts: ['b','a','ck'],      phonetic: '/bæk/' },
-      { text: 'duck',   parts: ['du','ck'],         phonetic: '/dʌk/' },
-      { text: 'laugh',  parts: ['lau','gh'],        phonetic: '/lɑːf/' },
-      { text: 'tough',  parts: ['tou','gh'],        phonetic: '/tʌf/' },
+      { text: 'fish',  parts: ['f','i','sh'],     phonetic: '/fɪʃ/' },
+      { text: 'dish',  parts: ['d','i','sh'],     phonetic: '/dɪʃ/' },
+      { text: 'rich',  parts: ['r','i','ch'],     phonetic: '/rɪtʃ/' },
+      { text: 'match', parts: ['m','a','t','ch'], phonetic: '/mætʃ/' },
+      { text: 'bath',  parts: ['b','a','th'],     phonetic: '/bæθ/' },
+      { text: 'with',  parts: ['w','i','th'],     phonetic: '/wɪð/' },
+      { text: 'back',  parts: ['b','a','ck'],     phonetic: '/bæk/' },
+      { text: 'duck',  parts: ['du','ck'],        phonetic: '/dʌk/' },
+      { text: 'laugh', parts: ['lau','gh'],       phonetic: '/lɑːf/' },
+      { text: 'tough', parts: ['tou','gh'],       phonetic: '/tʌf/' },
     ]
   },
 ];
@@ -353,12 +368,8 @@ function buildPage() {
         s.textContent = part;
         s.addEventListener('click', (e) => {
           e.stopPropagation();
-          s.classList.add('tapped');
-          s.classList.add('bounce-in');
-          setTimeout(() => {
-            s.classList.remove('tapped');
-            s.classList.remove('bounce-in');
-          }, 600);
+          s.classList.add('tapped', 'bounce-in');
+          setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
         });
         soundsRow.appendChild(s);
       });
@@ -401,14 +412,8 @@ function speakWord(text, btn) {
   btn.classList.add('speaking');
   btn.textContent = '🎵';
 
-  utter.onend = () => {
-    btn.classList.remove('speaking');
-    btn.textContent = '🔊';
-  };
-  utter.onerror = () => {
-    btn.classList.remove('speaking');
-    btn.textContent = '🔊';
-  };
+  utter.onend  = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
 
   window.speechSynthesis.speak(utter);
 }
