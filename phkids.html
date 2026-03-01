@@ -265,7 +265,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 .confetti-piece{position:absolute;top:-10px;animation:confettiFall linear forwards;border-radius:2px;}
 @keyframes confettiFall{to{transform:translateY(110vh) rotate(720deg);opacity:0;}}
 
-@media(max-width:480px){
+.phonic-chip{padding:7px 13px;border-radius:20px;border:2px solid #e8e0ff;background:#fff;font-family:'Fredoka One',cursive;font-size:.9rem;color:var(--text);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.phonic-chip:hover{background:var(--purple);color:#fff;border-color:var(--purple);transform:scale(1.07);}
+.phonic-chip.cat-letter{border-color:#4FC3F7;color:#0d3d57;}
+.phonic-chip.cat-digraph{border-color:#FF6B9D;color:#7a0033;}
+.phonic-chip.cat-vowel{border-color:#69E090;color:#1a5c35;}
+.phonic-chip.cat-blend{border-color:#FFA552;color:#7a3800;}
+.phonic-chip.cat-special{border-color:#B388FF;color:#4a0080;}
+.chip-group-label{width:100%;font-size:.7rem;font-weight:800;color:#aaa;margin-top:6px;margin-bottom:2px;text-align:left;padding-left:2px;}
   .act-card{padding:16px 14px;}
   .tabs{gap:0;}
   .tab{padding:9px 9px;font-size:.65rem;}
@@ -282,11 +289,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 <!-- HOME -->
 <div id="home" class="page">
   <div class="home-logo">Phonics Fun! 🌟</div>
-  <p class="home-subtitle">19 fun activities to learn letter sounds!</p>
+  <p class="home-subtitle">19 fun activities to learn phonic sounds!</p>
   <div class="input-card">
-    <label for="phonicInput">✏️ Type a Phonic Letter (A–Z):</label>
-    <input type="text" id="phonicInput" class="letter-input" maxlength="2" placeholder="A" autocomplete="off"/>
+    <label for="phonicInput">🔤 Type a phonic sound:</label>
+    <input type="text" id="phonicInput" class="letter-input" maxlength="3" placeholder="sh" autocomplete="off"/>
     <button class="start-btn" onclick="startActivities()">Let's Go! 🚀</button>
+    <div style="margin-top:18px;">
+      <p style="font-size:.8rem;font-weight:800;color:#aaa;margin-bottom:10px;">OR tap a sound to pick it:</p>
+      <div id="phonicChips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-height:220px;overflow-y:auto;"></div>
+    </div>
   </div>
   <div class="emoji-row">🐊 🦁 🐘 🦒 🐧 🦋 🎯 🎪</div>
 </div>
@@ -643,33 +654,82 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;overf
 // ============================================================
 // DATA
 // ============================================================
+// PD keys = the phonic/sound label typed by the user (uppercase)
+// 'letter' = the grapheme shown on trace canvas
+// 'searchIn' = substring(s) to look for when highlighting/sorting words
 const PD = {
-  A:{sound:"aah",example:"Apple 🍎",words:["apple","ant","arrow","arm","axe"],emojis:["🍎","🐜","➡️","💪","🪓"]},
-  B:{sound:"buh",example:"Ball ⚽",words:["ball","bear","bird","boat","banana"],emojis:["⚽","🐻","🐦","⛵","🍌"]},
-  C:{sound:"kuh",example:"Cat 🐱",words:["cat","car","cake","cup","cow"],emojis:["🐱","🚗","🎂","🥤","🐮"]},
-  D:{sound:"duh",example:"Dog 🐶",words:["dog","duck","drum","door","deer"],emojis:["🐶","🦆","🥁","🚪","🦌"]},
-  E:{sound:"eh",example:"Elephant 🐘",words:["egg","ear","eagle","elf","eye"],emojis:["🥚","👂","🦅","🧝","👁️"]},
-  F:{sound:"fuh",example:"Fish 🐟",words:["fish","frog","fan","fox","flag"],emojis:["🐟","🐸","💨","🦊","🚩"]},
-  G:{sound:"guh",example:"Goat 🐐",words:["goat","grapes","gift","gem","ghost"],emojis:["🐐","🍇","🎁","💎","👻"]},
-  H:{sound:"huh",example:"Hat 🎩",words:["hat","horse","heart","hen","horn"],emojis:["🎩","🐴","❤️","🐔","📯"]},
-  I:{sound:"ih",example:"Igloo 🏠",words:["igloo","ink","iron","ice","ivy"],emojis:["🏠","🖊️","🪢","🧊","🌿"]},
-  J:{sound:"juh",example:"Jar 🫙",words:["jar","jet","jump","jam","jug"],emojis:["🫙","✈️","🦘","🍓","🏺"]},
-  K:{sound:"kuh",example:"Kite 🪁",words:["kite","king","key","kit","kiwi"],emojis:["🪁","👑","🔑","🧰","🥝"]},
-  L:{sound:"luh",example:"Lion 🦁",words:["lion","leaf","lamp","log","lime"],emojis:["🦁","🍃","💡","🪵","🍋"]},
-  M:{sound:"muh",example:"Moon 🌙",words:["moon","map","milk","mop","mask"],emojis:["🌙","🗺️","🥛","🧹","😷"]},
-  N:{sound:"nuh",example:"Nest 🪺",words:["nest","nose","net","nut","nail"],emojis:["🪺","👃","🕸️","🥜","🔩"]},
-  O:{sound:"oh",example:"Octopus 🐙",words:["owl","ox","oak","oar","oven"],emojis:["🦉","🐂","🌳","🚣","🔥"]},
-  P:{sound:"puh",example:"Pizza 🍕",words:["pig","pan","pen","pie","paw"],emojis:["🐷","🍳","✏️","🥧","🐾"]},
-  Q:{sound:"kwuh",example:"Queen 👑",words:["queen","quilt","quiz","quack","quest"],emojis:["👑","🛏️","📝","🦆","🗺️"]},
-  R:{sound:"ruh",example:"Rainbow 🌈",words:["rainbow","rabbit","rose","rug","rock"],emojis:["🌈","🐰","🌹","🪸","🪨"]},
-  S:{sound:"suh",example:"Sun ☀️",words:["sun","star","sock","seal","soup"],emojis:["☀️","⭐","🧦","🦭","🍜"]},
-  T:{sound:"tuh",example:"Tiger 🐯",words:["tiger","tree","tent","tail","toad"],emojis:["🐯","🌲","⛺","🐈","🐸"]},
-  U:{sound:"uh",example:"Umbrella ☂️",words:["umbrella","up","uncle","urge","use"],emojis:["☂️","⬆️","👨","📢","🔧"]},
-  V:{sound:"vuh",example:"Volcano 🌋",words:["van","vest","vine","vase","vow"],emojis:["🚐","🦺","🍇","🏺","💍"]},
-  W:{sound:"wuh",example:"Whale 🐳",words:["whale","wolf","web","wig","wand"],emojis:["🐳","🐺","🕸️","💈","🪄"]},
-  X:{sound:"ks",example:"X-Ray 🦴",words:["x-ray","box","fox","wax","six"],emojis:["🦴","📦","🦊","🕯️","6️⃣"]},
-  Y:{sound:"yuh",example:"Yak 🐃",words:["yak","yarn","yell","yawn","yam"],emojis:["🐃","🧶","📢","😮","🍠"]},
-  Z:{sound:"zuh",example:"Zebra 🦓",words:["zebra","zero","zoom","zap","zone"],emojis:["🦓","0️⃣","🔍","⚡","🗺️"]}
+  // ── Single letters ──────────────────────────────────────────
+  A:{letter:"A",sound:"aah",example:"Apple 🍎",words:["apple","ant","arrow","arm","axe"],emojis:["🍎","🐜","➡️","💪","🪓"],searchIn:["a"]},
+  B:{letter:"B",sound:"buh",example:"Ball ⚽",words:["ball","bear","bird","boat","banana"],emojis:["⚽","🐻","🐦","⛵","🍌"],searchIn:["b"]},
+  C:{letter:"C",sound:"kuh",example:"Cat 🐱",words:["cat","car","cake","cup","cow"],emojis:["🐱","🚗","🎂","🥤","🐮"],searchIn:["c"]},
+  D:{letter:"D",sound:"duh",example:"Dog 🐶",words:["dog","duck","drum","door","deer"],emojis:["🐶","🦆","🥁","🚪","🦌"],searchIn:["d"]},
+  E:{letter:"E",sound:"eh",example:"Elephant 🐘",words:["egg","ear","eagle","elf","eye"],emojis:["🥚","👂","🦅","🧝","👁️"],searchIn:["e"]},
+  F:{letter:"F",sound:"fuh",example:"Fish 🐟",words:["fish","frog","fan","fox","flag"],emojis:["🐟","🐸","💨","🦊","🚩"],searchIn:["f"]},
+  G:{letter:"G",sound:"guh",example:"Goat 🐐",words:["goat","grapes","gift","gem","ghost"],emojis:["🐐","🍇","🎁","💎","👻"],searchIn:["g"]},
+  H:{letter:"H",sound:"huh",example:"Hat 🎩",words:["hat","horse","heart","hen","horn"],emojis:["🎩","🐴","❤️","🐔","📯"],searchIn:["h"]},
+  I:{letter:"I",sound:"ih",example:"Igloo 🏠",words:["igloo","ink","iron","ice","ivy"],emojis:["🏠","🖊️","🪢","🧊","🌿"],searchIn:["i"]},
+  J:{letter:"J",sound:"juh",example:"Jar 🫙",words:["jar","jet","jump","jam","jug"],emojis:["🫙","✈️","🦘","🍓","🏺"],searchIn:["j"]},
+  K:{letter:"K",sound:"kuh",example:"Kite 🪁",words:["kite","king","key","kit","kiwi"],emojis:["🪁","👑","🔑","🧰","🥝"],searchIn:["k"]},
+  L:{letter:"L",sound:"luh",example:"Lion 🦁",words:["lion","leaf","lamp","log","lime"],emojis:["🦁","🍃","💡","🪵","🍋"],searchIn:["l"]},
+  M:{letter:"M",sound:"muh",example:"Moon 🌙",words:["moon","map","milk","mop","mask"],emojis:["🌙","🗺️","🥛","🧹","😷"],searchIn:["m"]},
+  N:{letter:"N",sound:"nuh",example:"Nest 🪺",words:["nest","nose","net","nut","nail"],emojis:["🪺","👃","🕸️","🥜","🔩"],searchIn:["n"]},
+  O:{letter:"O",sound:"oh",example:"Octopus 🐙",words:["owl","ox","oak","oar","oven"],emojis:["🦉","🐂","🌳","🚣","🔥"],searchIn:["o"]},
+  P:{letter:"P",sound:"puh",example:"Pizza 🍕",words:["pig","pan","pen","pie","paw"],emojis:["🐷","🍳","✏️","🥧","🐾"],searchIn:["p"]},
+  Q:{letter:"Q",sound:"kwuh",example:"Queen 👑",words:["queen","quilt","quiz","quack","quest"],emojis:["👑","🛏️","📝","🦆","🗺️"],searchIn:["qu","q"]},
+  R:{letter:"R",sound:"ruh",example:"Rainbow 🌈",words:["rainbow","rabbit","rose","rug","rock"],emojis:["🌈","🐰","🌹","🪸","🪨"],searchIn:["r"]},
+  S:{letter:"S",sound:"suh",example:"Sun ☀️",words:["sun","star","sock","seal","soup"],emojis:["☀️","⭐","🧦","🦭","🍜"],searchIn:["s"]},
+  T:{letter:"T",sound:"tuh",example:"Tiger 🐯",words:["tiger","tree","tent","tail","toad"],emojis:["🐯","🌲","⛺","🐈","🐸"],searchIn:["t"]},
+  U:{letter:"U",sound:"uh",example:"Umbrella ☂️",words:["umbrella","under","uncle","up","ugly"],emojis:["☂️","⬇️","👨","⬆️","😬"],searchIn:["u"]},
+  V:{letter:"V",sound:"vuh",example:"Volcano 🌋",words:["van","vest","vine","vase","vow"],emojis:["🚐","🦺","🍇","🏺","💍"],searchIn:["v"]},
+  W:{letter:"W",sound:"wuh",example:"Whale 🐳",words:["whale","wolf","web","wig","wand"],emojis:["🐳","🐺","🕸️","💈","🪄"],searchIn:["w"]},
+  X:{letter:"X",sound:"ks",example:"X-Ray 🦴",words:["x-ray","box","fox","wax","six"],emojis:["🦴","📦","🦊","🕯️","6️⃣"],searchIn:["x"]},
+  Y:{letter:"Y",sound:"yuh",example:"Yak 🐃",words:["yak","yarn","yell","yawn","yam"],emojis:["🐃","🧶","📢","😮","🍠"],searchIn:["y"]},
+  Z:{letter:"Z",sound:"zuh",example:"Zebra 🦓",words:["zebra","zero","zoom","zap","zone"],emojis:["🦓","0️⃣","🔍","⚡","🗺️"],searchIn:["z"]},
+  // ── Consonant digraphs ───────────────────────────────────────
+  CH:{letter:"ch",sound:"ch",example:"Chair 🪑",words:["chair","cheese","child","church","chips"],emojis:["🪑","🧀","🧒","⛪","🍟"],searchIn:["ch"]},
+  SH:{letter:"sh",sound:"sh",example:"Shell 🐚",words:["shell","shark","ship","shoe","sheep"],emojis:["🐚","🦈","🚢","👟","🐑"],searchIn:["sh"]},
+  TH:{letter:"th",sound:"th",example:"Thumb 👍",words:["thumb","three","thunder","thick","thorn"],emojis:["👍","3️⃣","⛈️","🧱","🌵"],searchIn:["th"]},
+  WH:{letter:"wh",sound:"wh",example:"Wheel 🎡",words:["wheel","whale","white","wheat","where"],emojis:["🎡","🐳","⬜","🌾","❓"],searchIn:["wh"]},
+  PH:{letter:"ph",sound:"f",example:"Phone 📱",words:["phone","photo","phrase","phantom","physical"],emojis:["📱","📸","💬","👻","🏋️"],searchIn:["ph"]},
+  CK:{letter:"ck",sound:"k",example:"Clock ⏰",words:["clock","duck","brick","black","trick"],emojis:["⏰","🦆","🧱","⬛","🎩"],searchIn:["ck"]},
+  NG:{letter:"ng",sound:"ng",example:"Ring 💍",words:["ring","sing","king","long","bang"],emojis:["💍","🎤","👑","⬛","💥"],searchIn:["ng"]},
+  // ── Vowel digraphs / long vowel patterns ────────────────────
+  AI:{letter:"ai",sound:"ay",example:"Rain 🌧️",words:["rain","tail","snail","train","paint"],emojis:["🌧️","🐌","🐌","🚂","🎨"],searchIn:["ai"]},
+  AY:{letter:"ay",sound:"ay",example:"Day ☀️",words:["day","play","stay","spray","tray"],emojis:["☀️","🛝","🧍","💦","🥘"],searchIn:["ay"]},
+  EE:{letter:"ee",sound:"ee",example:"Bee 🐝",words:["bee","tree","feet","sleep","green"],emojis:["🐝","🌲","🦶","😴","🟢"],searchIn:["ee"]},
+  EA:{letter:"ea",sound:"ee",example:"Seal 🦭",words:["seal","leaf","beach","read","team"],emojis:["🦭","🍃","🏖️","📖","⚽"],searchIn:["ea"]},
+  OA:{letter:"oa",sound:"oh",example:"Boat ⛵",words:["boat","coat","road","toad","goat"],emojis:["⛵","🧥","🛣️","🐸","🐐"],searchIn:["oa"]},
+  OW:{letter:"ow",sound:"oh or ow",example:"Cow 🐄",words:["cow","owl","crown","bow","snow"],emojis:["🐄","🦉","👑","🎀","❄️"],searchIn:["ow"]},
+  OI:{letter:"oi",sound:"oy",example:"Coin 🪙",words:["coin","oil","soil","boil","foil"],emojis:["🪙","🛢️","🌱","♨️","⭐"],searchIn:["oi"]},
+  OY:{letter:"oy",sound:"oy",example:"Boy 👦",words:["boy","toy","joy","enjoy","royal"],emojis:["👦","🧸","😊","🎉","👑"],searchIn:["oy"]},
+  OU:{letter:"ou",sound:"ow",example:"Cloud ☁️",words:["cloud","shout","mouth","found","house"],emojis:["☁️","📢","👄","🔍","🏠"],searchIn:["ou"]},
+  OO:{letter:"oo",sound:"oo",example:"Moon 🌙",words:["moon","food","boot","pool","tooth"],emojis:["🌙","🍕","👢","🏊","🦷"],searchIn:["oo"]},
+  AR:{letter:"ar",sound:"ar",example:"Star ⭐",words:["star","car","farm","dark","park"],emojis:["⭐","🚗","🌾","🌑","🌳"],searchIn:["ar"]},
+  OR:{letter:"or",sound:"or",example:"Fork 🍴",words:["fork","corn","sport","born","horse"],emojis:["🍴","🌽","🏅","👶","🐴"],searchIn:["or"]},
+  ER:{letter:"er",sound:"er",example:"Bird 🐦",words:["bird","fern","girl","first","shirt"],emojis:["🐦","🌿","👧","1️⃣","👕"],searchIn:["er","ir","ur"]},
+  // ── Consonant blends ─────────────────────────────────────────
+  BL:{letter:"bl",sound:"bl",example:"Blue 💙",words:["blue","black","blend","blow","blade"],emojis:["💙","⬛","🌀","💨","⚔️"],searchIn:["bl"]},
+  BR:{letter:"br",sound:"br",example:"Bridge 🌉",words:["bridge","bread","brown","broom","branch"],emojis:["🌉","🍞","🟤","🧹","🌿"],searchIn:["br"]},
+  CL:{letter:"cl",sound:"cl",example:"Clock ⏰",words:["clock","cloud","clap","clay","clean"],emojis:["⏰","☁️","👏","🎨","🧹"],searchIn:["cl"]},
+  CR:{letter:"cr",sound:"cr",example:"Crown 👑",words:["crown","crab","cry","crest","crisp"],emojis:["👑","🦀","😢","🗻","🥐"],searchIn:["cr"]},
+  DR:{letter:"dr",sound:"dr",example:"Drum 🥁",words:["drum","draw","dragon","dress","drop"],emojis:["🥁","✏️","🐉","👗","💧"],searchIn:["dr"]},
+  FL:{letter:"fl",sound:"fl",example:"Flag 🚩",words:["flag","flower","fly","flat","flock"],emojis:["🚩","🌸","🦋","📄","🐦"],searchIn:["fl"]},
+  FR:{letter:"fr",sound:"fr",example:"Frog 🐸",words:["frog","fruit","frame","fresh","freeze"],emojis:["🐸","🍎","🖼️","🌿","🧊"],searchIn:["fr"]},
+  GL:{letter:"gl",sound:"gl",example:"Globe 🌍",words:["globe","glad","glue","glow","glass"],emojis:["🌍","😄","🔵","💡","🥃"],searchIn:["gl"]},
+  GR:{letter:"gr",sound:"gr",example:"Grapes 🍇",words:["grapes","green","grow","grass","grab"],emojis:["🍇","🟢","🌱","🌾","🤜"],searchIn:["gr"]},
+  PL:{letter:"pl",sound:"pl",example:"Plant 🌱",words:["plant","play","plus","plum","plane"],emojis:["🌱","🛝","➕","🫐","✈️"],searchIn:["pl"]},
+  PR:{letter:"pr",sound:"pr",example:"Prize 🏆",words:["prize","prince","print","proud","press"],emojis:["🏆","🤴","🖨️","😤","📰"],searchIn:["pr"]},
+  SK:{letter:"sk",sound:"sk",example:"Sky 🌤️",words:["sky","skin","skip","skull","skate"],emojis:["🌤️","🫀","🦘","💀","⛸️"],searchIn:["sk"]},
+  SL:{letter:"sl",sound:"sl",example:"Slide 🛝",words:["slide","sleep","slow","slug","sled"],emojis:["🛝","😴","🐢","🐌","🛷"],searchIn:["sl"]},
+  SM:{letter:"sm",sound:"sm",example:"Smile 😊",words:["smile","small","smoke","smell","smooth"],emojis:["😊","🔬","💨","👃","🧈"],searchIn:["sm"]},
+  SN:{letter:"sn",sound:"sn",example:"Snake 🐍",words:["snake","snow","snail","snap","snore"],emojis:["🐍","❄️","🐌","👏","😴"],searchIn:["sn"]},
+  SP:{letter:"sp",sound:"sp",example:"Spider 🕷️",words:["spider","sport","space","spell","spoon"],emojis:["🕷️","🏅","🚀","✨","🥄"],searchIn:["sp"]},
+  ST:{letter:"st",sound:"st",example:"Star ⭐",words:["star","stop","step","stone","stick"],emojis:["⭐","🛑","👣","🪨","🏑"],searchIn:["st"]},
+  SW:{letter:"sw",sound:"sw",example:"Swan 🦢",words:["swan","swim","swing","sweet","sword"],emojis:["🦢","🏊","🛝","🍬","⚔️"],searchIn:["sw"]},
+  TR:{letter:"tr",sound:"tr",example:"Tree 🌲",words:["tree","train","truck","trip","track"],emojis:["🌲","🚂","🚛","✈️","🛤️"],searchIn:["tr"]},
+  // ── Soft/special sounds ──────────────────────────────────────
+  CE:{letter:"ce",sound:"ss",example:"Ice 🧊",words:["ice","mice","rice","race","space"],emojis:["🧊","🐭","🍚","🏁","🚀"],searchIn:["ce","ci","cy"]},
+  GE:{letter:"ge",sound:"j",example:"Gem 💎",words:["gem","giant","giraffe","gentle","gym"],emojis:["💎","👾","🦒","🌸","🏋️"],searchIn:["ge","gi","gy"]}
 };
 
 let CL='A',PH=PD['A'];
@@ -707,14 +767,44 @@ function genBubbles(){
 }
 genBubbles();
 
+// Build phonic picker chips on home screen
+(function buildChips(){
+  const CATS=[
+    {label:'🔤 Single Letters',keys:'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split(''),cls:'cat-letter'},
+    {label:'🔡 Consonant Digraphs',keys:['CH','SH','TH','WH','PH','CK','NG'],cls:'cat-digraph'},
+    {label:'🗣️ Vowel Patterns',keys:['AI','AY','EE','EA','OA','OW','OI','OY','OU','OO','AR','OR','ER'],cls:'cat-vowel'},
+    {label:'🌀 Consonant Blends',keys:['BL','BR','CL','CR','DR','FL','FR','GL','GR','PL','PR','SK','SL','SM','SN','SP','ST','SW','TR'],cls:'cat-blend'},
+    {label:'✨ Special Sounds',keys:['CE','GE'],cls:'cat-special'}
+  ];
+  const cont=document.getElementById('phonicChips');
+  CATS.forEach(cat=>{
+    const lbl=document.createElement('div');lbl.className='chip-group-label';lbl.textContent=cat.label;cont.appendChild(lbl);
+    cat.keys.filter(k=>PD[k]).forEach(k=>{
+      const chip=document.createElement('button');chip.className=`phonic-chip ${cat.cls}`;
+      chip.textContent=PD[k].letter;
+      chip.title=`${PD[k].letter} — "${PD[k].sound}" as in ${PD[k].example}`;
+      chip.onclick=()=>{document.getElementById('phonicInput').value=PD[k].letter;startActivities();};
+      cont.appendChild(chip);
+    });
+  });
+})();
+
 function startActivities(){
-  const v=document.getElementById('phonicInput').value.trim().toUpperCase();
-  if(!v||!PD[v]){
-    const el=document.getElementById('phonicInput');
-    el.style.borderColor='var(--red)';el.placeholder='Try A-Z!';
-    setTimeout(()=>{el.style.borderColor='';},800);return;
+  const raw=document.getElementById('phonicInput').value.trim().toUpperCase();
+  const el=document.getElementById('phonicInput');
+  // Try direct key match first (e.g. "CH", "SH", "A")
+  let key=raw;
+  if(!PD[key]){
+    // Try matching by sound (e.g. user typed "aah" -> A)
+    key=Object.keys(PD).find(k=>PD[k].sound.toUpperCase()===raw||PD[k].letter.toUpperCase()===raw);
   }
-  CL=v;PH=PD[CL];
+  if(!key||!PD[key]){
+    el.style.borderColor='var(--red)';
+    el.placeholder='Try: a, sh, ch, ee, ar...';
+    setTimeout(()=>{el.style.borderColor='';},900);
+    return;
+  }
+  CL=key;PH=PD[CL];
   document.getElementById('home').style.display='none';
   document.getElementById('activities').style.display='block';
   initAll();
@@ -734,9 +824,10 @@ function switchTab(i){
 document.getElementById('phonicInput').addEventListener('keydown',e=>{if(e.key==='Enter')startActivities();});
 
 function initAll(){
-  document.getElementById('headerLetter').textContent=CL;
+  const displayLabel=PH.letter.toUpperCase();
+  document.getElementById('headerLetter').textContent=displayLabel;
   // Panel 0
-  document.getElementById('soundLetter').textContent=CL;
+  document.getElementById('soundLetter').textContent=displayLabel;
   document.getElementById('soundExample').textContent=`like in ${PH.example}`;
   document.getElementById('soundStatus').textContent='Press "Hear Sound" first, then say the sound!';
   document.getElementById('soundStatus').className='sound-status status-neutral';
@@ -744,7 +835,7 @@ function initAll(){
   // Panel 1
   initTrace();
   // Panel 2
-  document.getElementById('circleDesc').textContent=`Tap all words that contain the letter "${CL}"!`;
+  document.getElementById('circleDesc').textContent=`Tap all words with the "${PH.letter}" sound!`;
   generateCircleWords();
   // Panel 3
   fillIdx=0;loadFillWord();
@@ -786,7 +877,7 @@ function initAll(){
 // ACT 1: SAY SOUND
 // ============================================================
 function speakPhonic(){
-  const u=new SpeechSynthesisUtterance(`The sound of the letter ${CL} is ${PH.sound}. Like in ${PH.words[0]}.`);
+  const u=new SpeechSynthesisUtterance(`The sound "${PH.letter}" makes the sound: ${PH.sound}. Like in ${PH.words[0]}.`);
   u.rate=0.8;u.pitch=1.2;window.speechSynthesis.speak(u);
   setStatus('soundStatus','🔊 Listen carefully!','neutral');
 }
@@ -830,16 +921,21 @@ function initTrace(){
   setupTraceEvents(c,ctx);
 }
 function drawGuide(ctx,w,h){
+  const label=PH.letter;
+  const charCount=label.length;
+  // Scale font so 2-char phonics fit (half size per extra char)
+  const baseSz=Math.min(w*.68,h*.82);
+  const fontSize=charCount===1?baseSz:charCount===2?baseSz*.52:baseSz*.38;
   ctx.clearRect(0,0,w,h);
   ctx.fillStyle='#faf6ff';ctx.fillRect(0,0,w,h);
   ctx.save();ctx.setLineDash([8,6]);ctx.strokeStyle='#d0beff';ctx.lineWidth=16;
-  ctx.font=`bold ${Math.min(w*.68,h*.82)}px 'Fredoka One',serif`;
+  ctx.font=`bold ${fontSize}px 'Fredoka One',serif`;
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.strokeText(CL,w/2,h/2);ctx.restore();
+  ctx.strokeText(label.toUpperCase(),w/2,h/2);ctx.restore();
   ctx.fillStyle='rgba(179,136,255,.07)';
-  ctx.font=`bold ${Math.min(w*.68,h*.82)}px 'Fredoka One',serif`;
+  ctx.font=`bold ${fontSize}px 'Fredoka One',serif`;
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(CL,w/2,h/2);
+  ctx.fillText(label.toUpperCase(),w/2,h/2);
 }
 let traceStrokes=false;
 function setupTraceEvents(c,ctx){
@@ -859,17 +955,23 @@ function clearTrace(){
   ctx.strokeStyle='#FF6B9D';ctx.lineWidth=7;ctx.lineCap='round';traceStrokes=false;
 }
 function checkTrace(){
-  if(!traceStrokes){alert('Trace the letter first! 😊');return;}
-  confettiBurst();speak(`Great job tracing the letter ${CL}!`);earnStickerIfFirst('trace');
+  if(!traceStrokes){alert('Trace the letters first! 😊');return;}
+  confettiBurst();speak(`Great job tracing "${PH.letter}"!`);earnStickerIfFirst('trace');
 }
 
 // ============================================================
 // ACT 3: CIRCLE WORDS
 // ============================================================
+// Returns true if word contains any of the phonic's graphemes
+function wordHasSound(w){
+  const wu=w.toUpperCase();
+  return (PH.searchIn||[PH.letter]).some(s=>wu.includes(s.toUpperCase()));
+}
+
 const DISTRACTORS=[{w:'dog',e:'🐶'},{w:'moon',e:'🌙'},{w:'boat',e:'⛵'},{w:'star',e:'⭐'},{w:'tree',e:'🌲'},{w:'pen',e:'✏️'},{w:'fish',e:'🐟'},{w:'cup',e:'🥤'}];
 function generateCircleWords(){
   const correct=PH.words.slice(0,4).map((w,i)=>({w,e:PH.emojis[i],correct:true}));
-  const dist=shuffle([...DISTRACTORS]).slice(0,3).map(d=>({...d,correct:!d.w.toUpperCase().includes(CL)}));
+  const dist=shuffle([...DISTRACTORS]).slice(0,3).map(d=>({...d,correct:wordHasSound(d.w)}));
   const all=shuffle([...correct,...dist]);
   const grid=document.getElementById('wordGrid');
   grid.innerHTML='';document.getElementById('circleResult').style.display='none';
@@ -879,7 +981,7 @@ function generateCircleWords(){
     div.dataset.correct=item.correct;
     div.onclick=function(){
       if(this.classList.contains('selected'))return;
-      if(item.correct){this.classList.add('selected');speak(`Yes! ${item.w} has the ${CL} sound!`);checkCircleComplete();}
+      if(item.correct){this.classList.add('selected');speak(`Yes! ${item.w} has the ${PH.letter} sound!`);checkCircleComplete();}
       else{this.classList.add('wrong');speak('Not quite, try again!');setTimeout(()=>this.classList.remove('wrong'),600);}
     };
     grid.appendChild(div);
@@ -891,7 +993,7 @@ function checkCircleComplete(){
   if(sel>=tot){
     const r=document.getElementById('circleResult');
     r.style.display='block';r.style.background='#d4f8e5';r.style.color='#1a7a45';
-    r.textContent=`🎉 Great! You found all ${tot} words with "${CL}"!`;
+    r.textContent=`🎉 Great! You found all ${tot} words with the "${PH.letter}" sound!`;
     confettiBurst();earnStickerIfFirst('circle');
   }
 }
@@ -902,25 +1004,35 @@ function checkCircleComplete(){
 function loadFillWord(){
   const word=PH.words[fillIdx%PH.words.length];
   const emoji=PH.emojis[fillIdx%PH.emojis.length];
-  const idx=word.toUpperCase().indexOf(CL);
+  const wu=word.toUpperCase();
+  // Find the first matching grapheme from searchIn
+  const grapheme=(PH.searchIn||[PH.letter]).map(s=>s.toUpperCase()).find(s=>wu.includes(s))||PH.letter.toUpperCase();
+  const idx=wu.indexOf(grapheme);
   document.getElementById('fillHint').textContent=emoji;
   document.getElementById('fillResult').style.display='none';
   let disp='';
-  if(idx>=0){disp=word.slice(0,idx).toUpperCase()+`<span class="fill-blank">?</span>`+word.slice(idx+1).toUpperCase();}
-  else{disp=`<span class="fill-blank">?</span>`+word.toUpperCase();}
+  if(idx>=0){
+    disp=wu.slice(0,idx)+`<span class="fill-blank">${'?'.repeat(grapheme.length)}</span>`+wu.slice(idx+grapheme.length);
+  }else{
+    disp=`<span class="fill-blank">${'?'.repeat(grapheme.length)}</span>`+wu;
+  }
   document.getElementById('fillWordDisplay').innerHTML=disp;
-  const wrong='BCDFGHJKLMNPQRSTVWXYZ'.replace(CL,'').split('').sort(()=>Math.random()-.5).slice(0,3);
-  const opts=shuffle([CL,...wrong]);
+  // Options: correct grapheme + 3 random phonic keys as distractors
+  const allKeys=Object.keys(PD).filter(k=>k!==CL);
+  const wrongKeys=shuffle(allKeys).slice(0,3).map(k=>PD[k].letter.toUpperCase());
+  const opts=shuffle([PH.letter.toUpperCase(),...wrongKeys]);
   const el=document.getElementById('fillOptions');el.innerHTML='';
   opts.forEach(o=>{
     const b=document.createElement('button');b.className='option-btn';b.textContent=o;
-    b.onclick=function(){checkFill(o,word,this);};el.appendChild(b);
+    b.style.fontSize=o.length>1?'1rem':'1.4rem';
+    b.onclick=function(){checkFill(o,word,this,grapheme);};el.appendChild(b);
   });
 }
-function checkFill(chosen,word,btn){
+function checkFill(chosen,word,btn,grapheme){
   const r=document.getElementById('fillResult');r.style.display='block';
-  if(chosen===CL){btn.classList.add('correct');setStatus('fillResult',`🎉 "${word.toUpperCase()}" is correct!`,'success');speak(`Yes! The word is ${word}`);document.querySelectorAll('.option-btn').forEach(b=>b.onclick=null);confettiBurst();earnStickerIfFirst('fill');}
-  else{btn.classList.add('incorrect');setStatus('fillResult','❌ Not quite! Try again!','error');setTimeout(()=>{btn.classList.remove('incorrect');btn.onclick=function(){checkFill(chosen,word,btn);};},600);}
+  const correct=chosen===PH.letter.toUpperCase()||chosen===grapheme;
+  if(correct){btn.classList.add('correct');setStatus('fillResult',`🎉 "${word.toUpperCase()}" is correct!`,'success');speak(`Yes! The word is ${word}`);document.querySelectorAll('.option-btn').forEach(b=>b.onclick=null);confettiBurst();earnStickerIfFirst('fill');}
+  else{btn.classList.add('incorrect');setStatus('fillResult','❌ Not quite! Try again!','error');setTimeout(()=>{btn.classList.remove('incorrect');btn.onclick=function(){checkFill(chosen,word,btn,grapheme);};},600);}
 }
 function nextFillWord(){fillIdx++;loadFillWord();}
 
@@ -958,9 +1070,11 @@ function generateListenGrid(){
   });
 }
 function hlLetter(w){
-  const i=w.toUpperCase().indexOf(CL);
+  const wu=w.toUpperCase();
+  const grapheme=(PH.searchIn||[PH.letter]).map(s=>s.toUpperCase()).find(s=>wu.includes(s))||PH.letter.toUpperCase();
+  const i=wu.indexOf(grapheme);
   if(i<0)return w;
-  return w.slice(0,i)+`[${w[i].toUpperCase()}]`+w.slice(i+1);
+  return w.slice(0,i)+`[${w.slice(i,i+grapheme.length).toUpperCase()}]`+w.slice(i+grapheme.length);
 }
 function listenWord(w,i){
   document.querySelectorAll('.listen-card').forEach(c=>c.classList.remove('playing'));
@@ -1140,13 +1254,11 @@ const SORT_ALL_WORDS=[
 ];
 function initSortBins(){
   sortWords=[];
-  // Words that have the letter
-  PH.words.slice(0,4).forEach(w=>sortWords.push({w,has:w.toUpperCase().includes(CL)}));
-  // Distractor words
-  ['moon','tree','star','dog','sun','pen','rock','bird'].forEach(w=>sortWords.push({w,has:w.toUpperCase().includes(CL)}));
+  PH.words.slice(0,4).forEach(w=>sortWords.push({w,has:wordHasSound(w)}));
+  ['moon','tree','star','dog','sun','pen','rock','bird'].forEach(w=>sortWords.push({w,has:wordHasSound(w)}));
   sortWords=shuffle(sortWords);sortIdx=0;
-  document.getElementById('binLetter').textContent=CL;
-  document.getElementById('binLetter2').textContent=CL;
+  document.getElementById('binLetter').textContent=PH.letter;
+  document.getElementById('binLetter2').textContent=PH.letter;
   document.getElementById('binYesItems').innerHTML='';
   document.getElementById('binNoItems').innerHTML='';
   document.getElementById('sortResult').style.display='none';
@@ -1172,10 +1284,10 @@ function processSortAnswer(bin){
   const item=sortWords[sortIdx];
   const correct=(bin==='yes'&&item.has)||(bin==='no'&&!item.has);
   const chip=document.createElement('div');chip.className=`sort-chip ${correct?'correct-place':'wrong-place'}`;chip.textContent=item.w;
-  if(correct){document.getElementById('binYesItems').appendChild(chip);speak(`Yes! ${item.w} has the letter ${CL}!`);}
+  if(correct){document.getElementById('binYesItems').appendChild(chip);speak(`Yes! ${item.w} has the ${PH.letter} sound!`);}
   else{document.getElementById('binNoItems').appendChild(chip);speak(`Try again next time!`);}
   const r=document.getElementById('sortResult');r.style.display='block';
-  setStatus('sortResult',correct?`✅ "${item.w}" goes in the right bin!`:`❌ "${item.w}" should be in the ${item.has?'has':'no'} bin!`,correct?'success':'error');
+  setStatus('sortResult',correct?`✅ "${item.w}" sorted correctly!`:`❌ "${item.w}" should be in the ${item.has?'has':'no'} bin!`,correct?'success':'error');
   setTimeout(()=>{sortIdx++;loadNextSortWord();},1500);
 }
 
@@ -1187,23 +1299,24 @@ function nextPositionWord(){
   const w=PH.words[posIdx%PH.words.length];
   const e=PH.emojis[posIdx%PH.emojis.length];
   posCurrentWord=w.toUpperCase();
-  const idx=posCurrentWord.indexOf(CL);
+  // Find the grapheme
+  const grapheme=(PH.searchIn||[PH.letter]).map(s=>s.toUpperCase()).find(s=>posCurrentWord.includes(s))||PH.letter.toUpperCase();
+  const idx=posCurrentWord.indexOf(grapheme);
   let pos='middle';
   if(idx===0)pos='beginning';
-  else if(idx===posCurrentWord.length-1)pos='end';
+  else if(idx+grapheme.length===posCurrentWord.length)pos='end';
   posCorrectPos=pos;
   document.getElementById('posHint').textContent=e;
+  // Highlight the whole grapheme
   let html='';
-  for(let i=0;i<posCurrentWord.length;i++){
-    html+=posCurrentWord[i]===CL?`<span class="hl">${posCurrentWord[i]}</span>`:posCurrentWord[i];
+  let i=0;
+  while(i<posCurrentWord.length){
+    if(i===idx){html+=`<span class="hl">${posCurrentWord.slice(i,i+grapheme.length)}</span>`;i+=grapheme.length;}
+    else{html+=posCurrentWord[i];i++;}
   }
   document.getElementById('posWord').innerHTML=html;
   document.getElementById('posResult').style.display='none';
-  // Reset all pos buttons cleanly
-  document.querySelectorAll('.pos-btn').forEach(b=>{
-    b.classList.remove('correct','incorrect');
-    b.disabled=false;
-  });
+  document.querySelectorAll('.pos-btn').forEach(b=>{b.classList.remove('correct','incorrect');b.disabled=false;});
   posIdx++;
 }
 function checkPosition(chosen){
@@ -1218,9 +1331,9 @@ function checkPosition(chosen){
     if(b.dataset.pos===posCorrectPos)b.classList.add('correct');
   });
   if(chosen===posCorrectPos){
-    setStatus('posResult',`🎉 Correct! "${CL}" is at the ${posCorrectPos}!`,'success');confettiBurst();earnStickerIfFirst('position');
+    setStatus('posResult',`🎉 Correct! "${PH.letter}" is at the ${posCorrectPos}!`,'success');confettiBurst();earnStickerIfFirst('position');
   }else{
-    setStatus('posResult',`❌ Not quite! "${CL}" is at the ${posCorrectPos}.`,'error');
+    setStatus('posResult',`❌ Not quite! "${PH.letter}" is at the ${posCorrectPos}.`,'error');
   }
 }
 
@@ -1338,7 +1451,7 @@ function resetTapUI(){
   document.getElementById('tapArena').innerHTML='';
   document.getElementById('tapResult').style.display='none';
   document.getElementById('tapStartBtn').style.display='block';
-  document.getElementById('tapDesc').textContent=`Tap only the letter "${CL}" — ignore the others!`;
+  document.getElementById('tapDesc').textContent=`Tap only "${PH.letter.toUpperCase()}" — ignore the others!`;
 }
 function startTapGame(){
   tapScore=0;tapLives=3;tapActive=true;tapTimeLeft=30;
@@ -1356,9 +1469,11 @@ function spawnFallingLetter(){
   if(!tapActive)return;
   const arena=document.getElementById('tapArena');
   const isTarget=Math.random()>0.4;
-  const letter=isTarget?CL:getRandomLetter();
+  const label=isTarget?PH.letter.toUpperCase():getRandomPhonic();
   const el=document.createElement('div');el.className='falling-letter';
-  el.textContent=letter;
+  el.textContent=label;
+  // Shrink font for multi-char
+  if(label.length>1)el.style.fontSize='1rem';
   const color=COLORS_FALL[Math.floor(Math.random()*COLORS_FALL.length)];
   el.style.background=color;el.style.color='#fff';
   const dur=2.5+Math.random()*1.5;
@@ -1370,16 +1485,14 @@ function spawnFallingLetter(){
     else{tapLives--;updateTapLives();if(tapLives<=0)endTapGame();el.style.background=COLORS_FALL[6];el.textContent='💥';}
     setTimeout(()=>{if(el.parentNode)el.parentNode.removeChild(el);},200);
   });
-  el.addEventListener('animationend',()=>{
-    if(el.parentNode)el.parentNode.removeChild(el);
-  });
+  el.addEventListener('animationend',()=>{if(el.parentNode)el.parentNode.removeChild(el);});
   arena.appendChild(el);
 }
-function updateTapLives(){
-  const hearts=['❤️❤️❤️','❤️❤️🖤','❤️🖤🖤','🖤🖤🖤'];
-  document.getElementById('tapLives').textContent=hearts[Math.max(0,3-tapLives)];
+function getRandomPhonic(){
+  const keys=Object.keys(PD).filter(k=>k!==CL);
+  const k=keys[Math.floor(Math.random()*keys.length)];
+  return PD[k].letter.toUpperCase();
 }
-function getRandomLetter(){const ls='BCDFGHJKLMNPQRSTVWXYZ'.replace(CL,'').split('');return ls[Math.floor(Math.random()*ls.length)];}
 function endTapGame(){
   tapActive=false;clearInterval(tapInterval);clearInterval(tapCountdown);
   const r=document.getElementById('tapResult');r.style.display='block';
@@ -1402,7 +1515,7 @@ function resetWhackUI(){
   document.getElementById('whackLives').textContent='❤️❤️❤️';
   document.getElementById('whackResult').style.display='none';
   document.getElementById('whackStartBtn').style.display='block';
-  document.getElementById('whackDesc').textContent=`Whack moles that show words with "${CL}" — don't whack the others!`;
+  document.getElementById('whackDesc').textContent=`Whack moles with words containing "${PH.letter}" — don't whack the others!`;
   buildWhackGrid();
 }
 function buildWhackGrid(){
@@ -1429,7 +1542,7 @@ function popMole(){
   const useHas=Math.random()>0.4;
   let word,hasLetter;
   if(useHas&&PH.words.length){word=PH.words[Math.floor(Math.random()*PH.words.length)];hasLetter=true;}
-  else{const pool=['moon','star','pen','duck','tree','rock','car','sun','frog','rain'];word=pool[Math.floor(Math.random()*pool.length)];hasLetter=word.toUpperCase().includes(CL);}
+  else{const pool=['moon','star','pen','duck','tree','rock','car','sun','frog','rain'];word=pool[Math.floor(Math.random()*pool.length)];hasLetter=wordHasSound(word);}
   h.word=word;h.hasLetter=hasLetter;h.up=true;h.mole.textContent=word.toUpperCase();h.mole.classList.add('up');
   setTimeout(()=>{if(h.up){h.mole.classList.remove('up');h.up=false;if(h.hasLetter){whackLives--;updateWhackLives();if(whackLives<=0)endWhack();}}},2000);
 }
