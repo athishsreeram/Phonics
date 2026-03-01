@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🎸 Consonant Blends Fun!</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFF8DC;
+
+```
+/* L-blends */
+--bl: #2980B9;
+--cl: #16A085;
+--fl: #E67E22;
+--gl: #8E44AD;
+--pl: #E84393;
+--sl: #D63031;
+
+/* R-blends */
+--br: #C0392B;
+--cr: #27AE60;
+--dr: #1A6DA8;
+--fr: #884EA0;
+--gr: #B7950B;
+--pr: #0E6655;
+--tr: #E84343;
+
+/* S-blends */
+--sc: #6C3483;
+--sk: #2C3E50;
+--sl2: #D63031;
+--sm: #16A085;
+--sn: #E67E22;
+--sp: #8E44AD;
+--st: #27AE60;
+--sw: #2980B9;
+
+/* End blends */
+--end-nd: #C0392B;
+--end-nt: #1A6DA8;
+--end-nk: #884EA0;
+--end-st: #27AE60;
+--end-mp: #E84393;
+--end-lt: #B7950B;
+--end-lk: #6C3483;
+--end-ft: #2C3E50;
+```
+
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+font-family: ‘Nunito’, sans-serif;
+background: var(–bg);
+min-height: 100vh;
+padding: 16px;
+background-image:
+radial-gradient(circle at 10% 10%, #FFE4E1 0%, transparent 35%),
+radial-gradient(circle at 90% 90%, #E0F7FA 0%, transparent 35%),
+radial-gradient(circle at 50% 50%, #FFF9C4 0%, transparent 60%);
+}
+
+header { text-align: center; padding: 20px 10px 14px; }
+
+header h1 {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2rem, 8vw, 3.5rem);
+color: #2980B9;
+text-shadow: 3px 3px 0 #AED6F1;
+letter-spacing: 1px;
+}
+
+header p {
+font-size: clamp(1rem, 4vw, 1.3rem);
+color: #555;
+margin-top: 6px;
+font-weight: 700;
+}
+
+.intro-badge {
+display: inline-block;
+margin-top: 12px;
+background: #fff;
+border-radius: 50px;
+padding: 8px 22px;
+font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+font-weight: 800;
+color: #333;
+box-shadow: 0 4px 0 rgba(0,0,0,0.1);
+letter-spacing: 0.5px;
+}
+
+.blend-col  { color: #2980B9; font-family: ‘Fredoka One’, cursive; font-size: 1.2em; }
+.rest-col   { color: #888; }
+
+/* ── KEY BAR ─────────────────────────────────── */
+.key-bar {
+display: flex;
+justify-content: center;
+gap: 16px;
+flex-wrap: wrap;
+margin: 10px auto 4px;
+max-width: 500px;
+}
+
+.key-item {
+display: flex;
+align-items: center;
+gap: 6px;
+font-size: clamp(0.85rem, 3vw, 1rem);
+font-weight: 800;
+color: #444;
+}
+
+.key-dot {
+width: 18px; height: 18px;
+border-radius: 50%;
+flex-shrink: 0;
+}
+
+.key-dot.blend { background: #2980B9; }
+.key-dot.rest  { background: #555; }
+
+/* ── GROUP HEADING ───────────────────────────── */
+.group-heading {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.6rem, 6vw, 2.6rem);
+text-align: center;
+margin: 32px 0 6px;
+color: #2C3E50;
+letter-spacing: 0.5px;
+}
+
+.group-heading span {
+display: inline-block;
+background: #2C3E50;
+color: white;
+padding: 4px 22px;
+border-radius: 50px;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+}
+
+/* ── SECTION ─────────────────────────────────── */
+.section { margin: 18px auto; max-width: 960px; }
+
+.section-title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+text-align: center;
+margin-bottom: 14px;
+padding: 12px 20px;
+border-radius: 50px;
+display: inline-block;
+width: 100%;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+letter-spacing: 0.5px;
+}
+
+/* L-blends */
+.sec-bl .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
+.sec-cl .section-title { background: linear-gradient(135deg, #16A085, #1ABC9C); }
+.sec-fl .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); }
+.sec-gl .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
+.sec-pl .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
+.sec-sl .section-title { background: linear-gradient(135deg, #D63031, #E74C3C); }
+
+/* R-blends */
+.sec-br .section-title { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+.sec-cr .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.sec-dr .section-title { background: linear-gradient(135deg, #1A6DA8, #5499C7); }
+.sec-fr .section-title { background: linear-gradient(135deg, #884EA0, #A569BD); }
+.sec-gr .section-title { background: linear-gradient(135deg, #B7950B, #F4D03F); color: #5D4037; text-shadow: none; }
+.sec-pr .section-title { background: linear-gradient(135deg, #0E6655, #1ABC9C); }
+.sec-tr .section-title { background: linear-gradient(135deg, #E84343, #FF7675); }
+
+/* S-blends */
+.sec-sc .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
+.sec-sk .section-title { background: linear-gradient(135deg, #2C3E50, #34495E); }
+.sec-sm .section-title { background: linear-gradient(135deg, #16A085, #1ABC9C); }
+.sec-sn .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); }
+.sec-sp .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
+.sec-st .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.sec-sw .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
+
+/* End blends */
+.sec-end-nd .section-title { background: linear-gradient(135deg, #C0392B, #E74C3C); }
+.sec-end-nt .section-title { background: linear-gradient(135deg, #1A6DA8, #5499C7); }
+.sec-end-nk .section-title { background: linear-gradient(135deg, #884EA0, #A569BD); }
+.sec-end-st .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
+.sec-end-mp .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
+.sec-end-lt .section-title { background: linear-gradient(135deg, #B7950B, #F4D03F); color: #5D4037; text-shadow: none; }
+.sec-end-lk .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
+.sec-end-ft .section-title { background: linear-gradient(135deg, #2C3E50, #34495E); }
+
+/* ── GRID ────────────────────────────────────── */
+.cards-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(min(155px, 44vw), 1fr));
+gap: 14px;
+padding: 0 4px;
+}
+
+/* ── CARD ────────────────────────────────────── */
+.word-card {
+background: #FFFFFF;
+border-radius: 20px;
+padding: 18px 10px 14px;
+text-align: center;
+box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
+transition: transform 0.1s, box-shadow 0.1s;
+user-select: none;
+cursor: default;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 10px;
+border-bottom: 6px solid transparent;
+}
+
+.word-card:active {
+transform: translateY(3px);
+box-shadow: 0 3px 0 rgba(0,0,0,0.15);
+}
+
+/* border colours */
+.sec-bl      .word-card { border-bottom-color: var(–bl); }
+.sec-cl      .word-card { border-bottom-color: var(–cl); }
+.sec-fl      .word-card { border-bottom-color: var(–fl); }
+.sec-gl      .word-card { border-bottom-color: var(–gl); }
+.sec-pl      .word-card { border-bottom-color: var(–pl); }
+.sec-sl      .word-card { border-bottom-color: var(–sl); }
+.sec-br      .word-card { border-bottom-color: var(–br); }
+.sec-cr      .word-card { border-bottom-color: var(–cr); }
+.sec-dr      .word-card { border-bottom-color: var(–dr); }
+.sec-fr      .word-card { border-bottom-color: var(–fr); }
+.sec-gr      .word-card { border-bottom-color: var(–gr); }
+.sec-pr      .word-card { border-bottom-color: var(–pr); }
+.sec-tr      .word-card { border-bottom-color: var(–tr); }
+.sec-sc      .word-card { border-bottom-color: var(–sc); }
+.sec-sk      .word-card { border-bottom-color: var(–sk); }
+.sec-sm      .word-card { border-bottom-color: var(–sm); }
+.sec-sn      .word-card { border-bottom-color: var(–sn); }
+.sec-sp      .word-card { border-bottom-color: var(–sp); }
+.sec-st      .word-card { border-bottom-color: var(–st); }
+.sec-sw      .word-card { border-bottom-color: var(–sw); }
+.sec-end-nd  .word-card { border-bottom-color: var(–end-nd); }
+.sec-end-nt  .word-card { border-bottom-color: var(–end-nt); }
+.sec-end-nk  .word-card { border-bottom-color: var(–end-nk); }
+.sec-end-st  .word-card { border-bottom-color: var(–end-st); }
+.sec-end-mp  .word-card { border-bottom-color: var(–end-mp); }
+.sec-end-lt  .word-card { border-bottom-color: var(–end-lt); }
+.sec-end-lk  .word-card { border-bottom-color: var(–end-lk); }
+.sec-end-ft  .word-card { border-bottom-color: var(–end-ft); }
+
+/* ── SOUNDS ROW ──────────────────────────────── */
+.sounds-row {
+display: flex;
+justify-content: center;
+align-items: center;
+flex-wrap: nowrap;
+gap: 0;
+}
+
+.sound {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(2.2rem, 9vw, 3.2rem);
+cursor: pointer;
+padding: 2px 3px;
+border-radius: 8px;
+transition: all 0.15s;
+display: inline-block;
+line-height: 1.1;
+}
+
+/* blend letters = section accent colour; rest = dark grey */
+.sound.blend { font-size: clamp(2.4rem, 10vw, 3.5rem); }
+.sound.rest  { color: #444; }
+
+/* blend colours per section */
+.sec-bl .sound.blend { color: #1A5276; }
+.sec-cl .sound.blend { color: #0E6655; }
+.sec-fl .sound.blend { color: #A04000; }
+.sec-gl .sound.blend { color: #5B2C6F; }
+.sec-pl .sound.blend { color: #A5003B; }
+.sec-sl .sound.blend { color: #922B21; }
+.sec-br .sound.blend { color: #7B241C; }
+.sec-cr .sound.blend { color: #145A32; }
+.sec-dr .sound.blend { color: #154360; }
+.sec-fr .sound.blend { color: #5B2C6F; }
+.sec-gr .sound.blend { color: #7D6608; }
+.sec-pr .sound.blend { color: #0B5345; }
+.sec-tr .sound.blend { color: #922B21; }
+.sec-sc .sound.blend { color: #4A235A; }
+.sec-sk .sound.blend { color: #1C2833; }
+.sec-sm .sound.blend { color: #0E6655; }
+.sec-sn .sound.blend { color: #A04000; }
+.sec-sp .sound.blend { color: #5B2C6F; }
+.sec-st .sound.blend { color: #145A32; }
+.sec-sw .sound.blend { color: #1A5276; }
+.sec-end-nd .sound.blend { color: #7B241C; }
+.sec-end-nt .sound.blend { color: #154360; }
+.sec-end-nk .sound.blend { color: #5B2C6F; }
+.sec-end-st .sound.blend { color: #145A32; }
+.sec-end-mp .sound.blend { color: #A5003B; }
+.sec-end-lt .sound.blend { color: #7D6608; }
+.sec-end-lk .sound.blend { color: #4A235A; }
+.sec-end-ft .sound.blend { color: #1C2833; }
+
+.sound:active,
+.sound.tapped {
+color: #FF6B00 !important;
+transform: scale(1.3);
+text-shadow: 0 0 14px rgba(255,107,0,0.5);
+background: #FFF3CD;
+border-radius: 10px;
+}
+
+/* ── BLEND BADGE ─────────────────────────────── */
+.blend-badge {
+display: inline-block;
+padding: 3px 12px;
+border-radius: 20px;
+font-size: clamp(0.7rem, 2.8vw, 0.9rem);
+font-weight: 900;
+color: white;
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+.sec-bl      .blend-badge { background: var(–bl); }
+.sec-cl      .blend-badge { background: var(–cl); }
+.sec-fl      .blend-badge { background: var(–fl); }
+.sec-gl      .blend-badge { background: var(–gl); }
+.sec-pl      .blend-badge { background: var(–pl); }
+.sec-sl      .blend-badge { background: var(–sl); }
+.sec-br      .blend-badge { background: var(–br); }
+.sec-cr      .blend-badge { background: var(–cr); }
+.sec-dr      .blend-badge { background: var(–dr); }
+.sec-fr      .blend-badge { background: var(–fr); }
+.sec-gr      .blend-badge { background: var(–gr); }
+.sec-pr      .blend-badge { background: var(–pr); }
+.sec-tr      .blend-badge { background: var(–tr); }
+.sec-sc      .blend-badge { background: var(–sc); }
+.sec-sk      .blend-badge { background: var(–sk); }
+.sec-sm      .blend-badge { background: var(–sm); }
+.sec-sn      .blend-badge { background: var(–sn); }
+.sec-sp      .blend-badge { background: var(–sp); }
+.sec-st      .blend-badge { background: var(–st); }
+.sec-sw      .blend-badge { background: var(–sw); }
+.sec-end-nd  .blend-badge { background: var(–end-nd); }
+.sec-end-nt  .blend-badge { background: var(–end-nt); }
+.sec-end-nk  .blend-badge { background: var(–end-nk); }
+.sec-end-st  .blend-badge { background: var(–end-st); }
+.sec-end-mp  .blend-badge { background: var(–end-mp); }
+.sec-end-lt  .blend-badge { background: var(–end-lt); }
+.sec-end-lk  .blend-badge { background: var(–end-lk); }
+.sec-end-ft  .blend-badge { background: var(–end-ft); }
+
+/* ── PHONETIC ─────────────────────────────────── */
+.phonetic-label {
+font-size: clamp(0.7rem, 2.8vw, 0.9rem);
+color: #888;
+font-weight: 800;
+letter-spacing: 0.5px;
+background: #F4F4F4;
+padding: 3px 10px;
+border-radius: 20px;
+}
+
+/* ── SPEAK BUTTON ────────────────────────────── */
+.speak-btn {
+border: none;
+border-radius: 50%;
+width: clamp(44px, 12vw, 54px);
+height: clamp(44px, 12vw, 54px);
+font-size: clamp(1.3rem, 5vw, 1.8rem);
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+transition: transform 0.1s, box-shadow 0.1s;
+flex-shrink: 0;
+color: white;
+}
+
+.sec-bl      .speak-btn { background: var(–bl);     box-shadow: 0 4px 0 #1A5276; }
+.sec-cl      .speak-btn { background: var(–cl);     box-shadow: 0 4px 0 #0E6655; }
+.sec-fl      .speak-btn { background: var(–fl);     box-shadow: 0 4px 0 #A04000; }
+.sec-gl      .speak-btn { background: var(–gl);     box-shadow: 0 4px 0 #5B2C6F; }
+.sec-pl      .speak-btn { background: var(–pl);     box-shadow: 0 4px 0 #A5003B; }
+.sec-sl      .speak-btn { background: var(–sl);     box-shadow: 0 4px 0 #922B21; }
+.sec-br      .speak-btn { background: var(–br);     box-shadow: 0 4px 0 #7B241C; }
+.sec-cr      .speak-btn { background: var(–cr);     box-shadow: 0 4px 0 #145A32; }
+.sec-dr      .speak-btn { background: var(–dr);     box-shadow: 0 4px 0 #154360; }
+.sec-fr      .speak-btn { background: var(–fr);     box-shadow: 0 4px 0 #5B2C6F; }
+.sec-gr      .speak-btn { background: var(–gr);     box-shadow: 0 4px 0 #7D6608; }
+.sec-pr      .speak-btn { background: var(–pr);     box-shadow: 0 4px 0 #0B5345; }
+.sec-tr      .speak-btn { background: var(–tr);     box-shadow: 0 4px 0 #922B21; }
+.sec-sc      .speak-btn { background: var(–sc);     box-shadow: 0 4px 0 #4A235A; }
+.sec-sk      .speak-btn { background: var(–sk);     box-shadow: 0 4px 0 #1C2833; }
+.sec-sm      .speak-btn { background: var(–sm);     box-shadow: 0 4px 0 #0E6655; }
+.sec-sn      .speak-btn { background: var(–sn);     box-shadow: 0 4px 0 #A04000; }
+.sec-sp      .speak-btn { background: var(–sp);     box-shadow: 0 4px 0 #5B2C6F; }
+.sec-st      .speak-btn { background: var(–st);     box-shadow: 0 4px 0 #145A32; }
+.sec-sw      .speak-btn { background: var(–sw);     box-shadow: 0 4px 0 #1A5276; }
+.sec-end-nd  .speak-btn { background: var(–end-nd); box-shadow: 0 4px 0 #7B241C; }
+.sec-end-nt  .speak-btn { background: var(–end-nt); box-shadow: 0 4px 0 #154360; }
+.sec-end-nk  .speak-btn { background: var(–end-nk); box-shadow: 0 4px 0 #5B2C6F; }
+.sec-end-st  .speak-btn { background: var(–end-st); box-shadow: 0 4px 0 #145A32; }
+.sec-end-mp  .speak-btn { background: var(–end-mp); box-shadow: 0 4px 0 #A5003B; }
+.sec-end-lt  .speak-btn { background: var(–end-lt); box-shadow: 0 4px 0 #7D6608; }
+.sec-end-lk  .speak-btn { background: var(–end-lk); box-shadow: 0 4px 0 #4A235A; }
+.sec-end-ft  .speak-btn { background: var(–end-ft); box-shadow: 0 4px 0 #1C2833; }
+
+.speak-btn:active {
+transform: scale(0.9) translateY(3px);
+box-shadow: 0 1px 0 rgba(0,0,0,0.3) !important;
+}
+
+.speak-btn.speaking { animation: pulse-btn 0.6s ease-in-out infinite alternate; }
+
+@keyframes pulse-btn {
+from { transform: scale(1); }
+to   { transform: scale(1.12); }
+}
+
+.bounce-in { animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
+
+@keyframes bounceIn {
+0%   { transform: scale(1); }
+30%  { transform: scale(1.3); }
+60%  { transform: scale(0.95); }
+100% { transform: scale(1.3); }
+}
+
+@media (max-width: 480px) {
+body { padding: 10px; }
+.cards-grid { gap: 10px; }
+}
+
+footer {
+text-align: center;
+padding: 30px 10px 16px;
+color: #aaa;
+font-size: 0.9rem;
+font-weight: 700;
+}
+</style>
+
+</head>
+<body>
+
+<header>
+  <h1>🎸 Consonant Blends!</h1>
+  <p>👆 Tap sounds to highlight &bull; 🔊 Hear the whole word!</p>
+  <div class="intro-badge">
+    Two consonants that <span class="blend-col">blend</span> <span class="rest-col">together</span>
+  </div>
+  <div class="key-bar">
+    <div class="key-item"><div class="key-dot blend"></div> Blend letters</div>
+    <div class="key-item"><div class="key-dot rest"></div> Rest of word</div>
+  </div>
+</header>
+
+<div id="app"></div>
+
+<footer>Blending sounds makes you a super reader! ⭐</footer>
+
+<script>
+const B = 'blend';
+const R = 'rest';
+
+const groups = [
+  {
+    groupLabel: '🔵 L-Blends',
+    sections: [
+      {
+        id: 'bl', label: '🔵 BL blend', secClass: 'sec-bl', blendLetters: 'bl',
+        words: [
+          { text: 'black', parts: [['bl',B],['a',R],['ck',R]], phonetic: '/blæk/' },
+          { text: 'blue',  parts: [['bl',B],['ue',R]],         phonetic: '/bluː/' },
+          { text: 'blob',  parts: [['bl',B],['o',R],['b',R]],  phonetic: '/blɒb/' },
+          { text: 'bless', parts: [['bl',B],['e',R],['ss',R]], phonetic: '/blɛs/' },
+          { text: 'blind', parts: [['bl',B],['i',R],['nd',R]], phonetic: '/blaɪnd/' },
+        ]
+      },
+      {
+        id: 'cl', label: '🟢 CL blend', secClass: 'sec-cl', blendLetters: 'cl',
+        words: [
+          { text: 'clap',  parts: [['cl',B],['a',R],['p',R]],  phonetic: '/klæp/' },
+          { text: 'clip',  parts: [['cl',B],['i',R],['p',R]],  phonetic: '/klɪp/' },
+          { text: 'clock', parts: [['cl',B],['o',R],['ck',R]], phonetic: '/klɒk/' },
+          { text: 'club',  parts: [['cl',B],['u',R],['b',R]],  phonetic: '/klʌb/' },
+          { text: 'clog',  parts: [['cl',B],['o',R],['g',R]],  phonetic: '/klɒg/' },
+        ]
+      },
+      {
+        id: 'fl', label: '🟠 FL blend', secClass: 'sec-fl', blendLetters: 'fl',
+        words: [
+          { text: 'flag',  parts: [['fl',B],['a',R],['g',R]],  phonetic: '/flæg/' },
+          { text: 'flat',  parts: [['fl',B],['a',R],['t',R]],  phonetic: '/flæt/' },
+          { text: 'flip',  parts: [['fl',B],['i',R],['p',R]],  phonetic: '/flɪp/' },
+          { text: 'flog',  parts: [['fl',B],['o',R],['g',R]],  phonetic: '/flɒg/' },
+          { text: 'fluff', parts: [['fl',B],['u',R],['ff',R]], phonetic: '/flʌf/' },
+        ]
+      },
+      {
+        id: 'gl', label: '🟣 GL blend', secClass: 'sec-gl', blendLetters: 'gl',
+        words: [
+          { text: 'glad',  parts: [['gl',B],['a',R],['d',R]],  phonetic: '/glæd/' },
+          { text: 'glen',  parts: [['gl',B],['e',R],['n',R]],  phonetic: '/glɛn/' },
+          { text: 'glib',  parts: [['gl',B],['i',R],['b',R]],  phonetic: '/glɪb/' },
+          { text: 'glob',  parts: [['gl',B],['o',R],['b',R]],  phonetic: '/glɒb/' },
+          { text: 'glum',  parts: [['gl',B],['u',R],['m',R]],  phonetic: '/glʌm/' },
+        ]
+      },
+      {
+        id: 'pl', label: '💗 PL blend', secClass: 'sec-pl', blendLetters: 'pl',
+        words: [
+          { text: 'plan',  parts: [['pl',B],['a',R],['n',R]],  phonetic: '/plæn/' },
+          { text: 'plod',  parts: [['pl',B],['o',R],['d',R]],  phonetic: '/plɒd/' },
+          { text: 'plop',  parts: [['pl',B],['o',R],['p',R]],  phonetic: '/plɒp/' },
+          { text: 'plug',  parts: [['pl',B],['u',R],['g',R]],  phonetic: '/plʌg/' },
+          { text: 'plus',  parts: [['pl',B],['u',R],['s',R]],  phonetic: '/plʌs/' },
+        ]
+      },
+      {
+        id: 'sl', label: '🔴 SL blend', secClass: 'sec-sl', blendLetters: 'sl',
+        words: [
+          { text: 'slap',  parts: [['sl',B],['a',R],['p',R]],  phonetic: '/slæp/' },
+          { text: 'sled',  parts: [['sl',B],['e',R],['d',R]],  phonetic: '/slɛd/' },
+          { text: 'slim',  parts: [['sl',B],['i',R],['m',R]],  phonetic: '/slɪm/' },
+          { text: 'slop',  parts: [['sl',B],['o',R],['p',R]],  phonetic: '/slɒp/' },
+          { text: 'slug',  parts: [['sl',B],['u',R],['g',R]],  phonetic: '/slʌg/' },
+        ]
+      },
+    ]
+  },
+  {
+    groupLabel: '🟤 R-Blends',
+    sections: [
+      {
+        id: 'br', label: '🔴 BR blend', secClass: 'sec-br', blendLetters: 'br',
+        words: [
+          { text: 'brag',  parts: [['br',B],['a',R],['g',R]],  phonetic: '/bræg/' },
+          { text: 'bred',  parts: [['br',B],['e',R],['d',R]],  phonetic: '/brɛd/' },
+          { text: 'brim',  parts: [['br',B],['i',R],['m',R]],  phonetic: '/brɪm/' },
+          { text: 'broth', parts: [['br',B],['o',R],['th',R]], phonetic: '/brɒθ/' },
+          { text: 'brush', parts: [['br',B],['u',R],['sh',R]], phonetic: '/brʌʃ/' },
+        ]
+      },
+      {
+        id: 'cr', label: '🟢 CR blend', secClass: 'sec-cr', blendLetters: 'cr',
+        words: [
+          { text: 'crab',  parts: [['cr',B],['a',R],['b',R]],  phonetic: '/kræb/' },
+          { text: 'cred',  parts: [['cr',B],['e',R],['d',R]],  phonetic: '/krɛd/' },
+          { text: 'crib',  parts: [['cr',B],['i',R],['b',R]],  phonetic: '/krɪb/' },
+          { text: 'crop',  parts: [['cr',B],['o',R],['p',R]],  phonetic: '/krɒp/' },
+          { text: 'crud',  parts: [['cr',B],['u',R],['d',R]],  phonetic: '/krʌd/' },
+        ]
+      },
+      {
+        id: 'dr', label: '🔵 DR blend', secClass: 'sec-dr', blendLetters: 'dr',
+        words: [
+          { text: 'drag',  parts: [['dr',B],['a',R],['g',R]],  phonetic: '/dræg/' },
+          { text: 'dreg',  parts: [['dr',B],['e',R],['g',R]],  phonetic: '/drɛg/' },
+          { text: 'drip',  parts: [['dr',B],['i',R],['p',R]],  phonetic: '/drɪp/' },
+          { text: 'drop',  parts: [['dr',B],['o',R],['p',R]],  phonetic: '/drɒp/' },
+          { text: 'drum',  parts: [['dr',B],['u',R],['m',R]],  phonetic: '/drʌm/' },
+        ]
+      },
+      {
+        id: 'fr', label: '🟣 FR blend', secClass: 'sec-fr', blendLetters: 'fr',
+        words: [
+          { text: 'frag',  parts: [['fr',B],['a',R],['g',R]],  phonetic: '/fræg/' },
+          { text: 'fret',  parts: [['fr',B],['e',R],['t',R]],  phonetic: '/frɛt/' },
+          { text: 'frill', parts: [['fr',B],['i',R],['ll',R]], phonetic: '/frɪl/' },
+          { text: 'from',  parts: [['fr',B],['o',R],['m',R]],  phonetic: '/frɒm/' },
+          { text: 'frug',  parts: [['fr',B],['u',R],['g',R]],  phonetic: '/frʌg/' },
+        ]
+      },
+      {
+        id: 'gr', label: '🟡 GR blend', secClass: 'sec-gr', blendLetters: 'gr',
+        words: [
+          { text: 'grab',  parts: [['gr',B],['a',R],['b',R]],  phonetic: '/græb/' },
+          { text: 'grin',  parts: [['gr',B],['i',R],['n',R]],  phonetic: '/grɪn/' },
+          { text: 'grip',  parts: [['gr',B],['i',R],['p',R]],  phonetic: '/grɪp/' },
+          { text: 'grot',  parts: [['gr',B],['o',R],['t',R]],  phonetic: '/grɒt/' },
+          { text: 'grub',  parts: [['gr',B],['u',R],['b',R]],  phonetic: '/grʌb/' },
+        ]
+      },
+      {
+        id: 'pr', label: '🟩 PR blend', secClass: 'sec-pr', blendLetters: 'pr',
+        words: [
+          { text: 'pram',  parts: [['pr',B],['a',R],['m',R]],  phonetic: '/præm/' },
+          { text: 'prep',  parts: [['pr',B],['e',R],['p',R]],  phonetic: '/prɛp/' },
+          { text: 'prim',  parts: [['pr',B],['i',R],['m',R]],  phonetic: '/prɪm/' },
+          { text: 'prop',  parts: [['pr',B],['o',R],['p',R]],  phonetic: '/prɒp/' },
+          { text: 'prod',  parts: [['pr',B],['o',R],['d',R]],  phonetic: '/prɒd/' },
+        ]
+      },
+      {
+        id: 'tr', label: '🔴 TR blend', secClass: 'sec-tr', blendLetters: 'tr',
+        words: [
+          { text: 'trap',  parts: [['tr',B],['a',R],['p',R]],  phonetic: '/træp/' },
+          { text: 'trek',  parts: [['tr',B],['e',R],['k',R]],  phonetic: '/trɛk/' },
+          { text: 'trim',  parts: [['tr',B],['i',R],['m',R]],  phonetic: '/trɪm/' },
+          { text: 'trot',  parts: [['tr',B],['o',R],['t',R]],  phonetic: '/trɒt/' },
+          { text: 'truck', parts: [['tr',B],['u',R],['ck',R]], phonetic: '/trʌk/' },
+        ]
+      },
+    ]
+  },
+  {
+    groupLabel: '🟡 S-Blends',
+    sections: [
+      {
+        id: 'sc', label: '🟣 SC blend', secClass: 'sec-sc', blendLetters: 'sc',
+        words: [
+          { text: 'scab',  parts: [['sc',B],['a',R],['b',R]],  phonetic: '/skæb/' },
+          { text: 'scam',  parts: [['sc',B],['a',R],['m',R]],  phonetic: '/skæm/' },
+          { text: 'scan',  parts: [['sc',B],['a',R],['n',R]],  phonetic: '/skæn/' },
+          { text: 'scot',  parts: [['sc',B],['o',R],['t',R]],  phonetic: '/skɒt/' },
+          { text: 'scum',  parts: [['sc',B],['u',R],['m',R]],  phonetic: '/skʌm/' },
+        ]
+      },
+      {
+        id: 'sk', label: '⬛ SK blend', secClass: 'sec-sk', blendLetters: 'sk',
+        words: [
+          { text: 'skab',  parts: [['sk',B],['a',R],['b',R]],  phonetic: '/skæb/' },
+          { text: 'sketch',parts: [['sk',B],['e',R],['tch',R]],phonetic: '/skɛtʃ/' },
+          { text: 'skim',  parts: [['sk',B],['i',R],['m',R]],  phonetic: '/skɪm/' },
+          { text: 'skip',  parts: [['sk',B],['i',R],['p',R]],  phonetic: '/skɪp/' },
+          { text: 'skull', parts: [['sk',B],['u',R],['ll',R]], phonetic: '/skʌl/' },
+        ]
+      },
+      {
+        id: 'sm', label: '🟢 SM blend', secClass: 'sec-sm', blendLetters: 'sm',
+        words: [
+          { text: 'smack', parts: [['sm',B],['a',R],['ck',R]], phonetic: '/smæk/' },
+          { text: 'smell', parts: [['sm',B],['e',R],['ll',R]], phonetic: '/smɛl/' },
+          { text: 'smog',  parts: [['sm',B],['o',R],['g',R]],  phonetic: '/smɒg/' },
+          { text: 'smug',  parts: [['sm',B],['u',R],['g',R]],  phonetic: '/smʌg/' },
+          { text: 'smit',  parts: [['sm',B],['i',R],['t',R]],  phonetic: '/smɪt/' },
+        ]
+      },
+      {
+        id: 'sn', label: '🟠 SN blend', secClass: 'sec-sn', blendLetters: 'sn',
+        words: [
+          { text: 'snag',  parts: [['sn',B],['a',R],['g',R]],  phonetic: '/snæg/' },
+          { text: 'snob',  parts: [['sn',B],['o',R],['b',R]],  phonetic: '/snɒb/' },
+          { text: 'snip',  parts: [['sn',B],['i',R],['p',R]],  phonetic: '/snɪp/' },
+          { text: 'snub',  parts: [['sn',B],['u',R],['b',R]],  phonetic: '/snʌb/' },
+          { text: 'snug',  parts: [['sn',B],['u',R],['g',R]],  phonetic: '/snʌg/' },
+        ]
+      },
+      {
+        id: 'sp', label: '🟣 SP blend', secClass: 'sec-sp', blendLetters: 'sp',
+        words: [
+          { text: 'span',  parts: [['sp',B],['a',R],['n',R]],  phonetic: '/spæn/' },
+          { text: 'sped',  parts: [['sp',B],['e',R],['d',R]],  phonetic: '/spɛd/' },
+          { text: 'spin',  parts: [['sp',B],['i',R],['n',R]],  phonetic: '/spɪn/' },
+          { text: 'spot',  parts: [['sp',B],['o',R],['t',R]],  phonetic: '/spɒt/' },
+          { text: 'spud',  parts: [['sp',B],['u',R],['d',R]],  phonetic: '/spʌd/' },
+        ]
+      },
+      {
+        id: 'st', label: '🟢 ST blend', secClass: 'sec-st', blendLetters: 'st',
+        words: [
+          { text: 'stab',  parts: [['st',B],['a',R],['b',R]],  phonetic: '/stæb/' },
+          { text: 'stem',  parts: [['st',B],['e',R],['m',R]],  phonetic: '/stɛm/' },
+          { text: 'stick', parts: [['st',B],['i',R],['ck',R]], phonetic: '/stɪk/' },
+          { text: 'stop',  parts: [['st',B],['o',R],['p',R]],  phonetic: '/stɒp/' },
+          { text: 'stub',  parts: [['st',B],['u',R],['b',R]],  phonetic: '/stʌb/' },
+        ]
+      },
+      {
+        id: 'sw', label: '🔵 SW blend', secClass: 'sec-sw', blendLetters: 'sw',
+        words: [
+          { text: 'swam',  parts: [['sw',B],['a',R],['m',R]],  phonetic: '/swæm/' },
+          { text: 'swell', parts: [['sw',B],['e',R],['ll',R]], phonetic: '/swɛl/' },
+          { text: 'swim',  parts: [['sw',B],['i',R],['m',R]],  phonetic: '/swɪm/' },
+          { text: 'swot',  parts: [['sw',B],['o',R],['t',R]],  phonetic: '/swɒt/' },
+          { text: 'swum',  parts: [['sw',B],['u',R],['m',R]],  phonetic: '/swʌm/' },
+        ]
+      },
+    ]
+  },
+  {
+    groupLabel: '🔚 End Blends',
+    sections: [
+      {
+        id: 'end-nd', label: '🔴 -ND ending', secClass: 'sec-end-nd', blendLetters: 'nd',
+        words: [
+          { text: 'band',  parts: [['ba',R],['nd',B]],         phonetic: '/bænd/' },
+          { text: 'bend',  parts: [['be',R],['nd',B]],         phonetic: '/bɛnd/' },
+          { text: 'bind',  parts: [['bi',R],['nd',B]],         phonetic: '/baɪnd/' },
+          { text: 'bond',  parts: [['bo',R],['nd',B]],         phonetic: '/bɒnd/' },
+          { text: 'fund',  parts: [['fu',R],['nd',B]],         phonetic: '/fʌnd/' },
+        ]
+      },
+      {
+        id: 'end-nt', label: '🔵 -NT ending', secClass: 'sec-end-nt', blendLetters: 'nt',
+        words: [
+          { text: 'ant',   parts: [['a',R],['nt',B]],          phonetic: '/ænt/' },
+          { text: 'dent',  parts: [['de',R],['nt',B]],         phonetic: '/dɛnt/' },
+          { text: 'hint',  parts: [['hi',R],['nt',B]],         phonetic: '/hɪnt/' },
+          { text: 'font',  parts: [['fo',R],['nt',B]],         phonetic: '/fɒnt/' },
+          { text: 'hunt',  parts: [['hu',R],['nt',B]],         phonetic: '/hʌnt/' },
+        ]
+      },
+      {
+        id: 'end-nk', label: '🟣 -NK ending', secClass: 'sec-end-nk', blendLetters: 'nk',
+        words: [
+          { text: 'bank',  parts: [['ba',R],['nk',B]],         phonetic: '/bæŋk/' },
+          { text: 'desk',  parts: [['de',R],['sk',B]],         phonetic: '/dɛsk/' },
+          { text: 'link',  parts: [['li',R],['nk',B]],         phonetic: '/lɪŋk/' },
+          { text: 'honk',  parts: [['ho',R],['nk',B]],         phonetic: '/hɒŋk/' },
+          { text: 'bunk',  parts: [['bu',R],['nk',B]],         phonetic: '/bʌŋk/' },
+        ]
+      },
+      {
+        id: 'end-st', label: '🟢 -ST ending', secClass: 'sec-end-st', blendLetters: 'st',
+        words: [
+          { text: 'last',  parts: [['la',R],['st',B]],         phonetic: '/lɑːst/' },
+          { text: 'best',  parts: [['be',R],['st',B]],         phonetic: '/bɛst/' },
+          { text: 'fist',  parts: [['fi',R],['st',B]],         phonetic: '/fɪst/' },
+          { text: 'cost',  parts: [['co',R],['st',B]],         phonetic: '/kɒst/' },
+          { text: 'dust',  parts: [['du',R],['st',B]],         phonetic: '/dʌst/' },
+        ]
+      },
+      {
+        id: 'end-mp', label: '💗 -MP ending', secClass: 'sec-end-mp', blendLetters: 'mp',
+        words: [
+          { text: 'camp',  parts: [['ca',R],['mp',B]],         phonetic: '/kæmp/' },
+          { text: 'hemp',  parts: [['he',R],['mp',B]],         phonetic: '/hɛmp/' },
+          { text: 'limp',  parts: [['li',R],['mp',B]],         phonetic: '/lɪmp/' },
+          { text: 'romp',  parts: [['ro',R],['mp',B]],         phonetic: '/rɒmp/' },
+          { text: 'bump',  parts: [['bu',R],['mp',B]],         phonetic: '/bʌmp/' },
+        ]
+      },
+      {
+        id: 'end-lt', label: '🟡 -LT ending', secClass: 'sec-end-lt', blendLetters: 'lt',
+        words: [
+          { text: 'halt',  parts: [['ha',R],['lt',B]],         phonetic: '/hɔːlt/' },
+          { text: 'melt',  parts: [['me',R],['lt',B]],         phonetic: '/mɛlt/' },
+          { text: 'jilt',  parts: [['ji',R],['lt',B]],         phonetic: '/dʒɪlt/' },
+          { text: 'bolt',  parts: [['bo',R],['lt',B]],         phonetic: '/boʊlt/' },
+          { text: 'cult',  parts: [['cu',R],['lt',B]],         phonetic: '/kʌlt/' },
+        ]
+      },
+      {
+        id: 'end-lk', label: '🟣 -LK ending', secClass: 'sec-end-lk', blendLetters: 'lk',
+        words: [
+          { text: 'talk',  parts: [['ta',R],['lk',B]],         phonetic: '/tɔːk/' },
+          { text: 'elk',   parts: [['e',R],['lk',B]],          phonetic: '/ɛlk/' },
+          { text: 'milk',  parts: [['mi',R],['lk',B]],         phonetic: '/mɪlk/' },
+          { text: 'folk',  parts: [['fo',R],['lk',B]],         phonetic: '/foʊk/' },
+          { text: 'bulk',  parts: [['bu',R],['lk',B]],         phonetic: '/bʌlk/' },
+        ]
+      },
+      {
+        id: 'end-ft', label: '⬛ -FT ending', secClass: 'sec-end-ft', blendLetters: 'ft',
+        words: [
+          { text: 'daft',  parts: [['da',R],['ft',B]],         phonetic: '/dɑːft/' },
+          { text: 'left',  parts: [['le',R],['ft',B]],         phonetic: '/lɛft/' },
+          { text: 'lift',  parts: [['li',R],['ft',B]],         phonetic: '/lɪft/' },
+          { text: 'loft',  parts: [['lo',R],['ft',B]],         phonetic: '/lɒft/' },
+          { text: 'tuft',  parts: [['tu',R],['ft',B]],         phonetic: '/tʌft/' },
+        ]
+      },
+    ]
+  },
+];
+
+function buildPage() {
+  const app = document.getElementById('app');
+
+  groups.forEach(group => {
+    // Group heading
+    const gh = document.createElement('div');
+    gh.className = 'group-heading';
+    gh.innerHTML = `<span>${group.groupLabel}</span>`;
+    app.appendChild(gh);
+
+    group.sections.forEach(sec => {
+      const section = document.createElement('div');
+      section.className = `section ${sec.secClass}`;
+
+      const h2 = document.createElement('h2');
+      h2.className = 'section-title';
+      h2.textContent = sec.label;
+      section.appendChild(h2);
+
+      const grid = document.createElement('div');
+      grid.className = 'cards-grid';
+
+      sec.words.forEach(word => {
+        const card = document.createElement('div');
+        card.className = 'word-card';
+
+        // Sounds row
+        const soundsRow = document.createElement('div');
+        soundsRow.className = 'sounds-row';
+        word.parts.forEach(([letters, type]) => {
+          const s = document.createElement('span');
+          s.className = `sound ${type}`;
+          s.textContent = letters;
+          s.addEventListener('click', (e) => {
+            e.stopPropagation();
+            s.classList.add('tapped', 'bounce-in');
+            setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
+          });
+          soundsRow.appendChild(s);
+        });
+
+        // Blend badge
+        const badge = document.createElement('div');
+        badge.className = 'blend-badge';
+        badge.textContent = sec.blendLetters.toUpperCase() + ' blend';
+
+        // Phonetic label
+        const label = document.createElement('div');
+        label.className = 'phonetic-label';
+        label.textContent = word.phonetic;
+
+        // Speak button
+        const btn = document.createElement('button');
+        btn.className = 'speak-btn';
+        btn.setAttribute('aria-label', `Hear ${word.text}`);
+        btn.textContent = '🔊';
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          speakWord(word.text, btn);
+        });
+
+        card.appendChild(soundsRow);
+        card.appendChild(badge);
+        card.appendChild(label);
+        card.appendChild(btn);
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      app.appendChild(section);
+    });
+  });
+}
+
+function speakWord(text, btn) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.75;
+  utter.pitch = 1.1;
+  utter.volume = 1;
+
+  btn.classList.add('speaking');
+  btn.textContent = '🎵';
+
+  utter.onend  = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
+
+  window.speechSynthesis.speak(utter);
+}
+
+buildPage();
+</script>
+
+</body>
+</html>
