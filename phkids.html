@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phonics Fun! \ud83c\udf89</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --pink: #FF6B9D;
+    --yellow: #FFD93D;
+    --blue: #4FC3F7;
+    --green: #69E090;
+    --purple: #B388FF;
+    --orange: #FFA552;
+    --bg: #FFF8F0;
+    --card: #ffffff;
+    --text: #3D2C8D;
+    --radius: 24px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== BUBBLES BG ===== */
+  .bubbles {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .bubble {
+    position: absolute; border-radius: 50%; opacity: 0.15;
+    animation: floatUp linear infinite;
+  }
+  @keyframes floatUp {
+    0% { transform: translateY(100vh) scale(0.5); opacity: 0.1; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+  }
+
+  /* ===== PAGES ===== */
+  .page { position: relative; z-index: 1; min-height: 100vh; }
+
+  /* ===== HOME PAGE ===== */
+  #home {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 100vh; padding: 20px; text-align: center;
+  }
+  .home-logo {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 10vw, 5rem);
+    background: linear-gradient(135deg, var(--pink), var(--purple), var(--blue));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: bounce 2s ease-in-out infinite;
+    margin-bottom: 8px;
+  }
+  .home-subtitle {
+    font-size: clamp(1rem, 3vw, 1.3rem);
+    color: var(--text); margin-bottom: 40px; font-weight: 700;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  .input-card {
+    background: white; border-radius: var(--radius);
+    padding: 36px 32px; max-width: 420px; width: 100%;
+    box-shadow: 0 12px 40px rgba(61,44,141,0.12);
+    border: 3px solid var(--yellow);
+  }
+  .input-card label {
+    display: block; font-size: 1.2rem; font-weight: 800;
+    color: var(--text); margin-bottom: 14px;
+  }
+  .letter-input {
+    width: 100%; padding: 18px 20px; font-size: 2rem;
+    font-family: 'Fredoka One', cursive; text-align: center;
+    border: 3px solid var(--purple); border-radius: 16px;
+    color: var(--text); outline: none; text-transform: uppercase;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .letter-input:focus {
+    border-color: var(--pink);
+    box-shadow: 0 0 0 4px rgba(255,107,157,0.2);
+  }
+  .start-btn {
+    margin-top: 20px; width: 100%; padding: 18px;
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    background: linear-gradient(135deg, var(--pink), var(--orange));
+    color: white; border: none; border-radius: 16px; cursor: pointer;
+    box-shadow: 0 6px 20px rgba(255,107,157,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .start-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 28px rgba(255,107,157,0.5); }
+  .start-btn:active { transform: translateY(0); }
+  .emoji-row { font-size: 2.5rem; margin-top: 30px; animation: wobble 3s ease-in-out infinite; }
+  @keyframes wobble {
+    0%,100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
+  /* ===== ACTIVITY PAGE ===== */
+  #activities { display: none; padding: 0; }
+
+  .act-header {
+    background: linear-gradient(135deg, var(--purple), var(--blue));
+    padding: 20px; display: flex; align-items: center; gap: 14px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  .back-btn {
+    background: rgba(255,255,255,0.25); border: none;
+    border-radius: 12px; color: white; font-size: 1.5rem;
+    width: 44px; height: 44px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    transition: background 0.2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,0.4); }
+  .act-header h1 {
+    font-family: 'Fredoka One', cursive; color: white;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+  }
+  .letter-badge {
+    margin-left: auto; background: var(--yellow);
+    border-radius: 50%; width: 52px; height: 52px;
+    font-family: 'Fredoka One', cursive; font-size: 1.8rem;
+    color: var(--text); display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  /* ===== TABS ===== */
+  .tabs-wrapper {
+    background: white; border-bottom: 3px solid #f0e8ff;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .tabs {
+    display: flex; min-width: max-content; padding: 0 8px;
+  }
+  .tab {
+    padding: 14px 16px; border: none; background: none;
+    font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 800;
+    color: #999; cursor: pointer; transition: color 0.2s;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    border-bottom: 3px solid transparent; white-space: nowrap;
+    margin-bottom: -3px;
+  }
+  .tab .tab-icon { font-size: 1.5rem; }
+  .tab.active { color: var(--purple); border-bottom-color: var(--purple); }
+  .tab:hover { color: var(--pink); }
+
+  /* ===== ACTIVITY PANELS ===== */
+  .activity-panel { display: none; padding: 20px; max-width: 700px; margin: 0 auto; }
+  .activity-panel.active { display: block; }
+
+  .act-card {
+    background: white; border-radius: var(--radius);
+    padding: 24px; margin-bottom: 20px;
+    box-shadow: 0 6px 24px rgba(61,44,141,0.08);
+  }
+  .act-title {
+    font-family: 'Fredoka One', cursive; font-size: 1.5rem;
+    color: var(--text); margin-bottom: 6px;
+  }
+  .act-desc { color: #777; font-size: 0.95rem; margin-bottom: 20px; font-weight: 600; }
+
+  /* ===== BUTTONS ===== */
+  .btn {
+    padding: 14px 24px; border: none; border-radius: 14px;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: translateY(0); }
+  .btn-pink { background: var(--pink); color: white; box-shadow: 0 4px 15px rgba(255,107,157,0.35); }
+  .btn-green { background: var(--green); color: #1a5c35; box-shadow: 0 4px 15px rgba(105,224,144,0.35); }
+  .btn-blue { background: var(--blue); color: #0d3d57; box-shadow: 0 4px 15px rgba(79,195,247,0.35); }
+  .btn-purple { background: var(--purple); color: white; box-shadow: 0 4px 15px rgba(179,136,255,0.35); }
+  .btn-orange { background: var(--orange); color: white; box-shadow: 0 4px 15px rgba(255,165,82,0.35); }
+  .btn-yellow { background: var(--yellow); color: var(--text); box-shadow: 0 4px 15px rgba(255,217,61,0.35); }
+  .btn-sm { padding: 10px 18px; font-size: 0.9rem; }
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ===== ACTIVITY 1: PHONICS SOUND ===== */
+  .big-letter {
+    font-family: 'Fredoka One', cursive; font-size: clamp(5rem, 20vw, 10rem);
+    text-align: center; line-height: 1;
+    background: linear-gradient(135deg, var(--purple), var(--pink));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+  .sound-status {
+    text-align: center; font-size: 1.1rem; font-weight: 700;
+    padding: 14px; border-radius: 14px; margin: 16px 0;
+  }
+  .status-neutral { background: #f5f0ff; color: var(--purple); }
+  .status-success { background: #d4f8e5; color: #1a7a45; }
+  .status-error { background: #ffe0e8; color: #c0284a; }
+  .status-recording { background: #fff0d4; color: #a0520d; animation: blink 1s step-end infinite; }
+  @keyframes blink { 50% { opacity: 0.5; } }
+
+  .stars { font-size: 2rem; text-align: center; letter-spacing: 4px; }
+
+  /* ===== ACTIVITY 2: TRACE ===== */
+  #traceCanvas {
+    border: 3px dashed var(--purple); border-radius: 16px;
+    touch-action: none; cursor: crosshair; display: block; margin: 0 auto;
+    max-width: 100%;
+  }
+  .trace-controls { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; justify-content: center; }
+
+  /* ===== ACTIVITY 3: CIRCLE WORDS ===== */
+  .word-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px; margin-top: 10px;
+  }
+  .word-item {
+    border: 3px solid #e8e0ff; border-radius: 16px; padding: 14px 10px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+    font-size: 1.1rem; font-weight: 800; color: var(--text);
+    user-select: none; background: white;
+  }
+  .word-item:hover { border-color: var(--purple); background: #f5f0ff; }
+  .word-item.selected { background: var(--green); border-color: #2ecc71; color: #155724; transform: scale(1.05); }
+  .word-item.wrong { background: #ffe0e8; border-color: var(--pink); animation: shake 0.4s; }
+  .word-item .word-emoji { font-size: 1.8rem; display: block; margin-bottom: 6px; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+  }
+  .circle-result {
+    text-align: center; padding: 14px; border-radius: 14px;
+    font-weight: 800; font-size: 1.1rem; margin-top: 14px;
+  }
+
+  /* ===== ACTIVITY 4: FILL MISSING SOUND ===== */
+  .fill-word {
+    font-family: 'Fredoka One', cursive; font-size: clamp(2rem, 8vw, 3.5rem);
+    text-align: center; color: var(--text); margin: 20px 0;
+    letter-spacing: 8px; line-height: 1.3;
+  }
+  .fill-blank {
+    display: inline-block; border-bottom: 5px solid var(--purple);
+    min-width: 52px; color: var(--purple);
+    padding: 0 6px; position: relative;
+  }
+  .options-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 12px; margin-top: 16px;
+  }
+  .option-btn {
+    padding: 18px 10px; border: 3px solid #e8e0ff; border-radius: 16px;
+    background: white; font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem; color: var(--text); cursor: pointer;
+    transition: all 0.2s; text-align: center;
+  }
+  .option-btn:hover { border-color: var(--purple); background: #f5f0ff; }
+  .option-btn.correct { background: var(--green); border-color: #2ecc71; color: #155724; }
+  .option-btn.incorrect { background: #ffe0e8; border-color: var(--pink); animation: shake 0.4s; }
+
+  /* ===== ACTIVITY 5: DRAW ===== */
+  #drawCanvas {
+    border: 3px solid var(--orange); border-radius: 16px;
+    touch-action: none; cursor: crosshair; display: block; margin: 0 auto;
+    max-width: 100%; background: white;
+  }
+  .draw-toolbar {
+    display: flex; gap: 8px; align-items: center;
+    flex-wrap: wrap; margin-bottom: 14px; justify-content: center;
+  }
+  .color-dot {
+    width: 36px; height: 36px; border-radius: 50%; border: 3px solid transparent;
+    cursor: pointer; transition: transform 0.15s, border-color 0.15s;
+  }
+  .color-dot.active { border-color: var(--text); transform: scale(1.2); }
+  .size-slider { width: 100px; accent-color: var(--orange); }
+  .draw-prompt {
+    background: linear-gradient(135deg, var(--orange), var(--yellow));
+    border-radius: 16px; padding: 16px 20px; margin-bottom: 16px;
+    font-weight: 800; font-size: 1.1rem; color: white; text-align: center;
+  }
+
+  /* ===== ACTIVITY 6: WORD LISTEN ===== */
+  .listen-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px; margin-top: 10px;
+  }
+  .listen-card {
+    border: 3px solid #e8e0ff; border-radius: 20px; padding: 20px 12px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+    background: white; position: relative; overflow: hidden;
+  }
+  .listen-card:hover { border-color: var(--blue); transform: translateY(-4px); box-shadow: 0 8px 24px rgba(79,195,247,0.25); }
+  .listen-card.playing { border-color: var(--blue); background: #e0f7fe; }
+  .listen-emoji { font-size: 2.5rem; display: block; margin-bottom: 8px; }
+  .listen-word { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--text); }
+  .listen-hint { font-size: 0.8rem; color: #999; font-weight: 700; margin-top: 4px; }
+  .speaker-icon {
+    position: absolute; top: 8px; right: 10px; font-size: 1.1rem; opacity: 0.4;
+  }
+  .listen-card.playing .speaker-icon { opacity: 1; animation: blink 0.5s step-end infinite; }
+
+  /* ===== SHARE PANEL ===== */
+  .share-section { text-align: center; }
+  .share-preview {
+    border: 3px solid var(--yellow); border-radius: 20px; padding: 24px;
+    background: linear-gradient(135deg, #fff8f0, #f0e8ff); margin-bottom: 20px;
+  }
+  .share-preview h2 {
+    font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--text);
+  }
+  .share-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+
+  /* ===== CELEBRATION ===== */
+  .confetti-container {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 9999;
+  }
+  .confetti-piece {
+    position: absolute; width: 10px; height: 10px; top: -10px;
+    animation: confettiFall linear forwards;
+    border-radius: 2px;
+  }
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 480px) {
+    .act-card { padding: 18px 16px; }
+    .tabs { gap: 0; }
+    .tab { padding: 12px 10px; font-size: 0.72rem; }
+    .tab .tab-icon { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- BUBBLES BACKGROUND -->
+<div class="bubbles" id="bubbles"></div>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="home" class="page">
+  <div class="home-logo">Phonics Fun! \ud83c\udf1f</div>
+  <p class="home-subtitle">Learn letter sounds the fun way!</p>
+  <div class="input-card">
+    <label for="phonicInput">\u270f\ufe0f Type a Phonic Letter:</label>
+    <input type="text" id="phonicInput" class="letter-input" maxlength="2" placeholder="A" autocomplete="off" />
+    <button class="start-btn" onclick="startActivities()">
+      Let's Go! \ud83d\ude80
+    </button>
+  </div>
+  <div class="emoji-row">\ud83d\udc0a \ud83e\udd81 \ud83d\udc18 \ud83e\udd92 \ud83d\udc27 \ud83e\udd8b</div>
+</div>
+
+<!-- ===== ACTIVITY PAGE ===== -->
+<div id="activities" class="page">
+  <div class="act-header">
+    <button class="back-btn" onclick="goHome()">\u2190</button>
+    <h1>Phonics Fun!</h1>
+    <div class="letter-badge" id="headerLetter">A</div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-wrapper">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(0)"><span class="tab-icon">\ud83d\udd0a</span>Say It</button>
+      <button class="tab" onclick="switchTab(1)"><span class="tab-icon">\u270f\ufe0f</span>Trace</button>
+      <button class="tab" onclick="switchTab(2)"><span class="tab-icon">\u2b55</span>Circle</button>
+      <button class="tab" onclick="switchTab(3)"><span class="tab-icon">\u2753</span>Fill In</button>
+      <button class="tab" onclick="switchTab(4)"><span class="tab-icon">\ud83c\udfa8</span>Draw</button>
+      <button class="tab" onclick="switchTab(5)"><span class="tab-icon">\ud83d\udc42</span>Listen</button>
+    </div>
+  </div>
+
+  <!-- PANEL 1: SAY THE SOUND -->
+  <div class="activity-panel active" id="panel0">
+    <div class="act-card" style="text-align:center;">
+      <div class="act-title">\ud83d\udd0a Say the Sound!</div>
+      <div class="act-desc">Listen to the sound, then say it yourself!</div>
+      <div class="big-letter" id="soundLetter">A</div>
+      <p id="soundExample" style="font-size:1.2rem;font-weight:800;color:#777;margin:8px 0 20px;">like in \ud83c\udf4e Apple</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px;">
+        <button class="btn btn-blue" onclick="speakPhonic()">\ud83d\udd0a Hear Sound</button>
+        <button class="btn btn-pink" id="recordBtn" onclick="toggleRecording()">\ud83c\udfa4 Say It!</button>
+      </div>
+      <div class="sound-status status-neutral" id="soundStatus">Press "Hear Sound" first, then say the sound!</div>
+      <div class="stars" id="starsDisplay"></div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: TRACE -->
+  <div class="activity-panel" id="panel1">
+    <div class="act-card">
+      <div class="act-title">\u270f\ufe0f Trace the Letter!</div>
+      <div class="act-desc">Follow the dotted lines to trace the letter.</div>
+      <canvas id="traceCanvas" width="400" height="320"></canvas>
+      <div class="trace-controls">
+        <button class="btn btn-purple btn-sm" onclick="clearTrace()">\ud83d\udd04 Clear</button>
+        <button class="btn btn-green btn-sm" onclick="checkTrace()">\u2705 Done!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: CIRCLE WORDS -->
+  <div class="activity-panel" id="panel2">
+    <div class="act-card">
+      <div class="act-title">\u2b55 Circle the Words!</div>
+      <div class="act-desc" id="circleDesc">Tap all words that have the letter!</div>
+      <div class="word-grid" id="wordGrid"></div>
+      <div class="circle-result" id="circleResult" style="display:none;"></div>
+      <button class="btn btn-purple btn-full" style="margin-top:16px;" onclick="generateCircleWords()">\ud83d\udd04 New Words</button>
+    </div>
+  </div>
+
+  <!-- PANEL 4: FILL MISSING -->
+  <div class="activity-panel" id="panel3">
+    <div class="act-card">
+      <div class="act-title">\u2753 Fill the Missing Sound!</div>
+      <div class="act-desc">Tap the correct letter to complete the word!</div>
+      <div id="fillWordDisplay" class="fill-word"></div>
+      <div id="fillHint" style="text-align:center;font-size:2rem;margin:8px 0;"></div>
+      <div class="options-grid" id="fillOptions"></div>
+      <div id="fillResult" class="sound-status" style="margin-top:16px;display:none;"></div>
+      <button class="btn btn-blue btn-full" style="margin-top:16px;" onclick="nextFillWord()">\u27a1\ufe0f Next Word</button>
+    </div>
+  </div>
+
+  <!-- PANEL 5: DRAW -->
+  <div class="activity-panel" id="panel4">
+    <div class="act-card">
+      <div class="act-title">\ud83c\udfa8 Draw Something!</div>
+      <div class="draw-prompt" id="drawPrompt">Draw a picture of something that starts with the letter!</div>
+      <div class="draw-toolbar">
+        <div class="color-dot active" style="background:#3D2C8D;" data-color="#3D2C8D" onclick="setColor(this)
