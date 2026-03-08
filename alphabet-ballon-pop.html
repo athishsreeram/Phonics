@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>🎈 Alphabet Balloon Pop!</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+- { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+:root {
+–sky: #87CEEB;
+–cloud: #fff;
+–grass: #7EC850;
+}
+
+body {
+font-family: ‘Nunito’, sans-serif;
+background: linear-gradient(180deg, #a8edff 0%, #d4f5ff 60%, #7EC850 60%, #5ba832 100%);
+min-height: 100vh;
+overflow: hidden;
+user-select: none;
+}
+
+/* Clouds */
+.cloud {
+position: fixed;
+background: white;
+border-radius: 50px;
+opacity: 0.85;
+animation: driftCloud linear infinite;
+pointer-events: none;
+}
+.cloud::before, .cloud::after {
+content: ‘’;
+position: absolute;
+background: white;
+border-radius: 50%;
+}
+.cloud-1 { width: 120px; height: 40px; top: 8%; animation-duration: 28s; animation-delay: -5s; }
+.cloud-1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
+.cloud-1::after { width: 45px; height: 45px; top: -22px; left: 50px; }
+.cloud-2 { width: 90px; height: 30px; top: 18%; animation-duration: 35s; animation-delay: -15s; opacity: 0.7; }
+.cloud-2::before { width: 45px; height: 45px; top: -22px; left: 10px; }
+.cloud-2::after { width: 35px; height: 35px; top: -16px; left: 40px; }
+.cloud-3 { width: 140px; height: 45px; top: 5%; animation-duration: 22s; animation-delay: -20s; opacity: 0.6; }
+.cloud-3::before { width: 70px; height: 70px; top: -35px; left: 20px; }
+.cloud-3::after { width: 55px; height: 55px; top: -27px; left: 65px; }
+
+@keyframes driftCloud {
+from { transform: translateX(-200px); }
+to { transform: translateX(calc(100vw + 200px)); }
+}
+
+/* Header */
+#header {
+position: fixed;
+top: 0; left: 0; right: 0;
+z-index: 100;
+padding: 10px 16px 6px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: linear-gradient(180deg, rgba(168,237,255,0.95) 0%, transparent 100%);
+}
+
+#title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(22px, 5vw, 36px);
+color: #ff6b6b;
+text-shadow: 3px 3px 0 #fff, 4px 4px 0 rgba(0,0,0,0.1);
+letter-spacing: 1px;
+}
+
+#progress-bar-wrap {
+display: flex;
+gap: 4px;
+flex-wrap: wrap;
+max-width: 55vw;
+justify-content: flex-end;
+}
+
+.prog-dot {
+width: clamp(12px, 2.5vw, 18px);
+height: clamp(12px, 2.5vw, 18px);
+border-radius: 50%;
+background: rgba(255,255,255,0.5);
+border: 2px solid rgba(255,255,255,0.8);
+transition: all 0.3s;
+font-size: clamp(7px, 1.5vw, 11px);
+display: flex; align-items: center; justify-content: center;
+color: white;
+font-weight: 900;
+}
+.prog-dot.done { background: #7EC850; border-color: #5ba832; }
+
+/* Game area */
+#game-area {
+position: fixed;
+inset: 0;
+overflow: hidden;
+}
+
+/* Current letter prompt */
+#letter-prompt {
+position: fixed;
+bottom: clamp(70px, 14vw, 100px);
+left: 50%;
+transform: translateX(-50%);
+z-index: 50;
+text-align: center;
+pointer-events: none;
+}
+
+#prompt-text {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(16px, 4vw, 24px);
+color: #555;
+text-shadow: 1px 1px 0 white;
+}
+
+#big-letter {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(60px, 18vw, 120px);
+color: #ff6b6b;
+text-shadow: 4px 4px 0 #fff, 6px 6px 0 rgba(0,0,0,0.1);
+line-height: 1;
+animation: bounce 1s ease-in-out infinite;
+}
+
+@keyframes bounce {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
+}
+
+/* Balloon */
+.balloon {
+position: absolute;
+cursor: pointer;
+animation: floatUp linear forwards;
+transform-origin: bottom center;
+z-index: 10;
+}
+
+.balloon-body {
+position: relative;
+border-radius: 50% 50% 50% 50% / 55% 55% 45% 45%;
+display: flex;
+align-items: center;
+justify-content: center;
+box-shadow: inset -8px -8px 20px rgba(0,0,0,0.15), inset 4px 4px 12px rgba(255,255,255,0.4);
+transition: transform 0.1s;
+}
+
+.balloon-body::after {
+content: ‘’;
+position: absolute;
+top: 12%;
+left: 20%;
+width: 25%;
+height: 20%;
+background: rgba(255,255,255,0.5);
+border-radius: 50%;
+transform: rotate(-30deg);
+}
+
+.balloon-body::before {
+content: ‘’;
+position: absolute;
+bottom: -8px;
+left: 50%;
+transform: translateX(-50%);
+width: 0;
+height: 0;
+border-left: 6px solid transparent;
+border-right: 6px solid transparent;
+border-top: 12px solid inherit;
+}
+
+.balloon-knot {
+position: absolute;
+bottom: -10px;
+left: 50%;
+transform: translateX(-50%);
+width: 10px;
+height: 10px;
+border-radius: 50%;
+}
+
+.balloon-string {
+position: absolute;
+bottom: -55px;
+left: 50%;
+transform: translateX(-50%);
+width: 2px;
+height: 50px;
+background: rgba(0,0,0,0.2);
+}
+
+.balloon-letter {
+font-family: ‘Fredoka One’, cursive;
+color: white;
+text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+z-index: 1;
+pointer-events: none;
+}
+
+.balloon:hover .balloon-body,
+.balloon:active .balloon-body {
+transform: scale(1.1);
+}
+
+@keyframes floatUp {
+0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+20% { transform: translateY(-10%) rotate(3deg); opacity: 1; }
+40% { transform: translateY(-22%) rotate(-2deg); opacity: 1; }
+60% { transform: translateY(-38%) rotate(2deg); opacity: 1; }
+80% { transform: translateY(-56%) rotate(-1deg); opacity: 1; }
+100% { transform: translateY(-110vh) rotate(2deg); opacity: 0.5; }
+}
+
+@keyframes sway {
+0%, 100% { transform: rotate(-3deg); }
+50% { transform: rotate(3deg); }
+}
+
+/* Pop effect */
+.pop-burst {
+position: absolute;
+pointer-events: none;
+z-index: 200;
+}
+
+.burst-piece {
+position: absolute;
+border-radius: 50%;
+animation: burst 0.6s ease-out forwards;
+}
+
+@keyframes burst {
+0% { transform: translate(0,0) scale(1); opacity: 1; }
+100% { transform: translate(var(–tx), var(–ty)) scale(0); opacity: 0; }
+}
+
+/* Word reveal overlay */
+#word-overlay {
+position: fixed;
+inset: 0;
+z-index: 300;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: radial-gradient(ellipse at center, rgba(255,255,180,0.97) 0%, rgba(255,220,100,0.97) 100%);
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.2s;
+}
+#word-overlay.show {
+opacity: 1;
+pointer-events: all;
+}
+
+#word-emoji {
+font-size: clamp(80px, 25vw, 160px);
+animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+filter: drop-shadow(4px 8px 12px rgba(0,0,0,0.15));
+line-height: 1.1;
+}
+
+#word-text {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(36px, 12vw, 80px);
+color: #e63946;
+text-shadow: 3px 3px 0 #fff, 5px 5px 0 rgba(0,0,0,0.1);
+letter-spacing: 4px;
+margin-top: 10px;
+animation: popIn 0.4s 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+#word-spelled {
+display: flex;
+gap: clamp(6px, 2vw, 14px);
+margin-top: 8px;
+}
+
+.spell-letter {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(28px, 8vw, 56px);
+width: clamp(44px, 12vw, 80px);
+height: clamp(44px, 12vw, 80px);
+border-radius: 12px;
+display: flex; align-items: center; justify-content: center;
+color: white;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 2px 8px rgba(0,0,0,0.1);
+animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+.spell-letter.highlight {
+transform: scale(1.2);
+box-shadow: 0 0 0 4px white, 0 8px 0 rgba(0,0,0,0.15);
+}
+
+#tap-continue {
+font-family: ‘Nunito’, sans-serif;
+font-size: clamp(16px, 4vw, 24px);
+color: #888;
+margin-top: 20px;
+animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+0%, 100% { opacity: 0.5; }
+50% { opacity: 1; }
+}
+
+@keyframes popIn {
+0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* Confetti */
+.confetti-piece {
+position: fixed;
+pointer-events: none;
+z-index: 250;
+border-radius: 3px;
+animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+/* Win screen */
+#win-screen {
+position: fixed;
+inset: 0;
+z-index: 500;
+display: none;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+background: linear-gradient(135deg, #ff9a9e, #fecfef, #ffeaa7, #a8edea, #fed6e3);
+background-size: 400% 400%;
+animation: gradShift 3s ease infinite;
+text-align: center;
+padding: 20px;
+}
+#win-screen.show { display: flex; }
+
+@keyframes gradShift {
+0% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+100% { background-position: 0% 50%; }
+}
+
+#win-title {
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(40px, 14vw, 90px);
+color: white;
+text-shadow: 4px 4px 0 #e63946, 7px 7px 0 rgba(0,0,0,0.1);
+animation: wiggle 0.5s ease-in-out infinite;
+}
+
+#win-subtitle {
+font-family: ‘Nunito’, sans-serif;
+font-size: clamp(18px, 5vw, 32px);
+color: white;
+font-weight: 900;
+text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+margin-top: 12px;
+}
+
+#win-emojis {
+font-size: clamp(40px, 12vw, 80px);
+margin: 16px 0;
+animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+@keyframes wiggle {
+0%, 100% { transform: rotate(-3deg) scale(1.02); }
+50% { transform: rotate(3deg) scale(1.02); }
+}
+
+#play-again-btn {
+margin-top: 20px;
+font-family: ‘Fredoka One’, cursive;
+font-size: clamp(20px, 5vw, 32px);
+color: white;
+background: linear-gradient(135deg, #e63946, #ff6b6b);
+border: none;
+border-radius: 50px;
+padding: clamp(12px, 3vw, 20px) clamp(30px, 8vw, 60px);
+cursor: pointer;
+box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 4px 16px rgba(0,0,0,0.1);
+transition: transform 0.1s, box-shadow 0.1s;
+-webkit-tap-highlight-color: transparent;
+}
+#play-again-btn:active {
+transform: translateY(4px);
+box-shadow: 0 4px 0 rgba(0,0,0,0.2);
+}
+
+/* Stars floating */
+.star {
+position: fixed;
+pointer-events: none;
+z-index: 1;
+font-size: 20px;
+opacity: 0.3;
+animation: twinkle 2s ease-in-out infinite;
+}
+@keyframes twinkle {
+0%, 100% { opacity: 0.15; transform: scale(0.9); }
+50% { opacity: 0.5; transform: scale(1.1); }
+}
+</style>
+
+</head>
+<body>
+
+<div class="cloud cloud-1"></div>
+<div class="cloud cloud-2"></div>
+<div class="cloud cloud-3"></div>
+
+<div id="header">
+  <div id="title">🎈 ABC Pop!</div>
+  <div id="progress-bar-wrap"></div>
+</div>
+
+<div id="game-area"></div>
+
+<div id="letter-prompt">
+  <div id="prompt-text">Pop the balloon!</div>
+  <div id="big-letter">a</div>
+</div>
+
+<div id="word-overlay">
+  <div id="word-emoji">🍎</div>
+  <div id="word-text">APPLE</div>
+  <div id="word-spelled"></div>
+  <div id="tap-continue">tap anywhere to continue ✨</div>
+</div>
+
+<div id="win-screen">
+  <div id="win-title">🌟 YOU DID IT! 🌟</div>
+  <div id="win-subtitle">You know all your ABCs!</div>
+  <div id="win-emojis">🎉</div>
+  <div id="play-again-btn" onclick="restartGame()">Play Again! 🎈</div>
+</div>
+
+<script>
+const WORDS = {
+  a: { word: 'apple',   emoji: '🍎' },
+  b: { word: 'bear',    emoji: '🐻' },
+  c: { word: 'cat',     emoji: '🐱' },
+  d: { word: 'dog',     emoji: '🐶' },
+  e: { word: 'egg',     emoji: '🥚' },
+  f: { word: 'fish',    emoji: '🐟' },
+  g: { word: 'goat',    emoji: '🐐' },
+  h: { word: 'hat',     emoji: '🎩' },
+  i: { word: 'ice',     emoji: '🧊' },
+  j: { word: 'jar',     emoji: '🫙' },
+  k: { word: 'kite',    emoji: '🪁' },
+  l: { word: 'lion',    emoji: '🦁' },
+  m: { word: 'moon',    emoji: '🌙' },
+  n: { word: 'nest',    emoji: '🪺' },
+  o: { word: 'owl',     emoji: '🦉' },
+  p: { word: 'pig',     emoji: '🐷' },
+  q: { word: 'quail',   emoji: '🐦' },
+  r: { word: 'rain',    emoji: '🌧️' },
+  s: { word: 'star',    emoji: '⭐' },
+  t: { word: 'tree',    emoji: '🌳' },
+  u: { word: 'umi',     emoji: '🌊' },
+  v: { word: 'van',     emoji: '🚐' },
+  w: { word: 'wolf',    emoji: '🐺' },
+  x: { word: 'xmas',   emoji: '🎄' },
+  y: { word: 'yak',     emoji: '🐃' },
+  z: { word: 'zip',     emoji: '🤐' }
+};
+
+const BALLOON_COLORS = [
+  ['#ff6b6b','#cc4444'],
+  ['#ffd93d','#cc9900'],
+  ['#6bcb77','#3d8c47'],
+  ['#4d96ff','#2255cc'],
+  ['#ff922b','#cc5500'],
+  ['#cc5de8','#8833bb'],
+  ['#f06595','#c02060'],
+  ['#20c997','#0a8060'],
+];
+
+const LETTER_COLORS = [
+  '#ff6b6b','#ff922b','#ffd93d','#6bcb77',
+  '#4d96ff','#cc5de8','#f06595','#20c997',
+  '#ff6b6b','#ff922b','#ffd93d','#6bcb77',
+  '#4d96ff','#cc5de8','#f06595','#20c997',
+  '#ff6b6b','#ff922b','#ffd93d','#6bcb77',
+  '#4d96ff','#cc5de8','#f06595','#20c997',
+  '#ff6b6b','#ffd93d'
+];
+
+const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+let currentIndex = 0;
+let balloonEl = null;
+let overlayVisible = false;
+let canSpawn = true;
+let spawnTimer = null;
+
+// Build progress dots
+const progWrap = document.getElementById('progress-bar-wrap');
+alphabet.forEach((l, i) => {
+  const dot = document.createElement('div');
+  dot.className = 'prog-dot';
+  dot.id = `dot-${l}`;
+  dot.textContent = l;
+  progWrap.appendChild(dot);
+});
+
+function spawnBalloon() {
+  if (!canSpawn) return;
+  const letter = alphabet[currentIndex];
+  const gameArea = document.getElementById('game-area');
+
+  // Remove old balloon
+  if (balloonEl) { balloonEl.remove(); balloonEl = null; }
+
+  const colorPair = BALLOON_COLORS[currentIndex % BALLOON_COLORS.length];
+  const size = Math.max(90, Math.min(140, window.innerWidth * 0.22));
+  const leftPct = 15 + Math.random() * 70;
+  const duration = 12 + Math.random() * 6;
+
+  const el = document.createElement('div');
+  el.className = 'balloon';
+  el.style.cssText = `left:${leftPct}%;bottom:-${size+80}px;width:${size}px;height:${size*1.2}px;animation:floatUp ${duration}s linear forwards`;
+
+  el.innerHTML = `
+    <div class="balloon-body" style="width:${size}px;height:${size*1.1}px;background:radial-gradient(circle at 38% 32%, ${colorPair[0]}ee, ${colorPair[1]})">
+      <span class="balloon-letter" style="font-size:${size*0.44}px">${letter}</span>
+    </div>
+    <div class="balloon-knot" style="background:${colorPair[1]}"></div>
+    <div class="balloon-string"></div>
+  `;
+
+  el.addEventListener('click', () => popBalloon(el, letter));
+  el.addEventListener('touchstart', (e) => { e.preventDefault(); popBalloon(el, letter); }, { passive: false });
+
+  gameArea.appendChild(el);
+  balloonEl = el;
+
+  // If floated away, respawn
+  setTimeout(() => {
+    if (balloonEl === el && !overlayVisible) {
+      el.remove();
+      balloonEl = null;
+      spawnBalloon();
+    }
+  }, duration * 1000);
+}
+
+function popBalloon(el, letter) {
+  if (overlayVisible) return;
+  if (letter !== alphabet[currentIndex]) return;
+
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2;
+  const cy = rect.top + rect.height / 2;
+
+  // Burst effect
+  createBurst(cx, cy, BALLOON_COLORS[currentIndex % BALLOON_COLORS.length][0]);
+
+  // Say letter
+  speak(letter);
+
+  el.remove();
+  balloonEl = null;
+  canSpawn = false;
+
+  // Show word
+  setTimeout(() => showWord(letter), 350);
+}
+
+function createBurst(cx, cy, color) {
+  const gameArea = document.getElementById('game-area');
+  const burst = document.createElement('div');
+  burst.className = 'pop-burst';
+  burst.style.cssText = `left:${cx}px;top:${cy}px`;
+
+  for (let i = 0; i < 16; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'burst-piece';
+    const angle = (i / 16) * 360;
+    const dist = 60 + Math.random() * 60;
+    const tx = Math.cos(angle * Math.PI / 180) * dist;
+    const ty = Math.sin(angle * Math.PI / 180) * dist;
+    const sz = 8 + Math.random() * 14;
+    const colors = [color, '#fff', '#ffd93d', '#ff6b6b', '#6bcb77'];
+    piece.style.cssText = `
+      width:${sz}px;height:${sz}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --tx:${tx}px;--ty:${ty}px;
+      margin-left:-${sz/2}px;margin-top:-${sz/2}px;
+    `;
+    burst.appendChild(piece);
+  }
+
+  gameArea.appendChild(burst);
+  setTimeout(() => burst.remove(), 700);
+  launchConfetti(cx, cy);
+}
+
+function launchConfetti(cx, cy) {
+  const colors = ['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#cc5de8','#f06595','#ff922b'];
+  for (let i = 0; i < 28; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti-piece';
+    const color = colors[Math.floor(Math.random() * colors.length)];
+    const w = 6 + Math.random() * 10;
+    const h = 8 + Math.random() * 12;
+    const lx = cx + (Math.random() - 0.5) * 100;
+    const dur = 1.5 + Math.random() * 1.5;
+    c.style.cssText = `left:${lx}px;top:${cy}px;width:${w}px;height:${h}px;background:${color};animation-duration:${dur}s`;
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), dur * 1100);
+  }
+}
+
+function showWord(letter) {
+  const data = WORDS[letter];
+  const overlay = document.getElementById('word-overlay');
+  document.getElementById('word-emoji').textContent = data.emoji;
+  document.getElementById('word-text').textContent = data.word.toUpperCase();
+
+  // Spelled letters
+  const spelled = document.getElementById('word-spelled');
+  spelled.innerHTML = '';
+  data.word.split('').forEach((ch, i) => {
+    const span = document.createElement('div');
+    span.className = 'spell-letter' + (i === 0 ? ' highlight' : '');
+    span.textContent = ch;
+    span.style.cssText = `background:${LETTER_COLORS[i]};animation-delay:${0.2 + i * 0.12}s`;
+    spelled.appendChild(span);
+  });
+
+  overlay.classList.add('show');
+  overlayVisible = true;
+
+  // Speak the word
+  setTimeout(() => speak(data.word), 400);
+
+  // Mark progress
+  document.getElementById(`dot-${letter}`).classList.add('done');
+  currentIndex++;
+  document.getElementById('big-letter').textContent = alphabet[currentIndex] || '🎉';
+}
+
+document.getElementById('word-overlay').addEventListener('click', dismissOverlay);
+document.getElementById('word-overlay').addEventListener('touchstart', (e) => { e.preventDefault(); dismissOverlay(); }, { passive: false });
+
+function dismissOverlay() {
+  const overlay = document.getElementById('word-overlay');
+  overlay.classList.remove('show');
+  overlayVisible = false;
+
+  if (currentIndex >= 26) {
+    setTimeout(showWin, 400);
+  } else {
+    canSpawn = true;
+    setTimeout(spawnBalloon, 300);
+    document.getElementById('prompt-text').textContent = 'Pop the balloon!';
+  }
+}
+
+function showWin() {
+  document.getElementById('win-screen').classList.add('show');
+  // Big confetti
+  for (let i = 0; i < 5; i++) {
+    setTimeout(() => {
+      launchConfetti(Math.random() * window.innerWidth, -10);
+    }, i * 400);
+  }
+  speak("You did it! You know all your ABCs! Great job!");
+}
+
+function restartGame() {
+  currentIndex = 0;
+  overlayVisible = false;
+  canSpawn = true;
+  document.getElementById('win-screen').classList.remove('show');
+  document.getElementById('big-letter').textContent = 'a';
+  alphabet.forEach(l => {
+    document.getElementById(`dot-${l}`).classList.remove('done');
+  });
+  if (balloonEl) { balloonEl.remove(); balloonEl = null; }
+  setTimeout(spawnBalloon, 300);
+}
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 0.85;
+  utter.pitch = 1.3;
+  utter.volume = 1;
+  // Try to get a friendly voice
+  const voices = window.speechSynthesis.getVoices();
+  const pick = voices.find(v => v.name.includes('Samantha') || v.name.includes('Karen') || v.name.includes('Moira'))
+    || voices.find(v => v.lang.startsWith('en'))
+    || voices[0];
+  if (pick) utter.voice = pick;
+  window.speechSynthesis.speak(utter);
+}
+
+// Ensure voices load
+window.speechSynthesis?.getVoices();
+window.speechSynthesis?.addEventListener?.('voiceschanged', () => {});
+
+// Init
+spawnBalloon();
+</script>
+
+</body>
+</html>
