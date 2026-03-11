@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sight Words 👁️</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .level-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:12px 0;}
+  .lt{padding:7px 16px;border:2.5px solid var(--border);background:white;border-radius:20px;font-family:var(--font-display);font-size:0.85rem;font-weight:800;cursor:pointer;transition:all 0.2s;}
+  .lt.active,.lt:hover{border-color:var(--primary);background:#f0ecff;color:var(--primary);}
+  .flash-card{background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:28px;padding:50px 30px;text-align:center;margin:14px 0;min-height:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;transition:transform 0.2s;touch-action:manipulation;}
+  .flash-card:active{transform:scale(0.97);}
+  .fc-word{font-family:var(--font-display);font-size:clamp(2.5rem,10vw,4rem);font-weight:800;color:white;text-shadow:0 3px 12px rgba(0,0,0,0.2);}
+  .fc-hint{font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.82);}
+  .fc-sentence{font-family:var(--font-display);font-size:1.05rem;font-weight:700;color:rgba(255,255,255,0.9);margin-top:8px;font-style:italic;}
+  .words-progress{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0;justify-content:center;}
+  .wp-chip{padding:6px 12px;border:2px solid var(--border);border-radius:10px;font-family:var(--font-display);font-size:0.9rem;font-weight:800;cursor:pointer;transition:all 0.18s;background:white;touch-action:manipulation;}
+  .wp-chip:hover{transform:translateY(-2px);border-color:var(--primary);}
+  .wp-chip.known{border-color:var(--success);background:#f0faf4;color:var(--success);}
+  .match-game{background:white;border:2.5px solid var(--border);border-radius:20px;padding:20px;margin:16px 0;}
+  .match-q{font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--primary);text-align:center;margin-bottom:12px;}
+  .match-word{font-family:var(--font-display);font-size:2.5rem;font-weight:800;color:var(--primary);text-align:center;margin:12px 0;cursor:pointer;}
+  .match-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .mc-btn{padding:16px 10px;border:3px solid var(--border);border-radius:14px;background:white;font-family:var(--font-display);font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.18s;touch-action:manipulation;}
+  .mc-btn:hover{transform:translateY(-3px);border-color:var(--primary);}
+  .mc-btn.correct{border-color:var(--success);background:#f0faf4;}
+  .mc-btn.wrong{border-color:var(--danger);background:#fff5f5;}
+  .stat-row{display:flex;gap:12px;justify-content:center;margin:12px 0;flex-wrap:wrap;}
+  .sw-stat{background:white;border:2px solid var(--border);border-radius:14px;padding:10px 16px;text-align:center;}
+  .sw-num{font-family:var(--font-display);font-size:1.6rem;font-weight:800;color:var(--primary);}
+  .sw-lbl{font-size:0.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+<div class="ph-header">
+  <h1>👁️ Sight Words</h1>
+  <p>Learn the most common English words!</p>
+  <span class="ph-stage-badge">Stage 5</span>
+</div>
+<div class="ph-wrap">
+  <div class="stat-row">
+    <div class="sw-stat"><div class="sw-num" id="known-count">0</div><div class="sw-lbl">Words Known</div></div>
+    <div class="sw-stat"><div class="sw-num" id="total-count">100</div><div class="sw-lbl">Total Words</div></div>
+    <div class="sw-stat"><div class="sw-num" id="session-stars">0</div><div class="sw-lbl">Stars Today ⭐</div></div>
+  </div>
+  <div class="level-tabs" id="level-tabs"></div>
+  <div class="flash-card" id="flash-card" onclick="flipCard()">
+    <div class="fc-word" id="fc-word">the</div>
+    <div class="fc-hint" id="fc-hint">Tap to hear the word!</div>
+    <div class="fc-sentence" id="fc-sentence"></div>
+  </div>
+  <div class="ph-btn-row">
+    <button class="ph-btn ph-btn-outline" onclick="prevWord()">◀ Back</button>
+    <button class="ph-btn ph-btn-success" onclick="markKnown()">✅ I Know It!</button>
+    <button class="ph-btn ph-btn-primary" onclick="nextWord()">Next ▶</button>
+  </div>
+  <div class="ph-section-title">📋 All Words in This Level</div>
+  <div class="words-progress" id="words-progress"></div>
+  <div class="match-game">
+    <div class="match-q">🎯 Match Game — tap the word you HEAR!</div>
+    <button class="ph-btn ph-btn-primary" style="display:block;margin:0 auto 10px" onclick="playMatchWord()">🔊 Hear Word</button>
+    <div class="match-word" id="match-display" onclick="playMatchWord()" style="font-size:1.5rem;color:var(--muted)">Press 🔊 to start</div>
+    <div class="match-choices" id="match-choices"></div>
+    <div style="text-align:center;margin-top:10px;font-weight:700;color:var(--muted)" id="match-fb"></div>
+    <div style="text-align:center;font-size:0.82rem;font-weight:700;color:var(--muted);margin-top:4px" id="match-sc">Score: 0/0</div>
+  </div>
+</div>
+<script src="shared.js"></script>
+<script>
+const LEVELS = {
+  'Pre-K': {
+    words:[
+      {w:'a',   s:'a — as in: a cat'},
+      {w:'and',  s:'and — as in: cats and dogs'},
+      {w:'away', s:'away — as in: fly away'},
+      {w:'big',  s:'big — as in: a big dog'},
+      {w:'blue', s:'blue — as in: blue sky'},
+      {w:'can',  s:'can — as in: I can run'},
+      {w:'come', s:'come — as in: come here'},
+      {w:'down', s:'down — as in: sit down'},
+      {w:'find', s:'find — as in: find the cat'},
+      {w:'for',  s:'for — as in: a gift for you'},
+      {w:'funny',s:'funny — as in: a funny joke'},
+      {w:'go',   s:'go — as in: ready, set, go!'},
+      {w:'help', s:'help — as in: help me please'},
+      {w:'here', s:'here — as in: come here'},
+      {w:'I',    s:'I — as in: I am happy'},
+      {w:'in',   s:'in — as in: in the box'},
+      {w:'is',   s:'is — as in: the cat is cute'},
+      {w:'it',   s:'it — as in: it is fun'},
+      {w:'jump', s:'jump — as in: jump up high'},
+      {w:'little',s:'little — as in: a little bird'},
+      {w:'look', s:'look — as in: look at me'},
+      {w:'make', s:'make — as in: make a cake'},
+      {w:'me',   s:'me — as in: look at me'},
+      {w:'my',   s:'my — as in: my dog is big'},
+      {w:'not',  s:'not — as in: I am not sad'},
+    ]
+  },
+  'Kinder': {
+    words:[
+      {w:'all',  s:'all — as in: all done!'},
+      {w:'am',   s:'am — as in: I am happy'},
+      {w:'are',  s:'are — as in: we are friends'},
+      {w:'at',   s:'at — as in: sit at the table'},
+      {w:'ate',  s:'ate — as in: I ate my lunch'},
+      {w:'be',   s:'be — as in: be kind'},
+      {w:'black',s:'black — as in: a black cat'},
+      {w:'brown',s:'brown — as in: a brown bear'},
+      {w:'but',  s:'but — as in: I tried but fell'},
+      {w:'came', s:'came — as in: she came home'},
+      {w:'did',  s:'did — as in: did you see it?'},
+      {w:'do',   s:'do — as in: do your best'},
+      {w:'eat',  s:'eat — as in: eat your food'},
+      {w:'four', s:'four — as in: four apples'},
+      {w:'get',  s:'get — as in: get your coat'},
+      {w:'good', s:'good — as in: good job!'},
+      {w:'has',  s:'has — as in: she has a dog'},
+      {w:'have', s:'have — as in: I have a pet'},
+      {w:'he',   s:'he — as in: he is tall'},
+      {w:'into', s:'into — as in: jump into the pool'},
+      {w:'like', s:'like — as in: I like cake'},
+      {w:'must', s:'must — as in: you must sleep'},
+      {w:'new',  s:'new — as in: a new toy'},
+      {w:'no',   s:'no — as in: no thank you'},
+      {w:'now',  s:'now — as in: do it now!'},
+    ]
+  },
+  'Grade 1': {
+    words:[
+      {w:'after', s:'after — as in: after lunch'},
+      {w:'again', s:'again — as in: try again!'},
+      {w:'an',    s:'an — as in: an apple'},
+      {w:'any',   s:'any — as in: any time'},
+      {w:'ask',   s:'ask — as in: ask a question'},
+      {w:'by',    s:'by — as in: stand by me'},
+      {w:'could', s:'could — as in: I could fly!'},
+      {w:'every', s:'every — as in: every day'},
+      {w:'fly',   s:'fly — as in: birds can fly'},
+      {w:'from',  s:'from — as in: a gift from mum'},
+      {w:'give',  s:'give — as in: give it to me'},
+      {w:'going', s:'going — as in: I am going home'},
+      {w:'had',   s:'had — as in: I had fun'},
+      {w:'her',   s:'her — as in: her name is Sue'},
+      {w:'him',   s:'him — as in: I saw him'},
+      {w:'his',   s:'his — as in: his dog is big'},
+      {w:'how',   s:'how — as in: how are you?'},
+      {w:'just',  s:'just — as in: just one more'},
+      {w:'know',  s:'know — as in: I know it!'},
+      {w:'let',   s:'let — as in: let me try'},
+      {w:'live',  s:'live — as in: I live here'},
+      {w:'may',   s:'may — as in: may I help?'},
+      {w:'of',    s:'of — as in: a cup of tea'},
+      {w:'old',   s:'old — as in: an old tree'},
+      {w:'once',  s:'once — as in: once upon a time'},
+    ]
+  },
+  'Grade 2': {
+    words:[
+      {w:'always', s:'always — as in: always be kind'},
+      {w:'around', s:'around — as in: look around'},
+      {w:'because',s:'because — as in: because I said so'},
+      {w:'been',   s:'been — as in: I have been here'},
+      {w:'before', s:'before — as in: before bedtime'},
+      {w:'best',   s:'best — as in: you are the best!'},
+      {w:'both',   s:'both — as in: both cats are cute'},
+      {w:'buy',    s:'buy — as in: buy a gift'},
+      {w:'call',   s:'call — as in: call me later'},
+      {w:'cold',   s:'cold — as in: it is cold today'},
+      {w:'does',   s:'does — as in: she does her work'},
+      {w:'don\'t', s:'don\'t — as in: don\'t run'},
+      {w:'fast',   s:'fast — as in: run very fast'},
+      {w:'first',  s:'first — as in: first place!'},
+      {w:'five',   s:'five — as in: five fingers'},
+      {w:'found',  s:'found — as in: I found my shoe'},
+      {w:'gave',   s:'gave — as in: I gave a hug'},
+      {w:'goes',   s:'goes — as in: the bus goes fast'},
+      {w:'green',  s:'green — as in: green grass'},
+      {w:'its',    s:'its — as in: the cat wagged its tail'},
+      {w:'made',   s:'made — as in: I made a cake'},
+      {w:'many',   s:'many — as in: many stars'},
+      {w:'off',    s:'off — as in: lights off'},
+      {w:'or',     s:'or — as in: cats or dogs?'},
+      {w:'pull',   s:'pull — as in: pull the door'},
+    ]
+  },
+};
+
+let curLevel='Pre-K', wordIdx=0, sessionStars=0, matchIdx=0, matchScore=0, matchTotal=0;
+let known = JSON.parse(localStorage.getItem('ph_sight_known')||'{}');
+let matchShuffled=[];
+
+function buildTabs(){
+  document.getElementById('level-tabs').innerHTML=Object.keys(LEVELS).map(l=>`
+    <button class="lt${l===curLevel?' active':''}" onclick="selectLevel('${l}')">${l}</button>`).join('');
+}
+function selectLevel(l){curLevel=l;wordIdx=0;buildTabs();loadWord();buildWordList();buildMatch();}
+function loadWord(){
+  const ws=LEVELS[curLevel].words;
+  if(!ws.length)return;
+  const w=ws[wordIdx%ws.length];
+  document.getElementById('fc-word').textContent=w.w;
+  document.getElementById('fc-hint').textContent='Tap to hear · '+(wordIdx+1)+'/'+ws.length;
+  document.getElementById('fc-sentence').textContent=w.s;
+  speak(w.w,0.78);
+}
+function flipCard(){
+  const w=LEVELS[curLevel].words[wordIdx%LEVELS[curLevel].words.length];
+  speak(w.s,0.8);
+}
+function nextWord(){wordIdx=(wordIdx+1)%LEVELS[curLevel].words.length;loadWord();}
+function prevWord(){wordIdx=(wordIdx-1+LEVELS[curLevel].words.length)%LEVELS[curLevel].words.length;loadWord();}
+function markKnown(){
+  const w=LEVELS[curLevel].words[wordIdx%LEVELS[curLevel].words.length].w;
+  known[w]=true;localStorage.setItem('ph_sight_known',JSON.stringify(known));
+  sessionStars++;awardStars('sight-words',1);
+  document.getElementById('session-stars').textContent=sessionStars;
+  updateKnownCount();buildWordList();
+  speak('Great! You know the word '+w+'!',0.85);
+  nextWord();
+}
+function updateKnownCount(){
+  const all=Object.values(LEVELS).flatMap(l=>l.words);
+  const k=all.filter(w=>known[w.w]).length;
+  document.getElementById('known-count').textContent=k;
+  document.getElementById('total-count').textContent=all.length;
+  if(k>=50){markComplete('sight-words');awardStars('sight-words',5);}
+}
+function buildWordList(){
+  const ws=LEVELS[curLevel].words;
+  document.getElementById('words-progress').innerHTML=ws.map(w=>`
+    <div class="wp-chip${known[w.w]?' known':''}" onclick="speak('${w.w}',0.78)">${w.w}${known[w.w]?' ✅':''}</div>`).join('');
+}
+function buildMatch(){
+  matchShuffled=[...LEVELS[curLevel].words].sort(()=>Math.random()-0.5);
+  matchIdx=0;matchScore=0;matchTotal=0;
+  document.getElementById('match-sc').textContent='Score: 0/0';
+  document.getElementById('match-fb').textContent='';
+  document.getElementById('match-display').textContent='Press 🔊 to start';
+  document.getElementById('match-choices').innerHTML='';
+}
+function playMatchWord(){
+  if(!matchShuffled.length)return;
+  const item=matchShuffled[matchIdx%matchShuffled.length];
+  document.getElementById('match-display').textContent='?';
+  document.querySelectorAll('.mc-btn').forEach(b=>b.classList.remove('correct','wrong'));
+  document.getElementById('match-fb').textContent='';
+  const wrong=LEVELS[curLevel].words.filter(w=>w.w!==item.w).sort(()=>Math.random()-0.5).slice(0,3);
+  const choices=[item,...wrong].sort(()=>Math.random()-0.5);
+  document.getElementById('match-choices').innerHTML=choices.map(c=>`
+    <button class="mc-btn" onclick="checkMatch(this,'${c.w}','${item.w}')">${c.w}</button>`).join('');
+  speak(item.w,0.72);
+}
+function checkMatch(el,chosen,correct){
+  matchTotal++;
+  if(chosen===correct){
+    el.classList.add('correct');matchScore++;
+    document.getElementById('match-display').textContent=correct+' ✅';
+    document.getElementById('match-fb').textContent='✅ Correct!';
+    awardStars('sight-match',1);sessionStars++;
+    document.getElementById('session-stars').textContent=sessionStars;
+    matchIdx++;setTimeout(playMatchWord,1500);
+  } else {
+    el.classList.add('wrong');shakeWrong(el);
+    document.querySelectorAll('.mc-btn').forEach(b=>{if(b.textContent===correct)b.classList.add('correct');});
+    document.getElementById('match-fb').textContent='Try again! Listen carefully!';
+    matchIdx++;setTimeout(playMatchWord,2000);
+  }
+  document.getElementById('match-sc').textContent='Score: '+matchScore+'/'+matchTotal;
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTabs();loadWord();buildWordList();buildMatch();updateKnownCount();
+  injectMascot(["Tap the card to hear the word! 🦉","Press I Know It when you remember it!","Play the match game below! 🎯"]);
+  speak("Sight words! These are the most common words in English — let's learn them!",0.85);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sentence Builder 🧩</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .diff-tabs{display:flex;gap:8px;justify-content:center;margin:12px 0;flex-wrap:wrap;}
+  .dt{padding:7px 18px;border:2.5px solid var(--border);background:white;border-radius:20px;font-family:var(--font-display);font-size:0.85rem;font-weight:800;cursor:pointer;transition:all 0.2s;}
+  .dt.active,.dt:hover{border-color:var(--primary);background:#f0ecff;color:var(--primary);}
+  .scene-box{background:linear-gradient(135deg,#e8f4ff,#f0ecff);border:2.5px solid var(--border);border-radius:20px;padding:20px;text-align:center;margin:12px 0;}
+  .scene-img{font-size:4rem;margin-bottom:8px;}
+  .scene-hint{font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:var(--muted);}
+  .sentence-drop{min-height:72px;border:3px dashed var(--border);border-radius:16px;display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:12px 14px;background:white;margin:12px 0;transition:all 0.2s;}
+  .sentence-drop.over{border-color:var(--primary);background:#f0ecff;}
+  .sentence-drop.correct-sent{border-color:var(--success);background:#f0faf4;}
+  .sentence-drop.wrong-sent{border-color:var(--danger);background:#fff5f5;}
+  .word-bank{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;min-height:56px;}
+  .wb-word{background:white;border:2.5px solid var(--border);border-radius:12px;padding:11px 16px;font-family:var(--font-display);font-size:1.1rem;font-weight:800;cursor:pointer;transition:all 0.18s;touch-action:manipulation;user-select:none;}
+  .wb-word:hover{transform:translateY(-3px);border-color:var(--primary);background:#f0ecff;}
+  .wb-word:active{transform:scale(0.92);}
+  .wb-word.used{opacity:0.35;pointer-events:none;}
+  .placed-word{background:var(--primary);color:white;border-radius:12px;padding:11px 16px;font-family:var(--font-display);font-size:1.1rem;font-weight:800;cursor:pointer;touch-action:manipulation;transition:all 0.15s;}
+  .placed-word:hover{background:var(--primary-light);transform:translateY(-2px);}
+  .placed-word:active{transform:scale(0.92);}
+  .q-counter{font-family:var(--font-display);font-size:0.9rem;font-weight:800;color:var(--muted);text-align:center;margin:8px 0;}
+  .fb-line{font-family:var(--font-display);font-size:1rem;font-weight:800;min-height:28px;text-align:center;margin:8px 0;color:var(--primary);}
+</style>
+</head>
+<body>
+<div class="ph-header">
+  <h1>🧩 Sentence Builder</h1>
+  <p>Tap words to build the sentence!</p>
+  <span class="ph-stage-badge">Stage 6</span>
+</div>
+<div class="ph-wrap">
+  <div class="diff-tabs">
+    <button class="dt active" id="d-easy"   onclick="setDiff('easy')">🟢 Easy</button>
+    <button class="dt" id="d-medium" onclick="setDiff('medium')">🟡 Medium</button>
+    <button class="dt" id="d-hard"   onclick="setDiff('hard')">🔴 Hard</button>
+  </div>
+  <div class="q-counter">Question <span id="q-n">1</span> / <span id="q-tot">5</span> · ⭐ <span id="q-sc">0</span></div>
+  <div class="ph-progress-wrap">
+    <div class="ph-progress-bar"><div class="ph-progress-fill" id="q-prog" style="width:0%"></div></div>
+  </div>
+  <div class="scene-box">
+    <div class="scene-img" id="scene-img">🐱</div>
+    <div class="scene-hint" id="scene-hint">Build the sentence below!</div>
+  </div>
+  <p style="font-size:0.82rem;font-weight:700;color:var(--muted);margin:8px 0">Your sentence:</p>
+  <div class="sentence-drop" id="sentence-drop">
+    <span style="color:var(--muted);font-size:0.88rem;font-weight:700">Tap words below to add them here…</span>
+  </div>
+  <p style="font-size:0.82rem;font-weight:700;color:var(--muted);margin:8px 0">Word bank:</p>
+  <div class="word-bank" id="word-bank"></div>
+  <div class="fb-line" id="fb-line"></div>
+  <div class="ph-btn-row">
+    <button class="ph-btn ph-btn-outline" onclick="clearSentence()">🗑️ Clear</button>
+    <button class="ph-btn ph-btn-primary" onclick="checkSentence()">✅ Check!</button>
+    <button class="ph-btn ph-btn-outline" onclick="playHint()">🔊 Hint</button>
+  </div>
+</div>
+<script src="shared.js"></script>
+<script>
+const SENTENCES={
+  easy:[
+    {words:['The','cat','sat.'],scene:'🐱',hint:'Where did the cat sit?'},
+    {words:['I','see','a','dog.'],scene:'🐶',hint:'What do you see?'},
+    {words:['The','sun','is','hot.'],scene:'☀️',hint:'What is the sun like?'},
+    {words:['A','big','red','ball.'],scene:'🏀',hint:'What kind of ball?'},
+    {words:['I','like','to','run.'],scene:'🏃',hint:'What do you like to do?'},
+  ],
+  medium:[
+    {words:['The','little','dog','can','run','fast.'],scene:'🐕',hint:'What can the little dog do?'},
+    {words:['She','sat','under','the','big','tree.'],scene:'🌳',hint:'Where did she sit?'},
+    {words:['The','fish','swim','in','the','blue','sea.'],scene:'🐟',hint:'Where do the fish swim?'},
+    {words:['I','can','see','a','bright','yellow','star.'],scene:'⭐',hint:'What can you see?'},
+    {words:['The','rain','fell','on','the','green','grass.'],scene:'🌧️',hint:'Where did the rain fall?'},
+  ],
+  hard:[
+    {words:['The','big','brown','bear','ate','all','the','honey.'],scene:'🐻',hint:'What did the bear eat?'},
+    {words:['She','found','a','shiny','golden','egg','in','the','nest.'],scene:'🥚',hint:'What did she find?'},
+    {words:['The','three','little','frogs','jumped','into','the','cold','pond.'],scene:'🐸',hint:'What did the frogs do?'},
+    {words:['Every','morning','the','rooster','wakes','up','the','whole','farm.'],scene:'🐓',hint:'When does the rooster crow?'},
+    {words:['The','brave','knight','crossed','the','bridge','to','save','the','dragon.'],scene:'🐉',hint:'What did the brave knight do?'},
+  ]
+};
+let diff='easy', qIdx=0, score=0, placed=[], available=[];
+
+function setDiff(d){
+  diff=d;qIdx=0;score=0;
+  document.querySelectorAll('.dt').forEach(t=>t.classList.remove('active'));
+  document.getElementById('d-'+d).classList.add('active');
+  loadQ();
+}
+function loadQ(){
+  const qs=SENTENCES[diff];
+  if(qIdx>=qs.length){endRound();return;}
+  const q=qs[qIdx];
+  placed=[];
+  available=[...q.words].sort(()=>Math.random()-0.5);
+  document.getElementById('q-n').textContent=qIdx+1;
+  document.getElementById('q-tot').textContent=qs.length;
+  document.getElementById('q-sc').textContent=score;
+  document.getElementById('q-prog').style.width=(qIdx/qs.length*100)+'%';
+  document.getElementById('scene-img').textContent=q.scene;
+  document.getElementById('scene-hint').textContent=q.hint;
+  document.getElementById('fb-line').textContent='';
+  const drop=document.getElementById('sentence-drop');
+  drop.classList.remove('correct-sent','wrong-sent');
+  renderBoth();
+}
+function renderBoth(){
+  // Word bank
+  const bank=document.getElementById('word-bank');
+  bank.innerHTML=available.map((w,i)=>`
+    <div class="wb-word" onclick="placeWord(${i})">${w}</div>`).join('');
+  // Sentence drop
+  const drop=document.getElementById('sentence-drop');
+  if(placed.length===0){
+    drop.innerHTML='<span style="color:var(--muted);font-size:0.88rem;font-weight:700">Tap words below to add them here…</span>';
+  } else {
+    drop.innerHTML=placed.map((w,i)=>`
+      <div class="placed-word" onclick="removeWord(${i})">${w}</div>`).join('');
+  }
+}
+function placeWord(i){
+  placed.push(available[i]);
+  available.splice(i,1);
+  renderBoth();
+  speak(placed[placed.length-1],0.82);
+}
+function removeWord(i){
+  available.push(placed[i]);
+  placed.splice(i,1);
+  renderBoth();
+}
+function clearSentence(){
+  const q=SENTENCES[diff][qIdx];
+  placed=[];
+  available=[...q.words].sort(()=>Math.random()-0.5);
+  document.getElementById('sentence-drop').classList.remove('correct-sent','wrong-sent');
+  document.getElementById('fb-line').textContent='';
+  renderBoth();
+}
+function checkSentence(){
+  const q=SENTENCES[diff][qIdx];
+  const correct=q.words.join(' ');
+  const attempt=placed.join(' ');
+  const drop=document.getElementById('sentence-drop');
+  if(attempt===correct){
+    drop.classList.add('correct-sent');
+    score++;awardStars('sentence-builder',1);
+    document.getElementById('fb-line').textContent='✅ Perfect! "'+correct+'"';
+    speak('Perfect! '+correct,0.82);
+    setTimeout(()=>{qIdx++;loadQ();},2000);
+  } else if(placed.length<q.words.length){
+    document.getElementById('fb-line').textContent='Not done yet! Add more words!';
+    speak('Add more words!',0.85);
+  } else {
+    drop.classList.add('wrong-sent');
+    document.getElementById('fb-line').textContent='Almost! Check the word order. Try again!';
+    speak('Almost! Check the word order!',0.82);
+    setTimeout(()=>{drop.classList.remove('wrong-sent');},1200);
+  }
+}
+function playHint(){
+  const q=SENTENCES[diff][qIdx];
+  speak(q.words.join(' '),0.72);
+}
+function endRound(){
+  const pct=score/SENTENCES[diff].length;
+  document.getElementById('fb-line').textContent=(pct>=0.8?'🌟 Amazing!':'💪 Good effort! Try again!')
+    +' Score: '+score+'/'+SENTENCES[diff].length;
+  speak('Round complete! Score: '+score+' out of '+SENTENCES[diff].length,0.85);
+  markComplete('sentence-builder');awardStars('sentence-builder',pct>=0.8?3:1);
+  if(pct>=0.8)confetti();
+  setTimeout(()=>{qIdx=0;score=0;loadQ();},4000);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  loadQ();
+  injectMascot(["Tap words to build the sentence! 🦉","Tap a placed word to put it back!","Press the hint button to hear the sentence! 🔊"]);
+  speak("Sentence builder! Tap the words in the right order to make a sentence!",0.85);
+});
+</script>
+</body>
+</html>

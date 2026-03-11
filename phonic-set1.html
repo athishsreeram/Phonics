@@ -2,507 +2,178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Primary Phonics Set 1 Stories</title>
-
-<!-- Inter font like ChatGPT -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Phonic Set 1 1️⃣</title>
+<link rel="stylesheet" href="shared.css">
 <style>
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #fff8dc;
-    color: #333;
-    padding: 15px;
-    text-align: center;
-  }
-
-  h1 {
-    color: #ff6600;
-    font-size: 2em;
-    margin-bottom: 10px;
-  }
-
-  p {
-    font-size: 1em;
-  }
-
-  .tile-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 15px;
-    margin-top: 20px;
-  }
-
-  .story-tile {
-    background: #ffcc99;
-    padding: 20px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 1.2em;
-    transition: transform 0.2s, background 0.2s;
-    text-align: center;
-    word-wrap: break-word;
-  }
-
-  .story-tile:hover {
-    transform: scale(1.05);
-    background: #ffb366;
-  }
-
-  .story-content {
-    display: none;
-    background: #fff3e0;
-    border: 2px solid #ffcc99;
-    border-radius: 15px;
-    padding: 20px;
-    margin-top: 20px;
-    text-align: left;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-    font-size: 1.1em;
-    line-height: 1.5em;
-    overflow-wrap: break-word;
-  }
-
-  .close-btn {
-    display: block;
-    text-align: center;
-    margin-top: 10px;
-    padding: 8px 15px;
-    background: #ff6600;
-    color: white;
-    border-radius: 12px;
-    cursor: pointer;
-    width: 100px;
-    margin-left: auto;
-    margin-right: auto;
-    font-weight: 600;
-  }
-
-  /* Mobile text adjustments */
-  @media (max-width: 480px) {
-    h1 {
-      font-size: 1.6em;
-    }
-
-    .story-tile {
-      font-size: 1em;
-      padding: 15px;
-    }
-
-    .story-content {
-      font-size: 1em;
-      padding: 15px;
-    }
-
-    .close-btn {
-      width: 80px;
-      padding: 6px 10px;
-      font-size: 0.9em;
-    }
-  }
+  .set-intro { background:linear-gradient(135deg,#6c3fc5,#a259e6);color:white;padding:18px 20px;border-radius:18px;margin:14px 0;text-align:center; }
+  .si-title { font-family:var(--font-display);font-size:1.3rem;font-weight:800;margin-bottom:6px; }
+  .si-letters { font-family:var(--font-display);font-size:1.8rem;font-weight:800;letter-spacing:8px; }
+  .sound-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px;margin:14px 0; }
+  .sound-card { background:white;border:3px solid var(--border);border-radius:16px;padding:16px 10px;text-align:center;cursor:pointer;transition:all 0.18s;touch-action:manipulation;position:relative; }
+  .sound-card:hover { transform:translateY(-4px);box-shadow:0 8px 22px rgba(108,63,197,0.18); }
+  .sound-card:active { transform:scale(0.92); }
+  .sound-card.mastered { border-color:var(--success);background:#f0faf4; }
+  .sound-card.active { border-color:var(--primary);background:#f0ecff;transform:scale(1.05); }
+  .sc-letter { font-family:var(--font-display);font-size:2.6rem;font-weight:800;color:var(--primary);display:block;line-height:1; }
+  .sc-lower  { font-family:var(--font-display);font-size:1.2rem;font-weight:700;color:var(--muted); }
+  .sc-emoji  { font-size:1.5rem;display:block;margin-top:6px; }
+  .sc-word   { font-size:0.72rem;font-weight:700;color:var(--muted);margin-top:2px; }
+  .sc-dots   { display:flex;gap:3px;justify-content:center;margin-top:6px; }
+  .sc-dot    { width:7px;height:7px;border-radius:50%;background:var(--border); }
+  .sc-dot.filled { background:var(--success); }
+  .sc-check  { position:absolute;top:5px;right:7px;font-size:0.85rem;display:none; }
+  .sound-card.mastered .sc-check { display:block; }
+  .quiz-area { background:white;border:2.5px solid var(--border);border-radius:20px;padding:22px;margin:16px 0; }
+  .qa-label  { font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--primary);text-align:center;margin-bottom:14px; }
+  .qa-sound  { text-align:center;margin:12px 0; }
+  .qa-choices { display:grid;grid-template-columns:repeat(4,1fr);gap:10px; }
+  @media(max-width:380px){.qa-choices{grid-template-columns:repeat(2,1fr);}}
+  .qa-choice { background:white;border:3px solid var(--border);border-radius:12px;padding:14px 8px;font-family:var(--font-display);font-size:2rem;font-weight:800;cursor:pointer;text-align:center;transition:all 0.18s;touch-action:manipulation; }
+  .qa-choice:hover { transform:translateY(-3px);border-color:var(--primary); }
+  .qa-choice.correct { border-color:var(--success);background:#f0faf4; }
+  .qa-choice.wrong   { border-color:var(--danger);background:#fff5f5; }
+  .mode-row { display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:12px 0; }
+  .mode-pill { padding:7px 18px;border:2.5px solid var(--border);background:white;border-radius:20px;font-family:var(--font-display);font-size:0.88rem;font-weight:800;cursor:pointer;transition:all 0.2s; }
+  .mode-pill.active,.mode-pill:hover { border-color:var(--primary);background:#f0ecff;color:var(--primary); }
 </style>
 </head>
 <body>
+<div class="ph-header">
+  <h1>1️⃣ Phonic Set 1</h1>
+  <p>The first group of letter sounds!</p>
+  <span class="ph-stage-badge">Stage 1</span>
+</div>
+<div class="ph-wrap">
+  <div class="set-intro">
+    <div class="si-title">Set 1 Letters</div>
+    <div class="si-letters">s · a · t · p · i · n</div>
+    <p style="font-size:0.82rem;margin-top:8px;opacity:0.88">Tap each letter to hear and learn its sound</p>
+  </div>
 
-<h1>Primary Phonics Set 1</h1>
-<p>Click a story to read!</p>
+  <div class="mode-row">
+    <button class="mode-pill active" id="m-explore" onclick="setMode('explore')">🔍 Explore</button>
+    <button class="mode-pill" id="m-practice" onclick="setMode('practice')">📖 Practice</button>
+    <button class="mode-pill" id="m-quiz" onclick="setMode('quiz')">🎯 Quiz</button>
+  </div>
 
-<div class="tile-container">
-  <div class="story-tile" onclick="showStory(1)">1. Mac and Tab</div>
-  <div class="story-tile" onclick="showStory(2)">2. The Tin Man</div>
-  <div class="story-tile" onclick="showStory(3)">3. Al</div>
-  <div class="story-tile" onclick="showStory(4)">4. Tim</div>
-  <div class="story-tile" onclick="showStory(5)">5. The Jet</div>
-  <div class="story-tile" onclick="showStory(6)">6. Ben Bug</div>
-  <div class="story-tile" onclick="showStory(7)">7. Ed</div>
-  <div class="story-tile" onclick="showStory(8)">8. Meg</div>
-  <div class="story-tile" onclick="showStory(9)">9. Ted</div>
-  <div class="story-tile" onclick="showStory(10)">10. The Wig</div>
+  <div id="explore-area">
+    <div class="sound-grid" id="sound-grid"></div>
+  </div>
+
+  <div id="quiz-area" class="quiz-area" style="display:none">
+    <div class="qa-label">🔊 Hear the sound — tap the right letter!</div>
+    <div class="qa-sound">
+      <button class="ph-btn ph-btn-primary" onclick="playQuiz()">🔊 Play Sound</button>
+    </div>
+    <div class="qa-choices" id="qa-choices"></div>
+    <div style="text-align:center;margin-top:12px;font-weight:700;color:var(--muted)" id="qa-score">Score: 0/0</div>
+  </div>
 </div>
 
-<div id="storyDisplay" class="story-content">
-  <div id="storyText"></div>
-  <div class="close-btn" onclick="closeStory()">Close</div>
-</div>
-
+<script src="shared.js"></script>
 <script>
-// All 10 stories
-const stories = {
-  1: `### Mac and Tab
-
-Tab is a sad cat.
-Tab has a pal.
-His pal is Mac.
-Mac is a rat.
-
-"I got mad at Mac," said Tab.
-"I ate Mac up."
-
-"I did like Mac," said Tab.
-"I am a bad cat."
-
-Tab ran to get the vet.
-"I can save Mac," said the vet.
-
-The vet made Tab take a nap.
-The vet made a hole in Tab.
-
-"Mac is safe," said the vet.
-"I am fine," said Mac.
-"The hole in Tab is fine," said the vet.
-
-"I hope Tab can get up," said Mac.
-"Wake up Tab," said Mac.
-
-Tab woke up.
-"I am fine," said Tab.
-
-Mac gave Tab a hug.
-"I like Tab," said Mac.
-"I am not mad at him."
-
-Mac and Tab ran home.
-It is time to take a nap.`,
-  2: `### The Tin Man
-
-The Tin Man is sad.
-"It is rain," said the Tin Man.
-"I am a red man.
-I am a tin man.
-I am a sad man."
-
-Mac and Tab ran to the Tin Man.
-"Do not be sad," said Mac.
-"We can get a can.
-We can get a can of yellow."
-
-"We can get a can of yellow," said Tab.
-"We can paint the Tin Man."
-
-Mac got the can.
-Tab got the can.
-"Is it a can of yellow?" said Mac.
-"It is a can of yellow," said Tab.
-
-"See the Tin Man," said Mac.
-"I am a tin man," said the Tin Man.
-"I am a yellow man.
-I am a tin man.
-I am not sad."`,
-  3: `### Al
-
-Al is a big cat.
-Al is on a mat.
-Al had a nap on the mat.
-
-A pig ran to the mat.
-The pig sat on the mat.
-Al sat up.
-"I am Al," he said.
-"I am a cat.
-I nap on the mat.
-A pig is on the mat."
-
-Al ran to a log.
-Al had a nap on the log.
-A dog ran to the log.
-The dog sat on the log.
-Al sat up.
-"I am Al," he said.
-"I am a cat.
-I nap on the log.
-A dog is on the log."
-
-Al ran and ran.
-Al sat on a lap.
-Al had a nap on the lap.
-A pig and a dog ran to the lap.
-They sat on the lap.
-Al did not sit up.
-Al did not get up.
-Al is a pal.`,
-  4: `### Tim
-
-Tim is a pig.
-Tim sat on a log.
-Tim had a wig in a bag.
-Tim put on the wig.
-
-Tim ran to Sam.
-Sam is a cat.
-"Are you a pig?" said Sam.
-"I am a pig," said Tim.
-"I am not a pig on a log.
-I am a pig with a wig."
-
-"Is it a wig?" said Sam.
-"It is a wig," said Tim.
-"Tim is a pig.
-I am Tim!"
-
-Tim and Sam sat on the log.
-Tim had a nap.
-Sam had a nap.
-Tim is a pal.
-Sam is a pal.`,
-  5: `### The Jet
-
-A man had a jet.
-The jet is on a big log.
-The man sat in the jet.
-The jet went up, up, up.
-
-"I am up in the jet," said the man.
-"I can go to the sun."
-The jet went and went.
-The man did not get to the sun.
-The sun is hot.
-
-"I can go to the moon," said the man.
-The jet went and went.
-The man did not get to the moon.
-The moon is a long way off.
-
-The jet ran out of gas.
-The jet went down, down, down.
-The jet fell on a log.
-The man got out.
-
-"I am on the log," said the man.
-"The jet is on the log.
-It is time to go home."
-
-The man ran home.
-He got in bed.
-The man had a nap.
-He had a dream.
-He was in the jet.
-He went to the sun and the moon.`,
-  6: `### Ben Bug
-
-Ben Bug sat on a rock.
-A frog sat on a rock.
-"Get off the rock," said the frog.
-"The sun is hot.
-I will sit on the rock."
-
-Ben got off the rock.
-Ben sat on a log.
-A dog ran up.
-"Get off the log," said the dog.
-"I sat on a log.
-I will sit on the log."
-
-Ben got off the log.
-Ben ran and ran.
-Ben sat under a big leaf.
-A frog and a dog ran up.
-
-"Get off the leaf," said the frog.
-"No," said Ben.
-"I sat on a rock.
-A frog sat on the rock.
-I sat on a log.
-A dog sat on the log.
-I will sit under the big leaf.
-A frog and a dog can not sit here."
-
-Ben sat under the leaf.
-The frog sat on the rock.
-The dog sat on the log.
-Ben had a nap.
-Ben is a big bug.`,
-  7: `### Ed
-
-Ed is a hen.
-Ed is a red hen.
-Ed sat on a log.
-A pig ran to the log.
-The pig sat on the log.
-
-"I am Ed," said Ed.
-"I am a red hen.
-I sat on a log."
-
-The pig had a wig.
-"I have a wig," said the pig.
-"I will put on the wig."
-
-The pig put on the wig.
-"I am a pig with a wig," he said.
-"I am a big pig with a wig."
-
-Ed got up.
-"I like the wig," said Ed.
-"I will put on the wig."
-
-Ed put on the wig.
-Ed sat on the log.
-"I am a red hen with a wig," said Ed.
-"I am a red hen.
-I am a big red hen with a wig."
-
-The pig got the wig.
-The pig put it on.
-The pig sat on the log.
-"I am a pig," he said.
-"I am a pig with a wig."
-
-Ed and the pig sat on the log.
-Ed had a nap.
-The pig had a nap.
-The wig fell off.
-Ed and the pig did not get up.
-They had a nap.`,
-  8: `### Meg
-
-Meg sat on a mat.
-Meg had a pad.
-Meg had a pen.
-
-A cat sat on the mat.
-The cat is Meg's cat.
-
-Meg drew a cat on the pad.
-"See the cat," said Meg.
-The cat sat up.
-"I do not like the cat," said the cat.
-
-Meg drew a bug on the pad.
-"See the bug," said Meg.
-The cat sat up.
-"I do not like the bug," said the cat.
-
-Meg drew a dog on the pad.
-The dog is a red dog.
-"See the dog," said Meg.
-"See the red dog."
-
-The cat sat up.
-"I like the dog," said the cat.
-"The dog is red.
-I like the red dog."
-
-Meg and the cat sat on the mat.
-Meg had a nap.
-The cat had a nap.
-The red dog sat on the mat.
-He did not nap.
-He sat on the mat and had a wiggle.`,
-  9: `### Ted
-
-Ted is a bear.
-Ted is a red bear.
-Ted sat in a bed.
-The bed is a big bed.
-Ted had a nap in the bed.
-
-A cat ran up.
-The cat is Meg.
-Meg sat on the bed.
-"Get up, Ted," said Meg.
-"Do not nap.
-I will get Ted."
-
-Meg got Ted.
-Meg put Ted on her back.
-Meg ran with Ted.
-Ted sat up.
-"Where am I?" said Ted.
-"I am on a cat.
-I am on Meg."
-
-Meg ran to a big log.
-Meg put Ted on the log.
-"Am I on a log?" said Ted.
-"I am on a big log.
-I can not nap here."
-
-Meg got Ted.
-Meg ran to a big rock.
-Meg put Ted on the rock.
-"Am I on a rock?" said Ted.
-"I am on a big rock.
-I can not nap here."
-
-Meg got Ted.
-Meg ran back to the bed.
-Meg put Ted in the bed.
-Ted sat up.
-"Am I in my bed?" said Ted.
-"I am in my bed.
-I will nap here."
-
-Meg sat on the bed.
-Ted had a nap.
-Meg had a nap.
-Ted and Meg nap in the bed.`,
-  10: `### The Wig
-
-A pig sat on a log.
-A wig sat on a rock.
-The pig got the wig.
-The pig put on the wig.
-
-"A wig!" said the pig.
-"I am a pig with a wig.
-I am a big pig with a wig."
-
-A hen ran up.
-The hen is Ed.
-"See the pig," said Ed.
-"See the pig with a wig."
-
-The pig sat on the log.
-Ed sat on the log.
-A cat ran up.
-The cat is Meg.
-"See the pig," said Meg.
-"See the pig with a wig."
-
-"Get the wig," said Ed.
-Meg got the wig.
-Meg put on the wig.
-"I am a cat with a wig," said Meg.
-"I am a big cat with a wig."
-
-Ed got the wig.
-Ed put on the wig.
-"I am a hen with a wig," said Ed.
-"I am a red hen with a wig."
-
-The pig got the wig.
-The pig put it on.
-"Let us sit," said the pig.
-So they sat.
-The pig sat on the log.
-Ed sat on the log.
-Meg sat on the log.
-
-"Let us nap," said Ed.
-So they had a nap.
-The pig had a nap.
-Ed had a nap.
-Meg had a nap.
-The wig fell off.
-They did not get up.
-They are pals.`
-};
-
-// Show story
-function showStory(num) {
-  document.getElementById('storyText').innerText = stories[num];
-  document.getElementById('storyDisplay').style.display = 'block';
+const SET1 = [
+  {l:'S',w:'Snake',e:'🐍',s:'sss (like a snake!)'},
+  {l:'A',w:'Apple',e:'🍎',s:'a (short a — apple)'},
+  {l:'T',w:'Tiger',e:'🐯',s:'tuh (tiger!)'},
+  {l:'P',w:'Pig',  e:'🐷',s:'puh (pig!)'},
+  {l:'I',w:'Igloo',e:'🧊',s:'i (short i — igloo)'},
+  {l:'N',w:'Nest', e:'🪺',s:'nnn (nest!)'},
+];
+const VOWELS_SET1 = ['A','I'];
+let mastery = JSON.parse(localStorage.getItem('ph_set1_mastery')||'{}');
+let mode = 'explore', qLetter = null, qScore = 0, qTotal = 0;
+
+function buildGrid() {
+  const grid = document.getElementById('sound-grid');
+  grid.innerHTML = SET1.map(item => {
+    const taps = mastery[item.l]||0;
+    const done = taps >= 3;
+    const isVowel = VOWELS_SET1.includes(item.l);
+    return `<div class="sound-card${done?' mastered':''}${isVowel?' ph-vowel':''}" id="sc-${item.l}" onclick="tapCard('${item.l}')">
+      <span class="sc-check">✅</span>
+      <span class="sc-letter">${item.l}</span>
+      <span class="sc-lower">${item.l.toLowerCase()}</span>
+      <span class="sc-emoji">${item.e}</span>
+      <span class="sc-word">${item.w}</span>
+      <div class="sc-dots">
+        ${[0,1,2].map(i=>`<div class="sc-dot${i<taps?' filled':''}"></div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// Close story
-function closeStory() {
-  document.getElementById('storyDisplay').style.display = 'none';
+function tapCard(l) {
+  const item = SET1.find(x=>x.l===l);
+  const card = document.getElementById('sc-'+l);
+  card.classList.add('active');
+  setTimeout(()=>card.classList.remove('active'),700);
+  speak(l+'... '+item.s+'... '+item.w+'!', 0.78);
+  mastery[l] = Math.min((mastery[l]||0)+1, 3);
+  localStorage.setItem('ph_set1_mastery', JSON.stringify(mastery));
+  const taps = mastery[l];
+  card.querySelectorAll('.sc-dot').forEach((d,i)=>d.classList.toggle('filled',i<taps));
+  if (taps>=3) { card.classList.add('mastered'); card.querySelector('.sc-check').style.display='block'; awardStars('phonic-set1',1); }
+  checkSetComplete();
 }
+
+function checkSetComplete() {
+  const done = SET1.filter(x=>(mastery[x.l]||0)>=3).length;
+  if (done>=SET1.length) { markComplete('phonic-set1'); }
+}
+
+function setMode(m) {
+  mode = m;
+  document.querySelectorAll('.mode-pill').forEach(p=>p.classList.remove('active'));
+  document.getElementById('m-'+m).classList.add('active');
+  document.getElementById('explore-area').style.display = m==='explore'||m==='practice' ? 'block':'none';
+  document.getElementById('quiz-area').style.display = m==='quiz' ? 'block':'none';
+  if (m==='practice') {
+    speak('Practice time! Listen to each letter and repeat it!',0.85);
+    let i=0;
+    function playNext(){if(i>=SET1.length||mode!=='practice')return; tapCard(SET1[i].l); i++; setTimeout(playNext,2800);}
+    playNext();
+  }
+  if (m==='quiz') nextQuiz();
+}
+
+function nextQuiz() {
+  const idx = Math.floor(Math.random()*SET1.length);
+  qLetter = SET1[idx];
+  const wrong = SET1.filter(x=>x.l!==qLetter.l).sort(()=>Math.random()-0.5).slice(0,3);
+  const choices = [qLetter,...wrong].sort(()=>Math.random()-0.5);
+  document.getElementById('qa-choices').innerHTML = choices.map(c=>`
+    <div class="qa-choice" onclick="checkQuiz(this,'${c.l}','${qLetter.l}')">
+      ${c.l}<br><span style="font-size:1.2rem">${c.e}</span>
+    </div>`).join('');
+  playQuiz();
+}
+
+function playQuiz() {
+  if(qLetter) speak(qLetter.s, 0.72);
+}
+
+function checkQuiz(el, chosen, correct) {
+  qTotal++;
+  if(chosen===correct){
+    el.classList.add('correct'); qScore++;
+    speak('Correct! '+correct+' makes the '+qLetter.s+' sound!');
+    awardStars('phonic-set1-quiz',1);
+    setTimeout(nextQuiz,1800);
+  } else {
+    el.classList.add('wrong'); shakeWrong(el);
+    document.querySelectorAll('.qa-choice').forEach(c=>{if(c.textContent.trim().startsWith(correct))c.classList.add('correct');});
+    setTimeout(nextQuiz,2200);
+  }
+  document.getElementById('qa-score').textContent='Score: '+qScore+'/'+qTotal;
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildGrid();
+  injectMascot(["Tap each letter to hear its sound! 🦉","Practice all 6 letters — S, A, T, P, I, N!","Try Quiz when you feel ready! 🎯"]);
+  speak("Phonic Set 1! Let\'s learn the letters S, A, T, P, I, and N!",0.85);
+});
 </script>
-
 </body>
 </html>

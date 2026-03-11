@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Alphabet A–Z 🔤</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .alpha-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .alpha-card {
+    background: white;
+    border: 3px solid var(--border);
+    border-radius: 16px;
+    padding: 14px 8px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.18s, border-color 0.18s, background 0.18s;
+    position: relative;
+    user-select: none;
+    touch-action: manipulation;
+  }
+  .alpha-card:hover  { transform: translateY(-4px); border-color: var(--primary); }
+  .alpha-card:active { transform: scale(0.92); }
+  .alpha-card.mastered { border-color: var(--success); background: #f0faf4; }
+  .alpha-card.active-glow { border-color: var(--accent); background: #fff8ed; transform: scale(1.06); }
+
+  .alpha-upper { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; line-height:1; display:block; }
+  .alpha-lower { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--muted); }
+  .alpha-emoji { font-size: 1.3rem; display: block; margin-top: 4px; }
+  .alpha-word  { font-size: 0.62rem; font-weight: 700; color: var(--muted); margin-top: 2px; }
+  .alpha-check { position:absolute;top:4px;right:5px;font-size:0.75rem;display:none; }
+  .alpha-card.mastered .alpha-check { display:block; }
+
+  .alpha-tap-count {
+    position: absolute; top: 4px; left: 6px;
+    display: flex; gap: 2px;
+  }
+  .tap-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+  .tap-dot.filled { background: var(--success); }
+
+  .mode-bar {
+    display: flex; gap: 10px; justify-content: center;
+    margin: 14px 0; flex-wrap: wrap;
+  }
+  .mode-btn {
+    padding: 8px 20px;
+    border: 2.5px solid var(--border);
+    background: white;
+    border-radius: 20px;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mode-btn.active, .mode-btn:hover { border-color: var(--primary); background: #f0ecff; color: var(--primary); }
+
+  .quiz-box {
+    display: none;
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    margin: 16px 0;
+  }
+  .quiz-box.visible { display: block; }
+  .quiz-question {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 16px;
+  }
+  .quiz-sound-btn {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 20px rgba(108,63,197,0.35);
+    transition: transform 0.15s;
+  }
+  .quiz-sound-btn:active { transform: scale(0.92); }
+  .quiz-choices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  .quiz-choice {
+    background: white;
+    border: 3px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 8px;
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .quiz-choice:hover  { border-color: var(--primary); transform: translateY(-3px); }
+  .quiz-choice.correct{ border-color: var(--success); background: #f0faf4; }
+  .quiz-choice.wrong  { border-color: var(--danger);  background: #fff5f5; }
+
+  .stats-bar {
+    display: flex; gap: 12px; justify-content: center;
+    margin: 12px 0; flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 6px 16px;
+    font-family: var(--font-display);
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<div class="ph-header">
+  <h1>🔤 Alphabet A–Z</h1>
+  <p>Tap each letter to hear its name and sound!</p>
+  <span class="ph-stage-badge">Stage 1</span>
+</div>
+
+<div class="ph-wrap">
+  <div class="stats-bar">
+    <div class="stat-pill">✅ Mastered: <span id="mastered-count">0</span>/26</div>
+    <div class="stat-pill">⭐ Stars: <span id="star-count">0</span></div>
+  </div>
+
+  <div class="mode-bar">
+    <button class="mode-btn active" id="btn-explore" onclick="setMode('explore')">🔍 Explore</button>
+    <button class="mode-btn" id="btn-auto"    onclick="setMode('auto')">▶️ Auto-Play</button>
+    <button class="mode-btn" id="btn-quiz"    onclick="setMode('quiz')">🎯 Quiz</button>
+  </div>
+
+  <!-- EXPLORE MODE -->
+  <div id="explore-mode">
+    <div class="alpha-grid" id="alpha-grid"></div>
+    <div class="ph-btn-row">
+      <button class="ph-btn ph-btn-primary" onclick="resetMastery()">🔄 Reset Progress</button>
+    </div>
+  </div>
+
+  <!-- QUIZ MODE -->
+  <div class="quiz-box" id="quiz-mode">
+    <div class="quiz-question" id="quiz-q">Which letter makes this sound?</div>
+    <button class="quiz-sound-btn" id="quiz-play" onclick="playQuizSound()">🔊</button>
+    <div class="quiz-choices" id="quiz-choices"></div>
+    <div style="margin-top:16px;font-size:0.85rem;color:var(--muted);font-weight:700" id="quiz-score">Score: 0/0</div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+const LETTERS = [
+  {l:'A',w:'Apple',e:'🍎',s:'a (short a)'},
+  {l:'B',w:'Ball', e:'🏀',s:'buh'},
+  {l:'C',w:'Cat',  e:'🐱',s:'kuh'},
+  {l:'D',w:'Dog',  e:'🐶',s:'duh'},
+  {l:'E',w:'Egg',  e:'🥚',s:'e (short e)'},
+  {l:'F',w:'Fish', e:'🐟',s:'fuh'},
+  {l:'G',w:'Goat', e:'🐐',s:'guh'},
+  {l:'H',w:'Hat',  e:'🎩',s:'huh'},
+  {l:'I',w:'Igloo',e:'🧊',s:'i (short i)'},
+  {l:'J',w:'Jar',  e:'🫙',s:'juh'},
+  {l:'K',w:'Kite', e:'🪁',s:'kuh'},
+  {l:'L',w:'Lion', e:'🦁',s:'luh'},
+  {l:'M',w:'Moon', e:'🌙',s:'muh'},
+  {l:'N',w:'Nest', e:'🪺',s:'nuh'},
+  {l:'O',w:'Owl',  e:'🦉',s:'o (short o)'},
+  {l:'P',w:'Pig',  e:'🐷',s:'puh'},
+  {l:'Q',w:'Queen',e:'👑',s:'kwuh'},
+  {l:'R',w:'Rain', e:'🌧️',s:'ruh'},
+  {l:'S',w:'Sun',  e:'☀️',s:'sss'},
+  {l:'T',w:'Tree', e:'🌳',s:'tuh'},
+  {l:'U',w:'Umbrella',e:'☂️',s:'u (short u)'},
+  {l:'V',w:'Van',  e:'🚐',s:'vuh'},
+  {l:'W',w:'Water',e:'💧',s:'wuh'},
+  {l:'X',w:'X-ray',e:'🩻',s:'ks'},
+  {l:'Y',w:'Yak',  e:'🦬',s:'yuh'},
+  {l:'Z',w:'Zebra',e:'🦓',s:'zzz'},
+];
+const VOWELS = ['A','E','I','O','U'];
+let mastery = JSON.parse(localStorage.getItem('ph_alpha_mastery') || '{}');
+let mode = 'explore';
+let quizLetter = null, quizScore = 0, quizTotal = 0;
+let autoInterval = null;
+let autoIdx = 0;
+
+function buildGrid() {
+  const grid = document.getElementById('alpha-grid');
+  grid.innerHTML = '';
+  LETTERS.forEach((item, idx) => {
+    const taps = mastery[item.l] || 0;
+    const done = taps >= 3;
+    const isVowel = VOWELS.includes(item.l);
+    const card = document.createElement('div');
+    card.className = 'alpha-card' + (done ? ' mastered' : '') + (isVowel ? ' ph-vowel' : '');
+    card.id = 'card-' + item.l;
+    card.innerHTML = `
+      <div class="alpha-tap-count">
+        ${[0,1,2].map(i => `<div class="tap-dot${i < taps ? ' filled':''}"></div>`).join('')}
+      </div>
+      <span class="alpha-check">✅</span>
+      <span class="alpha-upper">${item.l}</span>
+      <span class="alpha-lower">${item.l.toLowerCase()}</span>
+      <span class="alpha-emoji">${item.e}</span>
+      <span class="alpha-word">${item.w}</span>`;
+    card.onclick = () => tapLetter(item);
+    grid.appendChild(card);
+  });
+  updateStats();
+}
+
+function tapLetter(item) {
+  const card = document.getElementById('card-' + item.l);
+  card.classList.add('active-glow');
+  setTimeout(() => card.classList.remove('active-glow'), 800);
+
+  const msg = `${item.l}... ${item.s}... ${item.w}!`;
+  speak(msg, 0.78);
+
+  if (!mastery[item.l]) mastery[item.l] = 0;
+  if (mastery[item.l] < 3) {
+    mastery[item.l]++;
+    localStorage.setItem('ph_alpha_mastery', JSON.stringify(mastery));
+    if (mastery[item.l] >= 3) {
+      awardStars('alphabet', 1);
+      setTimeout(() => {
+        card.classList.add('mastered');
+        speak('You learned the letter ' + item.l + '! Great job!');
+      }, 1200);
+    }
+  }
+  // update dots
+  const dots = card.querySelectorAll('.tap-dot');
+  dots.forEach((d, i) => d.classList.toggle('filled', i < mastery[item.l]));
+  if (mastery[item.l] >= 3) card.querySelector('.alpha-check').style.display = 'block';
+  updateStats();
+}
+
+function updateStats() {
+  const done = Object.values(mastery).filter(v => v >= 3).length;
+  document.getElementById('mastered-count').textContent = done;
+  document.getElementById('star-count').textContent = localStorage.getItem('ph_stars') || 0;
+  if (done >= 20) markComplete('alphabet');
+}
+
+function setMode(m) {
+  mode = m;
+  clearInterval(autoInterval);
+  document.getElementById('explore-mode').style.display = m === 'quiz' ? 'none' : 'block';
+  document.getElementById('quiz-mode').classList.toggle('visible', m === 'quiz');
+  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + m).classList.add('active');
+
+  if (m === 'auto') startAuto();
+  if (m === 'quiz') nextQuiz();
+}
+
+function startAuto() {
+  autoIdx = 0;
+  function playNext() {
+    if (mode !== 'auto') return;
+    const item = LETTERS[autoIdx % 26];
+    const card = document.getElementById('card-' + item.l);
+    document.querySelectorAll('.alpha-card').forEach(c => c.classList.remove('active-glow'));
+    card.classList.add('active-glow');
+    card.scrollIntoView({behavior:'smooth', block:'center'});
+    speak(`${item.l}... ${item.s}... ${item.w}!`, 0.75);
+    autoIdx++;
+    autoInterval = setTimeout(playNext, 3200);
+  }
+  playNext();
+}
+
+function nextQuiz() {
+  const idx = Math.floor(Math.random() * 26);
+  quizLetter = LETTERS[idx];
+  document.getElementById('quiz-q').textContent = 'Which letter makes this sound?';
+  // 4 choices including correct
+  const choices = [idx];
+  while (choices.length < 4) {
+    const r = Math.floor(Math.random() * 26);
+    if (!choices.includes(r)) choices.push(r);
+  }
+  choices.sort(() => Math.random() - 0.5);
+  const box = document.getElementById('quiz-choices');
+  box.innerHTML = choices.map(i => `
+    <div class="quiz-choice" onclick="checkQuiz(this,'${LETTERS[i].l}','${quizLetter.l}')">
+      ${LETTERS[i].l}
+    </div>`).join('');
+  playQuizSound();
+}
+
+function playQuizSound() {
+  if (quizLetter) speak(quizLetter.s + '... ' + quizLetter.s, 0.7);
+}
+
+function checkQuiz(el, chosen, correct) {
+  quizTotal++;
+  if (chosen === correct) {
+    el.classList.add('correct');
+    quizScore++;
+    speak('Correct! ' + correct + ' for ' + quizLetter.w + '!');
+    awardStars('alphabet-quiz', 1);
+    setTimeout(nextQuiz, 1600);
+  } else {
+    el.classList.add('wrong');
+    shakeWrong(el);
+    document.querySelectorAll('.quiz-choice').forEach(c => {
+      if (c.textContent.trim() === correct) c.classList.add('correct');
+    });
+    setTimeout(nextQuiz, 2000);
+  }
+  document.getElementById('quiz-score').textContent = `Score: ${quizScore}/${quizTotal}`;
+}
+
+function resetMastery() {
+  if (confirm('Reset all alphabet progress?')) {
+    mastery = {};
+    localStorage.removeItem('ph_alpha_mastery');
+    buildGrid();
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildGrid();
+  injectMascot(["Tap each letter to hear its sound! 🦉","Vowels are in red — A, E, I, O, U!","Try Quiz mode when you feel ready! 🎯"]);
+  speak("Let's learn the alphabet! Tap any letter to hear its sound!", 0.85);
+});
+</script>
+</body>
+</html>

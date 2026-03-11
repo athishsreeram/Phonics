@@ -1,425 +1,252 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🌟 Phonics Fun!</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<title>Digraph Practice 🔠</title>
+<link rel="stylesheet" href="shared.css">
 <style>
-  :root {
-    --bg:      #FFF8DC;
-    --sh:      #E84393;
-    --ch:      #E67E22;
-    --th-soft: #2980B9;
-    --th-hard: #8E44AD;
-    --ph:      #16A085;
-    --gh:      #27AE60;
-    --wh:      #D63031;
-    --ck:      #6C3483;
-    --end:     #2C3E50;
+  .digraph-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 16px 0;
   }
+  @media(max-width:400px){ .digraph-grid{grid-template-columns:repeat(2,1fr);} }
+  .digraph-card {
+    background: white;
+    border: 3px solid #e1bee7;
+    border-radius: 18px;
+    padding: 20px 12px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s;
+    touch-action: manipulation;
+    position: relative;
+  }
+  .digraph-card:hover  { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(142,68,173,0.2); }
+  .digraph-card:active { transform: scale(0.93); }
+  .digraph-card.active { border-color: var(--digraph); background: #f9f0ff; transform: scale(1.04); }
+  .dg-letters { font-family:var(--font-display);font-size:2.4rem;font-weight:800;color:var(--digraph);display:block;line-height:1; }
+  .dg-sound   { font-size:0.78rem;font-weight:700;color:var(--muted);margin-top:4px; }
+  .dg-emoji   { font-size:1.5rem;display:block;margin-top:6px; }
+  .dg-example { font-family:var(--font-display);font-size:0.88rem;font-weight:700;color:var(--text);margin-top:4px; }
+  .dg-practiced{ position:absolute;top:6px;right:8px;font-size:0.8rem;display:none; }
+  .digraph-card.done .dg-practiced { display:block; }
 
-- { box-sizing: border-box; margin: 0; padding: 0; }
+  .detail-panel {
+    background: white;
+    border: 2.5px solid var(--border);
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin: 16px 0;
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .detail-panel.visible { display: block; }
+  .dp-title { font-family:var(--font-display);font-size:1.8rem;font-weight:800;color:var(--digraph);text-align:center;margin-bottom:14px; }
 
-body {
-font-family: ‘Nunito’, sans-serif;
-background: var(–bg);
-min-height: 100vh;
-padding: 16px;
-background-image:
-radial-gradient(circle at 10% 10%, #FFE4E1 0%, transparent 35%),
-radial-gradient(circle at 90% 90%, #E0F7FA 0%, transparent 35%),
-radial-gradient(circle at 50% 50%, #FFF9C4 0%, transparent 60%);
-}
+  .example-words {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .ew-card {
+    background: #f9f0ff;
+    border: 2px solid #e1bee7;
+    border-radius: 14px;
+    padding: 14px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.15s;
+    touch-action: manipulation;
+  }
+  .ew-card:hover  { transform: translateY(-3px); }
+  .ew-card:active { transform: scale(0.92); }
+  .ew-emoji { font-size: 1.8rem; display: block; }
+  .ew-word  { font-family: var(--font-display); font-size: 1rem; font-weight: 800; margin-top: 6px; }
+  .ew-highlight { color: var(--digraph); }
 
-header { text-align: center; padding: 20px 10px 10px; }
-
-header h1 {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(2rem, 8vw, 3.5rem);
-color: #E84393;
-text-shadow: 3px 3px 0 #FFB3D9;
-letter-spacing: 1px;
-}
-
-header p {
-font-size: clamp(1rem, 4vw, 1.3rem);
-color: #555;
-margin-top: 6px;
-font-weight: 700;
-}
-
-.section { margin: 24px auto; max-width: 900px; }
-
-.section-title {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(1.5rem, 6vw, 2.4rem);
-text-align: center;
-margin-bottom: 14px;
-padding: 12px 20px;
-border-radius: 50px;
-display: inline-block;
-width: 100%;
-color: white;
-text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-letter-spacing: 0.5px;
-}
-
-.sec-sh      .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
-.sec-ch      .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); }
-.sec-th-soft .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
-.sec-th-hard .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
-.sec-ph      .section-title { background: linear-gradient(135deg, #16A085, #1ABC9C); }
-.sec-gh      .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
-.sec-wh      .section-title { background: linear-gradient(135deg, #D63031, #E74C3C); }
-.sec-ck      .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
-.sec-end     .section-title { background: linear-gradient(135deg, #2C3E50, #34495E); }
-
-.cards-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(min(160px, 45vw), 1fr));
-gap: 14px;
-padding: 0 4px;
-}
-
-/* WHITE cards — letters crystal clear */
-.word-card {
-background: #FFFFFF;
-border-radius: 20px;
-padding: 18px 10px 14px;
-text-align: center;
-box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
-transition: transform 0.1s, box-shadow 0.1s;
-user-select: none;
-cursor: default;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 10px;
-border-bottom: 6px solid transparent;
-}
-
-.word-card:active {
-transform: translateY(3px);
-box-shadow: 0 3px 0 rgba(0,0,0,0.15);
-}
-
-.sec-sh      .word-card { border-bottom-color: var(–sh); }
-.sec-ch      .word-card { border-bottom-color: var(–ch); }
-.sec-th-soft .word-card { border-bottom-color: var(–th-soft); }
-.sec-th-hard .word-card { border-bottom-color: var(–th-hard); }
-.sec-ph      .word-card { border-bottom-color: var(–ph); }
-.sec-gh      .word-card { border-bottom-color: var(–gh); }
-.sec-wh      .word-card { border-bottom-color: var(–wh); }
-.sec-ck      .word-card { border-bottom-color: var(–ck); }
-.sec-end     .word-card { border-bottom-color: var(–end); }
-
-.sounds-row {
-display: flex;
-justify-content: center;
-align-items: center;
-flex-wrap: wrap;
-gap: 2px;
-}
-
-/* Dark text per section — maximum contrast on white */
-.sound {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(2.2rem, 9vw, 3.2rem);
-cursor: pointer;
-padding: 2px 4px;
-border-radius: 8px;
-transition: all 0.15s;
-display: inline-block;
-line-height: 1.1;
-position: relative;
-}
-
-.sec-sh      .sound { color: #A5003B; }
-.sec-ch      .sound { color: #A04000; }
-.sec-th-soft .sound { color: #1A5276; }
-.sec-th-hard .sound { color: #5B2C6F; }
-.sec-ph      .sound { color: #0E6655; }
-.sec-gh      .sound { color: #145A32; }
-.sec-wh      .sound { color: #922B21; }
-.sec-ck      .sound { color: #4A235A; }
-.sec-end     .sound { color: #1C2833; }
-
-.sound:active,
-.sound.tapped {
-color: #FF6B00 !important;
-transform: scale(1.3);
-text-shadow: 0 0 14px rgba(255,107,0,0.5);
-background: #FFF3CD;
-border-radius: 10px;
-}
-
-.phonetic-label {
-font-size: clamp(0.75rem, 3vw, 0.95rem);
-color: #888;
-font-weight: 800;
-letter-spacing: 0.5px;
-background: #F4F4F4;
-padding: 3px 10px;
-border-radius: 20px;
-}
-
-.speak-btn {
-border: none;
-border-radius: 50%;
-width: clamp(44px, 12vw, 54px);
-height: clamp(44px, 12vw, 54px);
-font-size: clamp(1.3rem, 5vw, 1.8rem);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: transform 0.1s, box-shadow 0.1s;
-flex-shrink: 0;
-color: white;
-}
-
-.sec-sh      .speak-btn { background: var(–sh);      box-shadow: 0 4px 0 #A5003B; }
-.sec-ch      .speak-btn { background: var(–ch);      box-shadow: 0 4px 0 #A04000; }
-.sec-th-soft .speak-btn { background: var(–th-soft); box-shadow: 0 4px 0 #1A5276; }
-.sec-th-hard .speak-btn { background: var(–th-hard); box-shadow: 0 4px 0 #5B2C6F; }
-.sec-ph      .speak-btn { background: var(–ph);      box-shadow: 0 4px 0 #0E6655; }
-.sec-gh      .speak-btn { background: var(–gh);      box-shadow: 0 4px 0 #145A32; }
-.sec-wh      .speak-btn { background: var(–wh);      box-shadow: 0 4px 0 #922B21; }
-.sec-ck      .speak-btn { background: var(–ck);      box-shadow: 0 4px 0 #4A235A; }
-.sec-end     .speak-btn { background: var(–end);     box-shadow: 0 4px 0 #1C2833; }
-
-.speak-btn:active {
-transform: scale(0.9) translateY(3px);
-box-shadow: 0 1px 0 rgba(0,0,0,0.3) !important;
-}
-
-.speak-btn.speaking {
-animation: pulse-btn 0.6s ease-in-out infinite alternate;
-}
-
-@keyframes pulse-btn {
-from { transform: scale(1); }
-to   { transform: scale(1.12); }
-}
-
-@media (max-width: 480px) {
-body { padding: 10px; }
-.cards-grid { gap: 10px; }
-}
-
-.bounce-in {
-animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97);
-}
-
-@keyframes bounceIn {
-0%   { transform: scale(1); }
-30%  { transform: scale(1.3); }
-60%  { transform: scale(0.95); }
-100% { transform: scale(1.3); }
-}
-
-footer {
-text-align: center;
-padding: 30px 10px 16px;
-color: #aaa;
-font-size: 0.9rem;
-font-weight: 700;
-}
+  .sort-game {
+    background: white;
+    border: 2.5px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .sort-title { font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:var(--primary);text-align:center;margin-bottom:16px; }
+  .sort-word-display {
+    text-align: center;
+    font-family: var(--font-display);
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 12px 0;
+    color: var(--text);
+  }
+  .sort-buckets {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+  }
+  @media(max-width:460px){ .sort-buckets{grid-template-columns:repeat(2,1fr);} }
+  .sort-bucket {
+    background: #f9f0ff;
+    border: 3px solid #e1bee7;
+    border-radius: 14px;
+    padding: 14px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--digraph);
+    transition: all 0.18s;
+    touch-action: manipulation;
+  }
+  .sort-bucket:hover  { transform: translateY(-3px); border-color: var(--digraph); }
+  .sort-bucket:active { transform: scale(0.93); }
+  .sort-bucket.correct{ border-color: var(--success); background: #f0faf4; color: var(--success); }
+  .sort-bucket.wrong  { border-color: var(--danger);  background: #fff5f5; color: var(--danger); }
 </style>
-
 </head>
 <body>
+<div class="ph-header">
+  <h1>🔠 Digraph Practice</h1>
+  <p>Two letters — one sound!</p>
+  <span class="ph-stage-badge">Stage 3</span>
+</div>
 
-<header>
-  <h1>🌟 Phonics Fun!</h1>
-  <p>👆 Tap sounds to highlight &bull; 🔊 Press the button to hear the word!</p>
-</header>
+<div class="ph-wrap">
+  <div class="digraph-grid" id="digraph-grid"></div>
 
-<div id="app"></div>
+  <div class="detail-panel" id="detail-panel">
+    <div class="dp-title" id="dp-title"></div>
+    <div style="text-align:center;margin-bottom:14px">
+      <button class="ph-btn ph-btn-primary" onclick="playDigraphSound()">🔊 Hear the Sound</button>
+    </div>
+    <p style="font-size:0.85rem;font-weight:700;color:var(--muted);margin-bottom:10px">Words with this digraph — tap to hear!</p>
+    <div class="example-words" id="example-words"></div>
+  </div>
 
-<footer>Keep practising — you're doing amazing! ⭐</footer>
+  <div class="sort-game" id="sort-game">
+    <div class="sort-title">🎯 Which digraph does this word start with?</div>
+    <div style="text-align:center">
+      <button class="ph-btn ph-btn-primary" onclick="playSortWord()">🔊 Hear the Word</button>
+    </div>
+    <div class="sort-word-display" id="sort-word">???</div>
+    <div class="sort-buckets" id="sort-buckets"></div>
+    <div style="text-align:center;margin-top:12px;font-weight:700;color:var(--muted)" id="sort-feedback"></div>
+    <div style="text-align:center;margin-top:6px;font-size:0.82rem;font-weight:700;color:var(--muted)" id="sort-score">Score: 0/0</div>
+  </div>
+</div>
 
+<script src="shared.js"></script>
 <script>
-const sections = [
-  {
-    id: 'sh', label: '🐚 /sh/ words', secClass: 'sec-sh',
-    words: [
-      { text: 'ship',  parts: ['sh','i','p'],     phonetic: '/ʃɪp/' },
-      { text: 'shop',  parts: ['sh','o','p'],     phonetic: '/ʃɒp/' },
-      { text: 'shell', parts: ['sh','e','ll'],    phonetic: '/ʃɛl/' },
-      { text: 'shine', parts: ['sh','i','n','e'], phonetic: '/ʃaɪn/' },
-      { text: 'shoe',  parts: ['sh','oe'],        phonetic: '/ʃuː/' },
-    ]
-  },
-  {
-    id: 'ch', label: '🐔 /ch/ words', secClass: 'sec-ch',
-    words: [
-      { text: 'chair', parts: ['ch','air'],      phonetic: '/tʃɛr/' },
-      { text: 'chip',  parts: ['ch','i','p'],    phonetic: '/tʃɪp/' },
-      { text: 'check', parts: ['ch','e','ck'],   phonetic: '/tʃɛk/' },
-      { text: 'chin',  parts: ['ch','i','n'],    phonetic: '/tʃɪn/' },
-      { text: 'chat',  parts: ['ch','a','t'],    phonetic: '/tʃæt/' },
-    ]
-  },
-  {
-    id: 'th-soft', label: '👅 /th/ soft', secClass: 'sec-th-soft',
-    words: [
-      { text: 'thin',  parts: ['th','i','n'],    phonetic: '/θɪn/' },
-      { text: 'thick', parts: ['th','i','ck'],   phonetic: '/θɪk/' },
-      { text: 'thing', parts: ['th','i','ng'],   phonetic: '/θɪŋ/' },
-      { text: 'thumb', parts: ['th','u','mb'],   phonetic: '/θʌm/' },
-      { text: 'three', parts: ['th','r','ee'],   phonetic: '/θriː/' },
-    ]
-  },
-  {
-    id: 'th-hard', label: '👄 /th/ hard', secClass: 'sec-th-hard',
-    words: [
-      { text: 'this',  parts: ['th','i','s'],    phonetic: '/ðɪs/' },
-      { text: 'that',  parts: ['th','a','t'],    phonetic: '/ðæt/' },
-      { text: 'the',   parts: ['th','e'],        phonetic: '/ðə/' },
-      { text: 'those', parts: ['th','o','se'],   phonetic: '/ðoʊz/' },
-      { text: 'then',  parts: ['th','e','n'],    phonetic: '/ðɛn/' },
-    ]
-  },
-  {
-    id: 'ph', label: '📞 /ph/ = f sound', secClass: 'sec-ph',
-    words: [
-      { text: 'phone', parts: ['ph','o','ne'],    phonetic: '/foʊn/' },
-      { text: 'photo', parts: ['ph','o','to'],    phonetic: '/ˈfoʊ.toʊ/' },
-      { text: 'phish', parts: ['ph','i','sh'],    phonetic: '/fɪʃ/' },
-      { text: 'phonic',parts: ['ph','o','nic'],   phonetic: '/ˈfɒn.ɪk/' },
-      { text: 'phase', parts: ['ph','a','se'],    phonetic: '/feɪz/' },
-    ]
-  },
-  {
-    id: 'gh', label: '✨ /gh/ silent', secClass: 'sec-gh',
-    words: [
-      { text: 'light', parts: ['l','i','gh','t'], phonetic: '/laɪt/' },
-      { text: 'night', parts: ['n','i','gh','t'], phonetic: '/naɪt/' },
-      { text: 'right', parts: ['r','i','gh','t'], phonetic: '/raɪt/' },
-      { text: 'high',  parts: ['hi','gh'],        phonetic: '/haɪ/' },
-      { text: 'sigh',  parts: ['si','gh'],        phonetic: '/saɪ/' },
-    ]
-  },
-  {
-    id: 'wh', label: '💨 /wh/ words', secClass: 'sec-wh',
-    words: [
-      { text: 'what',  parts: ['wh','a','t'],    phonetic: '/wɒt/' },
-      { text: 'when',  parts: ['wh','e','n'],    phonetic: '/wɛn/' },
-      { text: 'which', parts: ['wh','i','ch'],   phonetic: '/wɪtʃ/' },
-      { text: 'wheel', parts: ['wh','ee','l'],   phonetic: '/wiːl/' },
-      { text: 'why',   parts: ['wh','y'],        phonetic: '/waɪ/' },
-    ]
-  },
-  {
-    id: 'ck', label: '🔑 /ck/ words', secClass: 'sec-ck',
-    words: [
-      { text: 'back',  parts: ['b','a','ck'],    phonetic: '/bæk/' },
-      { text: 'luck',  parts: ['l','u','ck'],    phonetic: '/lʌk/' },
-      { text: 'duck',  parts: ['du','ck'],       phonetic: '/dʌk/' },
-      { text: 'rock',  parts: ['ro','ck'],       phonetic: '/rɒk/' },
-      { text: 'sock',  parts: ['so','ck'],       phonetic: '/sɒk/' },
-    ]
-  },
-  {
-    id: 'end', label: '🎯 Digraph Endings!', secClass: 'sec-end',
-    words: [
-      { text: 'fish',  parts: ['f','i','sh'],     phonetic: '/fɪʃ/' },
-      { text: 'dish',  parts: ['d','i','sh'],     phonetic: '/dɪʃ/' },
-      { text: 'rich',  parts: ['r','i','ch'],     phonetic: '/rɪtʃ/' },
-      { text: 'match', parts: ['m','a','t','ch'], phonetic: '/mætʃ/' },
-      { text: 'bath',  parts: ['b','a','th'],     phonetic: '/bæθ/' },
-      { text: 'with',  parts: ['w','i','th'],     phonetic: '/wɪð/' },
-      { text: 'back',  parts: ['b','a','ck'],     phonetic: '/bæk/' },
-      { text: 'duck',  parts: ['du','ck'],        phonetic: '/dʌk/' },
-      { text: 'laugh', parts: ['lau','gh'],       phonetic: '/lɑːf/' },
-      { text: 'tough', parts: ['tou','gh'],       phonetic: '/tʌf/' },
-    ]
-  },
+const DIGRAPHS = {
+  sh: { sound:'sh (as in shh...)',  words:[{w:'sheep',e:'🐑'},{w:'shell',e:'🐚'},{w:'ship',e:'🚢'},{w:'shoe',e:'👟'},{w:'shop',e:'🏪'},{w:'shark',e:'🦈'}] },
+  ch: { sound:'ch (as in chips!)',  words:[{w:'chair',e:'🪑'},{w:'cheese',e:'🧀'},{w:'chicken',e:'🐔'},{w:'chin',e:'😊'},{w:'chip',e:'🍟'},{w:'cherry',e:'🍒'}] },
+  th: { sound:'th (as in this)',    words:[{w:'the',e:'📖'},{w:'this',e:'👇'},{w:'three',e:'3️⃣'},{w:'thumb',e:'👍'},{w:'think',e:'💭'},{w:'thin',e:'📏'}] },
+  ph: { sound:'ph says f (phone!)', words:[{w:'phone',e:'📱'},{w:'photo',e:'📸'},{w:'phrase',e:'💬'},{w:'graph',e:'📊'},{w:'phase',e:'🌗'},{w:'phew',e:'😮‍💨'}] },
+  wh: { sound:'wh (as in wheel)',   words:[{w:'whale',e:'🐳'},{w:'wheel',e:'🛞'},{w:'white',e:'⬜'},{w:'when',e:'⏰'},{w:'where',e:'📍'},{w:'wheat',e:'🌾'}] },
+  ng: { sound:'ng (as in ring)',    words:[{w:'ring',e:'💍'},{w:'song',e:'🎵'},{w:'king',e:'👑'},{w:'wing',e:'🦅'},{w:'long',e:'📏'},{w:'sing',e:'🎤'}] },
+};
+
+const SORT_WORDS = [
+  {w:'shell',d:'sh'},{w:'chair',d:'ch'},{w:'thumb',d:'th'},
+  {w:'phone',d:'ph'},{w:'whale',d:'wh'},{w:'ring',d:'ng'},
+  {w:'ship',d:'sh'},{w:'chin',d:'ch'},{w:'three',d:'th'},
+  {w:'photo',d:'ph'},{w:'wheel',d:'wh'},{w:'king',d:'ng'},
+  {w:'shoe',d:'sh'},{w:'cheese',d:'ch'},{w:'think',d:'th'},
 ];
 
-function buildPage() {
-  const app = document.getElementById('app');
+let currentDg = null, sortIdx = 0, sortScore = 0, sortTotal = 0;
+let sortShuffled = [...SORT_WORDS].sort(() => Math.random()-0.5);
+let practiced = JSON.parse(localStorage.getItem('ph_digraph_done') || '{}');
 
-  sections.forEach(sec => {
-    const section = document.createElement('div');
-    section.className = `section ${sec.secClass}`;
-
-    const h2 = document.createElement('h2');
-    h2.className = 'section-title';
-    h2.textContent = sec.label;
-    section.appendChild(h2);
-
-    const grid = document.createElement('div');
-    grid.className = 'cards-grid';
-
-    sec.words.forEach(word => {
-      const card = document.createElement('div');
-      card.className = 'word-card';
-
-      // Sounds row
-      const soundsRow = document.createElement('div');
-      soundsRow.className = 'sounds-row';
-      word.parts.forEach(part => {
-        const s = document.createElement('span');
-        s.className = 'sound';
-        s.textContent = part;
-        s.addEventListener('click', (e) => {
-          e.stopPropagation();
-          s.classList.add('tapped', 'bounce-in');
-          setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
-        });
-        soundsRow.appendChild(s);
-      });
-
-      // Phonetic label
-      const label = document.createElement('div');
-      label.className = 'phonetic-label';
-      label.textContent = word.phonetic;
-
-      // Speak button
-      const btn = document.createElement('button');
-      btn.className = 'speak-btn';
-      btn.setAttribute('aria-label', `Hear ${word.text}`);
-      btn.textContent = '🔊';
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        speakWord(word.text, btn);
-      });
-
-      card.appendChild(soundsRow);
-      card.appendChild(label);
-      card.appendChild(btn);
-      grid.appendChild(card);
-    });
-
-    section.appendChild(grid);
-    app.appendChild(section);
-  });
+function buildGrid() {
+  const grid = document.getElementById('digraph-grid');
+  grid.innerHTML = Object.keys(DIGRAPHS).map(dg => `
+    <div class="digraph-card${practiced[dg]?' done':''}" id="card-${dg}" onclick="selectDg('${dg}')">
+      <span class="dg-practiced">✅</span>
+      <span class="dg-letters">${dg}</span>
+      <span class="dg-sound">${DIGRAPHS[dg].sound}</span>
+      <span class="dg-emoji">${DIGRAPHS[dg].words[0].e}</span>
+      <span class="dg-example">${DIGRAPHS[dg].words[0].w}</span>
+    </div>`).join('');
 }
 
-function speakWord(text, btn) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.75;
-  utter.pitch = 1.1;
-  utter.volume = 1;
-
-  btn.classList.add('speaking');
-  btn.textContent = '🎵';
-
-  utter.onend  = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
-  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
-
-  window.speechSynthesis.speak(utter);
+function selectDg(dg) {
+  currentDg = dg;
+  document.querySelectorAll('.digraph-card').forEach(c => c.classList.remove('active'));
+  document.getElementById('card-'+dg).classList.add('active');
+  const data = DIGRAPHS[dg];
+  document.getElementById('dp-title').textContent = `"${dg}" — ${data.sound}`;
+  document.getElementById('example-words').innerHTML = data.words.map(wd => {
+    const highlighted = wd.w.startsWith(dg)
+      ? `<span class="ew-highlight">${dg}</span>${wd.w.slice(dg.length)}`
+      : wd.w.slice(0,-dg.length) + `<span class="ew-highlight">${dg}</span>`;
+    return `<div class="ew-card" onclick="speak('${wd.w}',0.72)">
+      <span class="ew-emoji">${wd.e}</span>
+      <span class="ew-word">${highlighted}</span>
+    </div>`;
+  }).join('');
+  document.getElementById('detail-panel').classList.add('visible');
+  playDigraphSound();
+  practiced[dg] = true;
+  localStorage.setItem('ph_digraph_done', JSON.stringify(practiced));
+  document.getElementById('card-'+dg).classList.add('done');
+  if (Object.keys(practiced).length >= 6) { markComplete('digraphs'); awardStars('digraphs', 3); }
 }
 
-buildPage();
+function playDigraphSound() {
+  if (!currentDg) return;
+  speak(DIGRAPHS[currentDg].sound + '... ' + DIGRAPHS[currentDg].words.map(w=>w.w).join(', '), 0.76);
+}
+
+function buildSortBuckets() {
+  const buckets = document.getElementById('sort-buckets');
+  buckets.innerHTML = Object.keys(DIGRAPHS).map(dg => `
+    <div class="sort-bucket" onclick="checkSort('${dg}')">${dg}</div>`).join('');
+}
+
+function playSortWord() {
+  const item = sortShuffled[sortIdx % sortShuffled.length];
+  document.getElementById('sort-word').textContent = item.w;
+  document.querySelectorAll('.sort-bucket').forEach(b => b.classList.remove('correct','wrong'));
+  document.getElementById('sort-feedback').textContent = '';
+  speak(item.w, 0.72);
+}
+
+function checkSort(chosen) {
+  const item = sortShuffled[sortIdx % sortShuffled.length];
+  sortTotal++;
+  const buckets = document.querySelectorAll('.sort-bucket');
+  if (chosen === item.d) {
+    sortScore++;
+    buckets.forEach(b => { if (b.textContent.trim()===chosen) b.classList.add('correct'); });
+    document.getElementById('sort-feedback').textContent = '✅ Correct! "' + item.w + '" starts with ' + item.d + '!';
+    speak('Correct! ' + item.w + ' starts with ' + item.d + '!');
+    awardStars('digraph-sort', 1);
+  } else {
+    buckets.forEach(b => { if (b.textContent.trim()===chosen) b.classList.add('wrong'); });
+    buckets.forEach(b => { if (b.textContent.trim()===item.d)  b.classList.add('correct'); });
+    document.getElementById('sort-feedback').textContent = 'Try again! "' + item.w + '" starts with ' + item.d + '!';
+    speak('Try again! ' + item.w + ' starts with ' + item.d);
+  }
+  sortIdx++;
+  document.getElementById('sort-score').textContent = 'Score: ' + sortScore + '/' + sortTotal;
+  setTimeout(playSortWord, 2000);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  buildGrid();
+  buildSortBuckets();
+  injectMascot(["Tap a digraph card to learn it! 🦉","Two letters make one sound!","Try the sorting game below! 🎯"]);
+  speak("Digraphs! Two letters together make one special sound!", 0.85);
+  setTimeout(playSortWord, 1200);
+});
 </script>
-
 </body>
 </html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Mini Stories 📖</title>
+<link rel="stylesheet" href="shared.css">
+<style>
+  .story-sel{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0;}
+  @media(max-width:420px){.story-sel{grid-template-columns:1fr;}}
+  .ss-card{background:white;border:2.5px solid var(--border);border-radius:18px;padding:16px 12px;text-align:center;cursor:pointer;transition:all 0.18s;touch-action:manipulation;}
+  .ss-card:hover{transform:translateY(-4px);border-color:var(--primary);}
+  .ss-card:active{transform:scale(0.93);}
+  .ss-card.active{border-color:var(--primary);background:#f0ecff;}
+  .ss-emoji{font-size:2.2rem;display:block;}
+  .ss-title{font-family:var(--font-display);font-size:0.88rem;font-weight:800;margin-top:6px;}
+  .ss-level{font-size:0.68rem;font-weight:700;color:var(--muted);margin-top:2px;}
+  .book-container{background:white;border:2.5px solid var(--border);border-radius:24px;overflow:hidden;margin:14px 0;box-shadow:var(--shadow);}
+  .page-num-bar{background:#f0ecff;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;}
+  .pnb-dots{display:flex;gap:6px;}
+  .pnb-dot{width:10px;height:10px;border-radius:50%;background:var(--border);}
+  .pnb-dot.active{background:var(--primary);}
+  .pnb-label{font-family:var(--font-display);font-size:0.82rem;font-weight:800;color:var(--primary);}
+  .story-page{padding:28px 20px 24px;text-align:center;min-height:300px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;animation:fadeIn 0.3s ease;}
+  .sp-illustration{font-size:5.5rem;line-height:1;}
+  .sp-text{font-family:var(--font-display);font-size:clamp(1.3rem,4.5vw,1.8rem);font-weight:700;line-height:1.8;color:var(--text);max-width:500px;}
+  .sp-word{cursor:pointer;border-radius:6px;padding:2px 4px;transition:background 0.2s;display:inline;}
+  .sp-word:hover{background:#e8e0f8;}
+  .sp-word.active{background:#FFD93D;font-weight:800;}
+  .page-controls{display:flex;gap:12px;justify-content:center;align-items:center;padding:16px 20px;background:#faf9ff;border-top:2px solid var(--border);flex-wrap:wrap;}
+  .speed-pills{display:flex;gap:6px;}
+  .speed-pill{padding:5px 12px;border:2px solid var(--border);background:white;border-radius:12px;font-family:var(--font-display);font-size:0.78rem;font-weight:800;cursor:pointer;transition:all 0.2s;}
+  .speed-pill.active,.speed-pill:hover{border-color:var(--primary);background:#f0ecff;color:var(--primary);}
+  .comp-overlay{display:none;background:#fff8ed;border-top:2.5px solid #ffd9a0;padding:22px 20px;animation:fadeIn 0.3s ease;}
+  .comp-overlay.visible{display:block;}
+  .comp-q{font-family:var(--font-display);font-size:1.05rem;font-weight:800;color:#9a6c00;margin-bottom:14px;text-align:center;}
+  .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .comp-btn{padding:18px 10px;border:3px solid #ffd9a0;background:white;border-radius:16px;text-align:center;cursor:pointer;font-family:var(--font-display);font-size:1.1rem;font-weight:800;transition:all 0.18s;touch-action:manipulation;}
+  .comp-btn:hover{transform:translateY(-3px);border-color:#f59e2e;}
+  .comp-btn.correct{border-color:var(--success);background:#f0faf4;}
+  .comp-btn.wrong{border-color:var(--danger);background:#fff5f5;}
+</style>
+</head>
+<body>
+<div class="ph-header">
+  <h1>📖 Mini Stories</h1>
+  <p>Three decodable picture books to read!</p>
+  <span class="ph-stage-badge">Stage 5</span>
+</div>
+<div class="ph-wrap">
+  <div class="story-sel" id="story-sel"></div>
+  <div class="book-container" id="book-container">
+    <div class="page-num-bar">
+      <div class="pnb-dots" id="pnb-dots"></div>
+      <div class="pnb-label" id="pnb-label">Page 1 of 6</div>
+    </div>
+    <div class="story-page" id="story-page"></div>
+    <div class="page-controls">
+      <button class="ph-btn ph-btn-outline" onclick="prevPage()">◀ Back</button>
+      <div class="speed-pills">
+        <button class="speed-pill active" onclick="setSpeed(0.65,this)">🐢</button>
+        <button class="speed-pill" onclick="setSpeed(0.85,this)">🐇</button>
+        <button class="speed-pill" onclick="setSpeed(1.05,this)">🚀</button>
+      </div>
+      <button class="ph-btn ph-btn-primary" onclick="readPage()">🔊 Read</button>
+      <button class="ph-btn ph-btn-accent" onclick="nextPage()">Next ▶</button>
+    </div>
+    <div class="comp-overlay" id="comp-overlay">
+      <div class="comp-q" id="comp-q"></div>
+      <div class="comp-grid" id="comp-grid"></div>
+      <div style="text-align:center;margin-top:10px;font-weight:700;color:var(--muted)" id="comp-fb"></div>
+    </div>
+  </div>
+</div>
+<script src="shared.js"></script>
+<script>
+const STORIES=[
+  {
+    title:'The Cat and the Mat',emoji:'🐱',level:'CVC Words',
+    pages:[
+      {illustration:'🐱',text:'The cat sat on the mat.'},
+      {illustration:'🎩',text:'The fat cat had a hat.'},
+      {illustration:'🐀',text:'A rat ran to the mat.'},
+      {illustration:'😾',text:'The cat sat up. Pat! Pat!'},
+      {illustration:'🏃',text:'The rat ran. The cat ran.'},
+      {illustration:'🌟',text:'The cat sat. The rat sat. They are pals!'},
+    ],
+    comp:{q:'Where did the cat sit?',choices:[{t:'On the mat',c:true,e:'🛒'},{t:'In a cup',c:false,e:'☕'}]}
+  },
+  {
+    title:'The Big Ship',emoji:'🚢',level:'Consonant Blends',
+    pages:[
+      {illustration:'🚢',text:'A big ship is on the sea.'},
+      {illustration:'🌊',text:'The ship goes fast on the blue waves.'},
+      {illustration:'🦈',text:'A shark swims by the ship.'},
+      {illustration:'⭐',text:'Stars shine bright at night.'},
+      {illustration:'🌅',text:'The ship stops at the green land.'},
+      {illustration:'🎉',text:'They clap and cheer. The trip is done!'},
+    ],
+    comp:{q:'What swam by the ship?',choices:[{t:'A shark',c:true,e:'🦈'},{t:'A frog',c:false,e:'🐸'}]}
+  },
+  {
+    title:'The Rain and the Rainbow',emoji:'🌈',level:'Long Vowels & Sight Words',
+    pages:[
+      {illustration:'☀️',text:'The day was bright and hot.'},
+      {illustration:'🌧️',text:'Then rain came down from the sky.'},
+      {illustration:'💧',text:'Drip, drip, drip. The rain fell on the green trees.'},
+      {illustration:'😊',text:'The rain made the flowers grow.'},
+      {illustration:'🌈',text:'Then the sun came back to shine.'},
+      {illustration:'🌟',text:'A big rainbow lit the whole sky. How beautiful!'},
+    ],
+    comp:{q:'What happened after the rain?',choices:[{t:'A rainbow!',c:true,e:'🌈'},{t:'More rain',c:false,e:'🌧️'}]}
+  }
+];
+let curStory=0,curPage=0,readSpeed=0.72,reading=false;
+
+function buildStorySel(){
+  document.getElementById('story-sel').innerHTML=STORIES.map((s,i)=>`
+    <div class="ss-card${i===curStory?' active':''}" onclick="selectStory(${i})">
+      <span class="ss-emoji">${s.emoji}</span>
+      <div class="ss-title">${s.title}</div>
+      <div class="ss-level">${s.level}</div>
+    </div>`).join('');
+}
+function selectStory(i){curStory=i;curPage=0;buildStorySel();loadPage();document.getElementById('comp-overlay').classList.remove('visible');}
+function buildDots(){
+  const n=STORIES[curStory].pages.length;
+  document.getElementById('pnb-dots').innerHTML=Array.from({length:n},(_,i)=>`<div class="pnb-dot${i===curPage?' active':''}"></div>`).join('');
+  document.getElementById('pnb-label').textContent='Page '+(curPage+1)+' of '+n;
+}
+function loadPage(){
+  window.speechSynthesis.cancel();reading=false;
+  const s=STORIES[curStory];
+  const p=s.pages[curPage];
+  buildDots();
+  const words=p.text.split(' ');
+  document.getElementById('story-page').innerHTML=`
+    <div class="sp-illustration">${p.illustration}</div>
+    <div class="sp-text">
+      ${words.map((w,i)=>`<span class="sp-word" id="sw${i}" onclick="speak('${w.replace(/[^a-zA-Z',!.]/g,'')}',0.72)">${w} </span>`).join('')}
+    </div>`;
+  document.getElementById('comp-overlay').classList.remove('visible');
+}
+function readPage(){
+  window.speechSynthesis.cancel();reading=true;
+  const p=STORIES[curStory].pages[curPage];
+  const words=p.text.split(' ');
+  const els=words.map((_,i)=>document.getElementById('sw'+i));
+  let idx=0;
+  function next(){
+    if(!reading||idx>=words.length){reading=false;return;}
+    els.forEach(e=>e&&e.classList.remove('active'));
+    if(els[idx])els[idx].classList.add('active');
+    const u=new SpeechSynthesisUtterance(words[idx].replace(/[^a-zA-Z']/g,''));
+    u.rate=readSpeed;u.lang='en-US';
+    u.onend=()=>{idx++;setTimeout(next,80);};
+    window.speechSynthesis.speak(u);
+  }
+  next();
+}
+function nextPage(){
+  window.speechSynthesis.cancel();reading=false;
+  const n=STORIES[curStory].pages.length;
+  if(curPage>=n-1){showComp();return;}
+  curPage++;loadPage();
+  speak(STORIES[curStory].pages[curPage].text,readSpeed);
+}
+function prevPage(){
+  window.speechSynthesis.cancel();reading=false;
+  document.getElementById('comp-overlay').classList.remove('visible');
+  if(curPage>0){curPage--;loadPage();}
+}
+function showComp(){
+  const s=STORIES[curStory];
+  document.getElementById('comp-overlay').classList.add('visible');
+  document.getElementById('comp-q').textContent='❓ '+s.comp.q;
+  document.getElementById('comp-fb').textContent='';
+  document.getElementById('comp-grid').innerHTML=s.comp.choices.map(c=>`
+    <div class="comp-btn" onclick="checkComp(this,${c.c})">${c.e}<br>${c.t}</div>`).join('');
+  awardStars('story',2);markComplete('story');
+  speak('Now answer the question! '+s.comp.q,0.85);
+}
+function checkComp(el,correct){
+  document.querySelectorAll('.comp-btn').forEach(b=>b.onclick=null);
+  if(correct){el.classList.add('correct');confetti();speak('Correct! Amazing reading! You earned stars!');awardStars('story',3);}
+  else{el.classList.add('wrong');shakeWrong(el);speak('Try again! Read the last page for a clue!');setTimeout(()=>document.querySelectorAll('.comp-btn').forEach(b=>b.onclick=function(){checkComp(this,b.classList.contains('correct'));}),1500);}
+  document.getElementById('comp-fb').textContent=correct?'✅ Brilliant! You read the whole story!':'Try again!';
+}
+function setSpeed(s,btn){readSpeed=s;document.querySelectorAll('.speed-pill').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+document.addEventListener('DOMContentLoaded',()=>{
+  buildStorySel();loadPage();
+  injectMascot(["Tap any word to hear it! 🦉","Press Read to hear the whole page!","Answer the question at the end! ❓"]);
+  speak("Story time! Let's read a decodable story together!",0.85);
+});
+</script>
+</body>
+</html>

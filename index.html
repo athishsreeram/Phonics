@@ -3,341 +3,399 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Phonics Learning Hub 🌟</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
 <style>
-  :root {
-    --yellow: #FFD93D;
-    --coral:  #FF6B6B;
-    --blue:   #3B9EFF;
-    --green:  #6BCB77;
-    --purple: #C77DFF;
-    --orange: #FF9F43;
-    --bg:     #FFF8E7;
-  }
+  body { background: var(--bg); }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    padding: 24px 16px 48px;
-    overflow-x: hidden;
-    position: relative;
-  }
-
-  /* floating stars background */
-  .star {
-    position: fixed;
-    pointer-events: none;
-    font-size: 1.4rem;
-    opacity: 0.18;
-    animation: drift linear infinite;
-    z-index: 0;
-  }
-  @keyframes drift {
-    0%   { transform: translateY(110vh) rotate(0deg);   opacity: 0; }
-    8%   { opacity: 0.18; }
-    92%  { opacity: 0.18; }
-    100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
-  }
-
-  /* ---- header ---- */
-  header {
-    position: relative;
-    z-index: 1;
+  .hub-hero {
+    background: linear-gradient(135deg, #6c3fc5 0%, #a259e6 55%, #f59e2e 100%);
+    padding: 36px 20px 28px;
     text-align: center;
-    margin-bottom: 32px;
-    animation: slideDown 0.6s cubic-bezier(.34,1.56,.64,1);
+    position: relative;
+    overflow: hidden;
   }
-  @keyframes slideDown {
-    from { transform: translateY(-40px); opacity: 0; }
-    to   { transform: translateY(0);     opacity: 1; }
+  .hub-hero::before {
+    content:'';position:absolute;inset:0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3C/g%3E%3C/svg%3E");
   }
-
-  .logo-emoji {
-    font-size: 4rem;
-    display: block;
-    animation: bounce 2s ease-in-out infinite;
-    line-height: 1;
-    margin-bottom: 6px;
+  .hub-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem,6vw,2.8rem);
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 3px 14px rgba(0,0,0,0.3);
+    position: relative;
   }
-  @keyframes bounce {
-    0%,100% { transform: translateY(0); }
-    50%      { transform: translateY(-10px); }
-  }
-
-  h1 {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(2rem, 8vw, 3rem);
-    color: var(--coral);
-    line-height: 1.1;
-    text-shadow: 3px 3px 0 rgba(255,107,107,0.2);
-  }
-
-  .tagline {
-    font-size: clamp(0.9rem, 3.5vw, 1.1rem);
-    font-weight: 700;
-    color: #AAAAAA;
+  .hub-subtitle {
+    color: rgba(255,255,255,0.9);
+    font-size: clamp(0.9rem,3vw,1.05rem);
     margin-top: 6px;
+    font-weight: 600;
+    position: relative;
+  }
+  .hub-star-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 16px;
+    position: relative;
+  }
+  .hub-stars-display {
+    background: rgba(255,255,255,0.25);
+    border: 2px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 5px 18px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: white;
+  }
+  .hub-start-btn {
+    background: white;
+    color: var(--primary);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 22px;
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    animation: pulse 2s ease-in-out infinite;
+    transition: transform 0.15s;
+  }
+  .hub-start-btn:active { transform: scale(0.95); }
+
+  /* ─── SECTION ─── */
+  .hub-section {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 14px;
+  }
+  .hub-section-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 22px 0 12px;
+    padding-bottom: 8px;
+    border-bottom: 2.5px solid var(--border);
   }
 
-  /* ---- section labels ---- */
-  .section-label {
-    position: relative;
-    z-index: 1;
-    font-family: 'Fredoka One', cursive;
-    font-size: 1.1rem;
-    color: #CCC;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-align: center;
-    margin-bottom: 12px;
-    margin-top: 8px;
-  }
-
-  /* ---- grid ---- */
-  .grid {
-    position: relative;
-    z-index: 1;
+  /* ─── CARDS GRID ─── */
+  .hub-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-    max-width: 520px;
-    margin: 0 auto 14px;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 8px;
   }
-
-  .grid.single {
-    grid-template-columns: 1fr;
-  }
-
-  /* ---- cards ---- */
-  .card {
+  .hub-card {
+    background: white;
+    border: 2.5px solid var(--border);
+    border-radius: 18px;
+    padding: 18px 12px 14px;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text);
+    cursor: pointer;
+    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     gap: 8px;
-    padding: 22px 14px 18px;
-    border-radius: 24px;
-    text-decoration: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hub-card:hover  { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(108,63,197,0.18); border-color: var(--primary); }
+  .hub-card:active { transform: scale(0.95); }
+
+  .hub-card-icon  { font-size: 2.2rem; line-height: 1; }
+  .hub-card-name  { font-family: var(--font-display); font-size: 0.88rem; font-weight: 800; line-height: 1.2; }
+  .hub-card-stage {
+    position: absolute;
+    top: 7px; right: 7px;
+    background: var(--primary);
     color: white;
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(1.1rem, 4vw, 1.35rem);
-    text-align: center;
-    line-height: 1.2;
-    transition: transform 0.18s cubic-bezier(.34,1.56,.64,1), box-shadow 0.15s;
-    position: relative;
-    overflow: hidden;
-    -webkit-touch-callout: none;
-    user-select: none;
-  }
-
-  /* shine sweep on tap */
-  .card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.25) 50%, transparent 70%);
-    transform: translateX(-100%);
-    transition: transform 0s;
-  }
-  .card:active::after { transform: translateX(100%); transition: transform 0.4s ease; }
-
-  .card:active   { transform: scale(0.94); }
-  .card:hover    { transform: scale(1.04); }
-
-  .card-emoji {
-    font-size: 2.4rem;
-    line-height: 1;
-    display: block;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
-  }
-
-  /* coming-soon style */
-  .card.soon {
-    opacity: 0.55;
-    cursor: default;
-    pointer-events: none;
-  }
-  .card.soon::before {
-    content: 'SOON';
-    position: absolute;
-    top: 10px; right: 10px;
-    background: rgba(255,255,255,0.3);
-    font-size: 0.6rem;
-    letter-spacing: 1px;
+    border-radius: 8px;
     padding: 2px 7px;
-    border-radius: 999px;
-    font-family: 'Nunito', sans-serif;
-    font-weight: 900;
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
   }
-
-  /* colour themes */
-  .c-blue   { background: var(--blue);   box-shadow: 0 6px 0 #1E78D4, 0 8px 20px rgba(59,158,255,0.35); }
-  .c-coral  { background: var(--coral);  box-shadow: 0 6px 0 #D44444, 0 8px 20px rgba(255,107,107,0.35); }
-  .c-green  { background: var(--green);  box-shadow: 0 6px 0 #44A34F, 0 8px 20px rgba(107,203,119,0.35); }
-  .c-purple { background: var(--purple); box-shadow: 0 6px 0 #9B4FD8, 0 8px 20px rgba(199,125,255,0.35); }
-  .c-orange { background: var(--orange); box-shadow: 0 6px 0 #D47A1E, 0 8px 20px rgba(255,159,67,0.35); }
-  .c-yellow { background: #FFBA08;       box-shadow: 0 6px 0 #CC8F00, 0 8px 20px rgba(255,186,8,0.35); }
-  .c-teal   { background: #20C997;       box-shadow: 0 6px 0 #149975, 0 8px 20px rgba(32,201,151,0.35); }
-  .c-pink   { background: #FF79C6;       box-shadow: 0 6px 0 #D44A9A, 0 8px 20px rgba(255,121,198,0.35); }
-
-  /* staggered entrance */
-  .card { animation: popIn 0.4s cubic-bezier(.34,1.56,.64,1) both; }
-  .card:nth-child(1)  { animation-delay: 0.08s; }
-  .card:nth-child(2)  { animation-delay: 0.14s; }
-  .card:nth-child(3)  { animation-delay: 0.20s; }
-  .card:nth-child(4)  { animation-delay: 0.26s; }
-  .card:nth-child(5)  { animation-delay: 0.32s; }
-  .card:nth-child(6)  { animation-delay: 0.38s; }
-  @keyframes popIn {
-    from { transform: scale(0.6) translateY(20px); opacity: 0; }
-    to   { transform: scale(1)   translateY(0);    opacity: 1; }
-  }
-
-  /* divider */
-  .divider {
-    position: relative;
-    z-index: 1;
-    max-width: 520px;
-    margin: 6px auto 18px;
-    border: none;
-    border-top: 3px dashed #EEE4CC;
-  }
-
-  footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    color: #CCC;
+  .hub-card-done .hub-card-stage { background: var(--success); }
+  .hub-card-done { border-color: #a8e6c4; }
+  .hub-card-done::after {
+    content: '✅';
+    position: absolute;
+    top: 7px; left: 8px;
     font-size: 0.8rem;
-    font-weight: 700;
-    margin-top: 20px;
   }
+
+  /* progress bar under section */
+  .hub-section-progress {
+    height: 6px;
+    background: var(--border);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .hub-section-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    border-radius: 4px;
+    transition: width 0.7s ease;
+  }
+
+  .hub-footer {
+    text-align: center;
+    padding: 28px 20px 100px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .hub-parent-link {
+    display: inline-block;
+    margin-top: 12px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+  }
+  .hub-parent-link:hover { opacity: 1; }
 </style>
 </head>
 <body>
 
+<!-- HERO -->
+<div class="hub-hero">
+  <div class="hub-title">🔤 Phonics Learning Hub</div>
+  <div class="hub-subtitle">Tap a card to start learning! 🚀</div>
+  <div class="hub-star-bar">
+    <div class="hub-stars-display" id="total-stars">⭐ 0</div>
+    <button class="hub-start-btn" onclick="startHere()">▶ Start Here!</button>
+  </div>
+</div>
+
+<div class="hub-section">
+
+  <!-- ── STAGE 1: ALPHABET & SOUNDS ── -->
+  <div class="hub-section-label">🌱 Stage 1 · Alphabet & Sounds</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-1" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="alphabet.html" onclick="cardClick(event,'alphabet','Let\'s learn the Alphabet!')">
+      <span class="hub-card-stage">S1</span>
+      <span class="hub-card-icon">🔤</span>
+      <span class="hub-card-name">Alphabet A–Z</span>
+    </a>
+    <a class="hub-card" href="phonic-set1.html" onclick="cardClick(event,'phonic-set1','Phonics Set One! Let\'s go!')">
+      <span class="hub-card-stage">S1</span>
+      <span class="hub-card-icon">1️⃣</span>
+      <span class="hub-card-name">Phonic Set 1</span>
+    </a>
+    <a class="hub-card" href="phonic-set2.html" onclick="cardClick(event,'phonic-set2','Phonics Set Two!')">
+      <span class="hub-card-stage">S1</span>
+      <span class="hub-card-icon">2️⃣</span>
+      <span class="hub-card-name">Phonic Set 2</span>
+    </a>
+  </div>
+
+  <!-- ── STAGE 2: CVC & VOWELS ── -->
+  <div class="hub-section-label">🌿 Stage 2 · Vowels & CVC Words</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-2" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="vowels.html" onclick="cardClick(event,'vowels','Let\'s practice vowels! A E I O U!')">
+      <span class="hub-card-stage">S2</span>
+      <span class="hub-card-icon">🗣️</span>
+      <span class="hub-card-name">Vowels A E I O U</span>
+    </a>
+    <a class="hub-card" href="cvc.html" onclick="cardClick(event,'cvc','CVC words! Cat, dog, sun!')">
+      <span class="hub-card-stage">S2</span>
+      <span class="hub-card-icon">🔠</span>
+      <span class="hub-card-name">CVC Words</span>
+    </a>
+    <a class="hub-card" href="rhyme.html" onclick="cardClick(event,'rhyme','Rhyme Time! Do cat and hat rhyme?')">
+      <span class="hub-card-stage">S2</span>
+      <span class="hub-card-icon">🎵</span>
+      <span class="hub-card-name">Rhyme Time</span>
+    </a>
+    <a class="hub-card" href="listen-choose.html" onclick="cardClick(event,'listen-choose','Listen and choose the right sound!')">
+      <span class="hub-card-stage">S2</span>
+      <span class="hub-card-icon">👂</span>
+      <span class="hub-card-name">Listen & Choose</span>
+    </a>
+  </div>
+
+  <!-- ── STAGE 3: DIGRAPHS & BLENDS ── -->
+  <div class="hub-section-label">🌳 Stage 3 · Digraphs & Blends</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-3" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="digraphs.html" onclick="cardClick(event,'digraphs','Digraphs! S H makes the sh sound!')">
+      <span class="hub-card-stage">S3</span>
+      <span class="hub-card-icon">🔠</span>
+      <span class="hub-card-name">Digraph Practice</span>
+    </a>
+    <a class="hub-card" href="digraph_fill.html" onclick="cardClick(event,'digraph-fill','Digraph test! Fill in the missing letters!')">
+      <span class="hub-card-stage">S3</span>
+      <span class="hub-card-icon">✏️</span>
+      <span class="hub-card-name">Digraph Test</span>
+    </a>
+    <a class="hub-card" href="consonant-blend.html" onclick="cardClick(event,'blends','Consonant blends! Blue, star, frog!')">
+      <span class="hub-card-stage">S3</span>
+      <span class="hub-card-icon">🔡</span>
+      <span class="hub-card-name">Consonant Blends</span>
+    </a>
+  </div>
+
+  <!-- ── STAGE 4: MAGIC E & LONG VOWELS ── -->
+  <div class="hub-section-label">✨ Stage 4 · Magic E & Long Vowels</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-4" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="magic-e.html" onclick="cardClick(event,'magic-e','Magic E! Cap becomes cape with a magic E!')">
+      <span class="hub-card-stage">S4</span>
+      <span class="hub-card-icon">✨</span>
+      <span class="hub-card-name">Magic E</span>
+    </a>
+    <a class="hub-card" href="long-vowel.html" onclick="cardClick(event,'long-vowel','Long vowels! Rain, sleep, boat!')">
+      <span class="hub-card-stage">S4</span>
+      <span class="hub-card-icon">🔆</span>
+      <span class="hub-card-name">Long Vowels</span>
+    </a>
+  </div>
+
+  <!-- ── STAGE 5: READING ── -->
+  <div class="hub-section-label">📖 Stage 5 · Reading</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-5" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="sight-words.html" onclick="cardClick(event,'sight-words','Sight words! The, is, and, a!')">
+      <span class="hub-card-stage">S5</span>
+      <span class="hub-card-icon">👁️</span>
+      <span class="hub-card-name">Sight Words</span>
+    </a>
+    <a class="hub-card" href="read.html" onclick="cardClick(event,'read','Read practice! Let\'s read together!')">
+      <span class="hub-card-stage">S5</span>
+      <span class="hub-card-icon">📗</span>
+      <span class="hub-card-name">Read Practice</span>
+    </a>
+    <a class="hub-card" href="read2.html" onclick="cardClick(event,'read2','Read with voice! Listen and follow along!')">
+      <span class="hub-card-stage">S5</span>
+      <span class="hub-card-icon">🎙️</span>
+      <span class="hub-card-name">Read + Voice</span>
+    </a>
+    <a class="hub-card" href="story.html" onclick="cardClick(event,'story','Story time! Let\'s read a fun story!')">
+      <span class="hub-card-stage">S5</span>
+      <span class="hub-card-icon">📖</span>
+      <span class="hub-card-name">Mini Stories</span>
+    </a>
+    <a class="hub-card" href="word-match.html" onclick="cardClick(event,'word-match','Word match! Hear a word, tap the picture!')">
+      <span class="hub-card-stage">S5</span>
+      <span class="hub-card-icon">🎯</span>
+      <span class="hub-card-name">Word Match</span>
+    </a>
+  </div>
+
+  <!-- ── STAGE 6: WRITING ── -->
+  <div class="hub-section-label">✍️ Stage 6 · Writing</div>
+  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-6" style="width:0%"></div></div>
+  <div class="hub-grid">
+    <a class="hub-card" href="trace.html" onclick="cardClick(event,'trace','Letter tracing! Draw the letters with your finger!')">
+      <span class="hub-card-stage">S6</span>
+      <span class="hub-card-icon">✍️</span>
+      <span class="hub-card-name">Letter Tracing</span>
+    </a>
+    <a class="hub-card" href="sentence-builder.html" onclick="cardClick(event,'sentence-builder','Sentence builder! Put the words in order!')">
+      <span class="hub-card-stage">S6</span>
+      <span class="hub-card-icon">🧩</span>
+      <span class="hub-card-name">Sentence Builder</span>
+    </a>
+  </div>
+
+  <!-- ── TOOLS & GAMES ── -->
+  <div class="hub-section-label">🛠️ Tools & Games</div>
+  <div class="hub-grid">
+    <a class="hub-card" href="word-explore.html" onclick="cardClick(event,'word-explore','Word Explorer! Type any word to learn about it!')">
+      <span class="hub-card-icon">🌟</span>
+      <span class="hub-card-name">Word Explorer</span>
+    </a>
+    <a class="hub-card" href="phkids.html" onclick="cardClick(event,'phkids','Phonic Games! Let\'s play and learn!')">
+      <span class="hub-card-icon">🎮</span>
+      <span class="hub-card-name">Phonic Games</span>
+    </a>
+    <a class="hub-card" href="alphabet-ballon-pop.html" onclick="cardClick(event,'balloon-pop','Balloon Pop! Pop the right balloon!')">
+      <span class="hub-card-icon">🎈</span>
+      <span class="hub-card-name">Balloon Pop</span>
+    </a>
+  </div>
+
+</div>
+
+<div class="hub-footer">
+  Happy Learning! 🌈⭐
+  <br>
+  <a class="hub-parent-link" href="parent-dashboard.html">👨‍👩‍👧 Parents</a>
+</div>
+
+<script src="shared.js"></script>
 <script>
-  /* floating background stars */
-  var icons = ['⭐','🌟','✨','🎵','🎈','💫','🌈'];
-  for (var i = 0; i < 16; i++) {
-    var s = document.createElement('div');
-    s.className = 'star';
-    s.textContent = icons[i % icons.length];
-    s.style.left = (Math.random()*100) + 'vw';
-    s.style.fontSize = (1 + Math.random()*1.2) + 'rem';
-    s.style.animationDuration = (10 + Math.random()*14) + 's';
-    s.style.animationDelay    = (Math.random()*14) + 's';
-    document.body.appendChild(s);
+  function cardClick(e, id, msg) {
+    e.preventDefault();
+    const href = e.currentTarget.href;
+    speak(msg, 0.88);
+    const card = e.currentTarget;
+    card.style.transform = 'scale(0.95)';
+    setTimeout(() => { card.style.transform = ''; location.href = href; }, 700);
   }
+
+  function startHere() {
+    speak("Let\'s start learning! Beginning with the Alphabet!");
+    setTimeout(() => location.href = 'alphabet.html', 1200);
+  }
+
+  function updateHubStars() {
+    const s = localStorage.getItem('ph_stars') || '0';
+    document.getElementById('total-stars').textContent = '⭐ ' + s;
+  }
+
+  function updateProgress() {
+    const prog = JSON.parse(localStorage.getItem('ph_progress') || '{}');
+    const sections = [
+      { id: 'prog-1', modules: ['alphabet','phonic-set1','phonic-set2'] },
+      { id: 'prog-2', modules: ['vowels','cvc','rhyme','listen-choose'] },
+      { id: 'prog-3', modules: ['digraphs','digraph-fill','blends'] },
+      { id: 'prog-4', modules: ['magic-e','long-vowel'] },
+      { id: 'prog-5', modules: ['sight-words','read','read2','story','word-match'] },
+      { id: 'prog-6', modules: ['trace','sentence-builder'] },
+    ];
+    sections.forEach(sec => {
+      const done = sec.modules.filter(m => prog[m + '_done']).length;
+      const pct  = Math.round((done / sec.modules.length) * 100);
+      const el   = document.getElementById(sec.id);
+      if (el) el.style.width = pct + '%';
+    });
+    // mark completed cards
+    document.querySelectorAll('.hub-card').forEach(card => {
+      const href  = card.getAttribute('href').replace('.html','');
+      const click = card.getAttribute('onclick') || '';
+      const match = click.match(/'([^']+)'/);
+      if (match && prog[match[1] + '_done']) card.classList.add('hub-card-done');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    updateHubStars();
+    updateProgress();
+    injectMascot([
+      "Tap a card to start learning! 🦉",
+      "Try Stage 1 first — the Alphabet!",
+      "Every star you earn goes here! ⭐"
+    ]);
+  });
 </script>
-
-<header>
-  <span class="logo-emoji">🔤</span>
-  <h1>Phonics Learning Hub</h1>
-  <p class="tagline">Tap a card to start learning! 🚀</p>
-</header>
-
-<!-- PRACTICE -->
-<p class="section-label">🎯 Practice</p>
-<div class="grid">
-  <a class="card c-blue" href="digraphs.html">
-    <span class="card-emoji">🔠</span>
-    Digraph Practice
-  </a>
-  <a class="card c-coral" href="digraph_fill.html">
-    <span class="card-emoji">✏️</span>
-    Digraph Test
-  </a>
-  <a class="card c-green" href="vowels.html">
-    <span class="card-emoji">🗣️</span>
-    Vowels Practice
-  </a>
- 
-  <a class="card c-blue" href="cvc.html">
-    <span class="card-emoji">🔠</span>
-    CVC Words
-  </a>
-  <a class="card c-blue" href="consonant-blend.html">
-    <span class="card-emoji">🔠</span>
-    Consonant Blends
-  </a>
-  <a class="card c-blue" href="magic-e.html">
-    <span class="card-emoji">✨</span>
-    Magic E
-  </a>
-  <a class="card c-blue" href="long-vowel.html">
-    <span class="card-emoji">✨</span>
-    Long Vowel
-  </a>
-</div>
-
-<hr class="divider">
-
-<!-- PHONICS SETS -->
-<p class="section-label">📚 Phonics Sets</p>
-<div class="grid">
-  <a class="card c-orange" href="phonic-set1.html">
-    <span class="card-emoji">1️⃣</span>
-    Phonic Set 1
-  </a>
-  <a class="card c-teal" href="phonic-set2.html">
-    <span class="card-emoji">2️⃣</span>
-    Phonic Set 2
-  </a>
-</div>
-
-<hr class="divider">
-
-<!-- READING -->
-<p class="section-label">📖 Reading</p>
-<div class="grid">
-  <a class="card c-yellow" href="read.html">
-    <span class="card-emoji">📗</span>
-    Read Practice 
-  </a>
-  <a class="card c-pink" href="read2.html">
-    <span class="card-emoji">🔤</span>
-    Read Practice + Voice
-  </a>
-</div>
-
-<hr class="divider">
-
-<!-- TOOLS -->
-<p class="section-label">🛠️ Tools</p>
-<div class="grid single">
-  <a class="card c-blue" href="word-explore.html">
-    <span class="card-emoji">🌟</span>
-    Word Explorer
-  </a>
-</div>
-
-
-<!-- TOOLS -->
-<p class="section-label">🛠️ Games</p>
-<div class="grid single">
-  <a class="card c-blue" href="phkids.html">
-    <span class="card-emoji">🌟</span>
-    Phonic Games
-  </a>
-</div>
-<div class="grid single">
-  <a class="card c-blue" href="alphabet-ballon-pop.html">
-    <span class="card-emoji">🌟</span>
-    Alphabet Balloon Pop Games
-  </a>
-</div>
-
-  
-</div>
-
-<footer>Happy Learning! 🌈⭐</footer>
-
 </body>
 </html>

@@ -1,1016 +1,164 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>🌈 Long Vowels & Vowel Teams!</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Fredoka+One&display=swap" rel="stylesheet">
+<title>Long Vowels 🔆</title>
+<link rel="stylesheet" href="shared.css">
 <style>
-  :root {
-    --bg: #FFF8DC;
-
-```
-/* Long A teams */
---ai: #E84393;
---ay: #C0392B;
---ea-a: #884EA0;
-
-/* Long E teams */
---ee: #2980B9;
---ea-e: #1A6DA8;
---ey-e: #154360;
---ie-e: #0E6655;
---ey2: #16A085;
-
-/* Long I teams */
---igh: #E67E22;
---ie-i: #B7950B;
---y-i:  #A04000;
-
-/* Long O teams */
---oa: #27AE60;
---ow-o: #1E8449;
---oe-o: #0E6655;
---old:  #145A32;
-
-/* Long U teams */
---oo-long: #8E44AD;
---ew:      #6C3483;
---ue-u:    #5B2C6F;
---ui:      #4A235A;
-
-/* OO short */
---oo-short: #2C3E50;
-
-/* Other */
---ou: #D63031;
---ow-ou: #922B21;
---oi: #E84343;
---oy: #B7950B;
---au: #16A085;
---aw: #0E6655;
-```
-
-}
-
-- { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-font-family: ‘Nunito’, sans-serif;
-background: var(–bg);
-min-height: 100vh;
-padding: 16px;
-background-image:
-radial-gradient(circle at 8% 12%,  #FFE4F0 0%, transparent 32%),
-radial-gradient(circle at 92% 88%, #E0F7FA 0%, transparent 32%),
-radial-gradient(circle at 50% 50%, #FFF9C4 0%, transparent 55%);
-}
-
-header { text-align: center; padding: 20px 10px 14px; }
-
-header h1 {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(2rem, 8vw, 3.5rem);
-color: #2980B9;
-text-shadow: 3px 3px 0 #AED6F1;
-letter-spacing: 1px;
-}
-
-header p {
-font-size: clamp(1rem, 4vw, 1.3rem);
-color: #555;
-margin-top: 6px;
-font-weight: 700;
-}
-
-/* ── INTRO EXPLAINER ─────────────────────────── */
-.intro-pills {
-display: flex;
-justify-content: center;
-gap: 10px;
-flex-wrap: wrap;
-margin: 14px auto 4px;
-max-width: 700px;
-}
-
-.intro-pill {
-background: #fff;
-border-radius: 50px;
-padding: 9px 18px;
-font-size: clamp(0.85rem, 3.2vw, 1.05rem);
-font-weight: 800;
-color: #333;
-box-shadow: 0 4px 0 rgba(0,0,0,0.1);
-display: flex;
-align-items: center;
-gap: 6px;
-}
-
-.intro-pill .team-letters {
-font-family: ‘Fredoka One’, cursive;
-font-size: 1.3em;
-color: #E84393;
-}
-
-.intro-pill .rule-text { color: #888; font-size: 0.9em; }
-
-/* ── KEY BAR ─────────────────────────────────── */
-.key-bar {
-display: flex;
-justify-content: center;
-gap: 14px;
-flex-wrap: wrap;
-margin: 12px auto 4px;
-max-width: 600px;
-}
-
-.key-item {
-display: flex;
-align-items: center;
-gap: 6px;
-font-size: clamp(0.82rem, 3vw, 1rem);
-font-weight: 800;
-color: #444;
-}
-
-.key-dot {
-width: 18px; height: 18px;
-border-radius: 50%;
-flex-shrink: 0;
-}
-.key-dot.team { background: #E84393; }
-.key-dot.cons { background: #555; }
-
-/* ── GROUP HEADING ───────────────────────────── */
-.group-heading {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(1.6rem, 6vw, 2.6rem);
-text-align: center;
-margin: 32px 0 6px;
-letter-spacing: 0.5px;
-}
-
-.group-heading span {
-display: inline-block;
-color: white;
-padding: 6px 26px;
-border-radius: 50px;
-text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-}
-
-.gh-a   span { background: linear-gradient(135deg, #E84393, #FF6EB4); }
-.gh-e   span { background: linear-gradient(135deg, #2980B9, #5DADE2); }
-.gh-i   span { background: linear-gradient(135deg, #E67E22, #F39C12); }
-.gh-o   span { background: linear-gradient(135deg, #27AE60, #2ECC71); }
-.gh-u   span { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
-.gh-oo  span { background: linear-gradient(135deg, #2C3E50, #34495E); }
-.gh-dip span { background: linear-gradient(135deg, #D63031, #E74C3C); }
-
-/* ── SECTION ─────────────────────────────────── */
-.section { margin: 18px auto; max-width: 960px; }
-
-.section-title {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(1.3rem, 5vw, 2.1rem);
-text-align: center;
-margin-bottom: 14px;
-padding: 12px 20px;
-border-radius: 50px;
-display: inline-block;
-width: 100%;
-color: white;
-text-shadow: 2px 2px 0 rgba(0,0,0,0.2);
-letter-spacing: 0.5px;
-}
-
-/* Long A */
-.sec-ai    .section-title { background: linear-gradient(135deg, #E84393, #FF6EB4); }
-.sec-ay    .section-title { background: linear-gradient(135deg, #C0392B, #E74C3C); }
-.sec-ea-a  .section-title { background: linear-gradient(135deg, #884EA0, #A569BD); }
-
-/* Long E */
-.sec-ee    .section-title { background: linear-gradient(135deg, #2980B9, #5DADE2); }
-.sec-ea-e  .section-title { background: linear-gradient(135deg, #1A6DA8, #5499C7); }
-.sec-ie-e  .section-title { background: linear-gradient(135deg, #0E6655, #1ABC9C); }
-.sec-ey-e  .section-title { background: linear-gradient(135deg, #154360, #2E86C1); }
-
-/* Long I */
-.sec-igh   .section-title { background: linear-gradient(135deg, #E67E22, #F39C12); color: #5D4037; text-shadow: none; }
-.sec-ie-i  .section-title { background: linear-gradient(135deg, #B7950B, #F4D03F); color: #5D4037; text-shadow: none; }
-.sec-y-i   .section-title { background: linear-gradient(135deg, #A04000, #CA6F1E); }
-
-/* Long O */
-.sec-oa    .section-title { background: linear-gradient(135deg, #27AE60, #2ECC71); }
-.sec-ow-o  .section-title { background: linear-gradient(135deg, #1E8449, #27AE60); }
-.sec-oe-o  .section-title { background: linear-gradient(135deg, #0E6655, #1ABC9C); }
-.sec-old   .section-title { background: linear-gradient(135deg, #145A32, #1E8449); }
-
-/* Long U */
-.sec-oo-l  .section-title { background: linear-gradient(135deg, #8E44AD, #BB8FCE); }
-.sec-ew    .section-title { background: linear-gradient(135deg, #6C3483, #9B59B6); }
-.sec-ue-u  .section-title { background: linear-gradient(135deg, #5B2C6F, #8E44AD); }
-.sec-ui    .section-title { background: linear-gradient(135deg, #4A235A, #6C3483); }
-
-/* OO short */
-.sec-oo-s  .section-title { background: linear-gradient(135deg, #2C3E50, #34495E); }
-
-/* Diphthongs */
-.sec-ou    .section-title { background: linear-gradient(135deg, #D63031, #E74C3C); }
-.sec-ow-ou .section-title { background: linear-gradient(135deg, #922B21, #C0392B); }
-.sec-oi    .section-title { background: linear-gradient(135deg, #E84343, #FF7675); }
-.sec-oy    .section-title { background: linear-gradient(135deg, #B7950B, #F4D03F); color: #5D4037; text-shadow: none; }
-.sec-au    .section-title { background: linear-gradient(135deg, #16A085, #1ABC9C); }
-.sec-aw    .section-title { background: linear-gradient(135deg, #0E6655, #16A085); }
-
-/* ── GRID ────────────────────────────────────── */
-.cards-grid {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(min(160px, 44vw), 1fr));
-gap: 14px;
-padding: 0 4px;
-}
-
-/* ── CARD ────────────────────────────────────── */
-.word-card {
-background: #FFFFFF;
-border-radius: 20px;
-padding: 18px 10px 14px;
-text-align: center;
-box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
-transition: transform 0.1s, box-shadow 0.1s;
-user-select: none;
-cursor: default;
-display: flex;
-flex-direction: column;
-align-items: center;
-gap: 10px;
-border-bottom: 6px solid transparent;
-}
-
-.word-card:active {
-transform: translateY(3px);
-box-shadow: 0 3px 0 rgba(0,0,0,0.15);
-}
-
-/* border colours */
-.sec-ai    .word-card { border-bottom-color: var(–ai); }
-.sec-ay    .word-card { border-bottom-color: var(–ay); }
-.sec-ea-a  .word-card { border-bottom-color: var(–ea-a); }
-.sec-ee    .word-card { border-bottom-color: var(–ee); }
-.sec-ea-e  .word-card { border-bottom-color: var(–ea-e); }
-.sec-ie-e  .word-card { border-bottom-color: var(–ie-e); }
-.sec-ey-e  .word-card { border-bottom-color: var(–ey-e); }
-.sec-igh   .word-card { border-bottom-color: var(–igh); }
-.sec-ie-i  .word-card { border-bottom-color: var(–ie-i); }
-.sec-y-i   .word-card { border-bottom-color: var(–y-i); }
-.sec-oa    .word-card { border-bottom-color: var(–oa); }
-.sec-ow-o  .word-card { border-bottom-color: var(–ow-o); }
-.sec-oe-o  .word-card { border-bottom-color: var(–oe-o); }
-.sec-old   .word-card { border-bottom-color: var(–old); }
-.sec-oo-l  .word-card { border-bottom-color: var(–oo-long); }
-.sec-ew    .word-card { border-bottom-color: var(–ew); }
-.sec-ue-u  .word-card { border-bottom-color: var(–ue-u); }
-.sec-ui    .word-card { border-bottom-color: var(–ui); }
-.sec-oo-s  .word-card { border-bottom-color: var(–oo-short); }
-.sec-ou    .word-card { border-bottom-color: var(–ou); }
-.sec-ow-ou .word-card { border-bottom-color: var(–ow-ou); }
-.sec-oi    .word-card { border-bottom-color: var(–oi); }
-.sec-oy    .word-card { border-bottom-color: var(–oy); }
-.sec-au    .word-card { border-bottom-color: var(–au); }
-.sec-aw    .word-card { border-bottom-color: var(–aw); }
-
-/* ── SOUNDS ROW ──────────────────────────────── */
-.sounds-row {
-display: flex;
-justify-content: center;
-align-items: center;
-flex-wrap: nowrap;
-gap: 0;
-}
-
-.sound {
-font-family: ‘Fredoka One’, cursive;
-font-size: clamp(2.2rem, 9vw, 3.2rem);
-cursor: pointer;
-padding: 2px 3px;
-border-radius: 8px;
-transition: all 0.15s;
-display: inline-block;
-line-height: 1.1;
-}
-
-/* vowel team = accent colour, consonants = dark */
-.sound.cons { color: #444; }
-
-/* team colours per section */
-.sec-ai    .sound.team { color: #A5003B; }
-.sec-ay    .sound.team { color: #7B241C; }
-.sec-ea-a  .sound.team { color: #5B2C6F; }
-.sec-ee    .sound.team { color: #1A5276; }
-.sec-ea-e  .sound.team { color: #154360; }
-.sec-ie-e  .sound.team { color: #0B5345; }
-.sec-ey-e  .sound.team { color: #0D2E46; }
-.sec-igh   .sound.team { color: #A04000; }
-.sec-ie-i  .sound.team { color: #7D6608; }
-.sec-y-i   .sound.team { color: #6E2F00; }
-.sec-oa    .sound.team { color: #145A32; }
-.sec-ow-o  .sound.team { color: #0E5230; }
-.sec-oe-o  .sound.team { color: #0B5345; }
-.sec-old   .sound.team { color: #0B3D22; }
-.sec-oo-l  .sound.team { color: #5B2C6F; }
-.sec-ew    .sound.team { color: #4A235A; }
-.sec-ue-u  .sound.team { color: #3D1A57; }
-.sec-ui    .sound.team { color: #2E1040; }
-.sec-oo-s  .sound.team { color: #1C2833; }
-.sec-ou    .sound.team { color: #7B241C; }
-.sec-ow-ou .sound.team { color: #641E16; }
-.sec-oi    .sound.team { color: #922B21; }
-.sec-oy    .sound.team { color: #7D6608; }
-.sec-au    .sound.team { color: #0E6655; }
-.sec-aw    .sound.team { color: #0B5345; }
-
-.sound:active,
-.sound.tapped {
-color: #FF6B00 !important;
-transform: scale(1.3);
-text-shadow: 0 0 14px rgba(255,107,0,0.5);
-background: #FFF3CD;
-border-radius: 10px;
-}
-
-/* ── TEAM BADGE ──────────────────────────────── */
-.team-badge {
-display: inline-block;
-padding: 3px 12px;
-border-radius: 20px;
-font-size: clamp(0.68rem, 2.6vw, 0.88rem);
-font-weight: 900;
-color: white;
-letter-spacing: 0.5px;
-}
-
-.sec-ai    .team-badge { background: var(–ai); }
-.sec-ay    .team-badge { background: var(–ay); }
-.sec-ea-a  .team-badge { background: var(–ea-a); }
-.sec-ee    .team-badge { background: var(–ee); }
-.sec-ea-e  .team-badge { background: var(–ea-e); }
-.sec-ie-e  .team-badge { background: var(–ie-e); }
-.sec-ey-e  .team-badge { background: var(–ey-e); }
-.sec-igh   .team-badge { background: var(–igh); }
-.sec-ie-i  .team-badge { background: var(–ie-i); }
-.sec-y-i   .team-badge { background: var(–y-i); }
-.sec-oa    .team-badge { background: var(–oa); }
-.sec-ow-o  .team-badge { background: var(–ow-o); }
-.sec-oe-o  .team-badge { background: var(–oe-o); }
-.sec-old   .team-badge { background: var(–old); }
-.sec-oo-l  .team-badge { background: var(–oo-long); }
-.sec-ew    .team-badge { background: var(–ew); }
-.sec-ue-u  .team-badge { background: var(–ue-u); }
-.sec-ui    .team-badge { background: var(–ui); }
-.sec-oo-s  .team-badge { background: var(–oo-short); }
-.sec-ou    .team-badge { background: var(–ou); }
-.sec-ow-ou .team-badge { background: var(–ow-ou); }
-.sec-oi    .team-badge { background: var(–oi); }
-.sec-oy    .team-badge { background: var(–oy); }
-.sec-au    .team-badge { background: var(–au); }
-.sec-aw    .team-badge { background: var(–aw); }
-
-/* ── PHONETIC ─────────────────────────────────── */
-.phonetic-label {
-font-size: clamp(0.68rem, 2.6vw, 0.88rem);
-color: #888;
-font-weight: 800;
-letter-spacing: 0.5px;
-background: #F4F4F4;
-padding: 3px 10px;
-border-radius: 20px;
-}
-
-/* ── SPEAK BUTTON ────────────────────────────── */
-.speak-btn {
-border: none;
-border-radius: 50%;
-width: clamp(44px, 12vw, 54px);
-height: clamp(44px, 12vw, 54px);
-font-size: clamp(1.3rem, 5vw, 1.8rem);
-cursor: pointer;
-display: flex;
-align-items: center;
-justify-content: center;
-transition: transform 0.1s, box-shadow 0.1s;
-flex-shrink: 0;
-color: white;
-}
-
-.sec-ai    .speak-btn { background: var(–ai);       box-shadow: 0 4px 0 #A5003B; }
-.sec-ay    .speak-btn { background: var(–ay);       box-shadow: 0 4px 0 #7B241C; }
-.sec-ea-a  .speak-btn { background: var(–ea-a);     box-shadow: 0 4px 0 #5B2C6F; }
-.sec-ee    .speak-btn { background: var(–ee);       box-shadow: 0 4px 0 #1A5276; }
-.sec-ea-e  .speak-btn { background: var(–ea-e);     box-shadow: 0 4px 0 #154360; }
-.sec-ie-e  .speak-btn { background: var(–ie-e);     box-shadow: 0 4px 0 #0B5345; }
-.sec-ey-e  .speak-btn { background: var(–ey-e);     box-shadow: 0 4px 0 #0D2E46; }
-.sec-igh   .speak-btn { background: var(–igh);      box-shadow: 0 4px 0 #A04000; }
-.sec-ie-i  .speak-btn { background: var(–ie-i);     box-shadow: 0 4px 0 #7D6608; }
-.sec-y-i   .speak-btn { background: var(–y-i);      box-shadow: 0 4px 0 #6E2F00; }
-.sec-oa    .speak-btn { background: var(–oa);       box-shadow: 0 4px 0 #145A32; }
-.sec-ow-o  .speak-btn { background: var(–ow-o);     box-shadow: 0 4px 0 #0E5230; }
-.sec-oe-o  .speak-btn { background: var(–oe-o);     box-shadow: 0 4px 0 #0B5345; }
-.sec-old   .speak-btn { background: var(–old);      box-shadow: 0 4px 0 #0B3D22; }
-.sec-oo-l  .speak-btn { background: var(–oo-long);  box-shadow: 0 4px 0 #5B2C6F; }
-.sec-ew    .speak-btn { background: var(–ew);       box-shadow: 0 4px 0 #4A235A; }
-.sec-ue-u  .speak-btn { background: var(–ue-u);     box-shadow: 0 4px 0 #3D1A57; }
-.sec-ui    .speak-btn { background: var(–ui);       box-shadow: 0 4px 0 #2E1040; }
-.sec-oo-s  .speak-btn { background: var(–oo-short); box-shadow: 0 4px 0 #1C2833; }
-.sec-ou    .speak-btn { background: var(–ou);       box-shadow: 0 4px 0 #7B241C; }
-.sec-ow-ou .speak-btn { background: var(–ow-ou);    box-shadow: 0 4px 0 #641E16; }
-.sec-oi    .speak-btn { background: var(–oi);       box-shadow: 0 4px 0 #922B21; }
-.sec-oy    .speak-btn { background: var(–oy);       box-shadow: 0 4px 0 #7D6608; }
-.sec-au    .speak-btn { background: var(–au);       box-shadow: 0 4px 0 #0E6655; }
-.sec-aw    .speak-btn { background: var(–aw);       box-shadow: 0 4px 0 #0B5345; }
-
-.speak-btn:active {
-transform: scale(0.9) translateY(3px);
-box-shadow: 0 1px 0 rgba(0,0,0,0.3) !important;
-}
-
-.speak-btn.speaking { animation: pulse-btn 0.6s ease-in-out infinite alternate; }
-
-@keyframes pulse-btn {
-from { transform: scale(1); }
-to   { transform: scale(1.12); }
-}
-
-.bounce-in { animation: bounceIn 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97); }
-
-@keyframes bounceIn {
-0%   { transform: scale(1); }
-30%  { transform: scale(1.3); }
-60%  { transform: scale(0.95); }
-100% { transform: scale(1.3); }
-}
-
-@media (max-width: 480px) {
-body { padding: 10px; }
-.cards-grid { gap: 10px; }
-}
-
-footer {
-text-align: center;
-padding: 30px 10px 16px;
-color: #aaa;
-font-size: 0.9rem;
-font-weight: 700;
-}
+  .vowel-tabs { display:flex;gap:8px;justify-content:center;margin:14px 0;flex-wrap:wrap; }
+  .v-tab { padding:8px 18px;border:2.5px solid var(--border);background:white;border-radius:20px;font-family:var(--font-display);font-size:1rem;font-weight:800;cursor:pointer;transition:all 0.2s;color:var(--vowel); }
+  .v-tab.active,.v-tab:hover { border-color:var(--vowel);background:#fff5f5; }
+  .pattern-box { background:white;border:2.5px solid var(--border);border-radius:20px;padding:22px;margin:14px 0; }
+  .pb-title { font-family:var(--font-display);font-size:1.4rem;font-weight:800;color:var(--vowel);text-align:center;margin-bottom:12px; }
+  .pattern-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px 0; }
+  @media(max-width:420px){.pattern-grid{grid-template-columns:repeat(2,1fr);}}
+  .pattern-card { background:#fff5f5;border:2px solid #ffcdd2;border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:transform 0.15s;touch-action:manipulation; }
+  .pattern-card:hover { transform:translateY(-3px);border-color:var(--vowel); }
+  .pattern-card:active { transform:scale(0.92); }
+  .pc-pattern { font-family:var(--font-display);font-size:1.2rem;font-weight:800;color:var(--vowel); }
+  .pc-example { font-family:var(--font-display);font-size:1rem;font-weight:700;color:var(--text);margin-top:4px; }
+  .pc-emoji   { font-size:1.4rem;display:block;margin-top:4px; }
+  .word-chips { display:flex;flex-wrap:wrap;gap:10px;margin:12px 0;justify-content:center; }
+  .word-chip  { background:#fff5f5;border:2px solid #ffcdd2;border-radius:12px;padding:10px 16px;font-family:var(--font-display);font-size:1.1rem;font-weight:800;cursor:pointer;transition:transform 0.15s;touch-action:manipulation; }
+  .word-chip:hover { transform:translateY(-3px); }
+  .word-chip:active { transform:scale(0.92); }
+  .sort-game { background:white;border:2.5px solid var(--border);border-radius:20px;padding:22px;margin:20px 0; }
+  .sort-q { font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--primary);text-align:center;margin-bottom:14px; }
+  .sort-word { font-family:var(--font-display);font-size:2.8rem;font-weight:800;color:var(--text);text-align:center;margin:12px 0; }
+  .pattern-choices { display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px; }
+  .pc-btn { padding:16px;border:3px solid var(--border);border-radius:14px;background:white;font-family:var(--font-display);font-size:1rem;font-weight:800;cursor:pointer;color:var(--vowel);transition:all 0.18s;touch-action:manipulation; }
+  .pc-btn:hover { transform:translateY(-3px);border-color:var(--vowel); }
+  .pc-btn.correct { border-color:var(--success);background:#f0faf4;color:var(--success); }
+  .pc-btn.wrong   { border-color:var(--danger);background:#fff5f5;color:var(--danger); }
 </style>
-
 </head>
 <body>
-
-<header>
-  <h1>🌈 Vowel Teams!</h1>
-  <p>👆 Tap sounds to highlight &bull; 🔊 Hear the word!</p>
-
-  <div class="intro-pills">
-    <div class="intro-pill">
-      <span class="team-letters">AI</span>
-      <span class="rule-text">When two vowels walk together, the first one does the talking!</span>
-    </div>
-    <div class="intro-pill">
-      🎯 <span class="rule-text">Vowel <strong>teams</strong> make <strong>one</strong> sound together</span>
-    </div>
+<div class="ph-header">
+  <h1>🔆 Long Vowels</h1>
+  <p>Different spellings — same long sound!</p>
+  <span class="ph-stage-badge">Stage 4</span>
+</div>
+<div class="ph-wrap">
+  <div class="vowel-tabs" id="vowel-tabs"></div>
+  <div id="content"></div>
+  <div class="sort-game">
+    <div class="sort-q">🎯 Which spelling pattern makes this long vowel word?</div>
+    <button class="ph-btn ph-btn-primary" style="display:block;margin:0 auto 10px" onclick="playSortWord()">🔊 Hear Word</button>
+    <div class="sort-word" id="sort-word">rain</div>
+    <div class="pattern-choices" id="pattern-choices"></div>
+    <div style="text-align:center;margin-top:10px;font-weight:700;color:var(--muted)" id="sort-fb"></div>
+    <div style="text-align:center;font-size:0.82rem;font-weight:700;color:var(--muted);margin-top:6px" id="sort-sc">Score: 0/0</div>
   </div>
-
-  <div class="key-bar">
-    <div class="key-item"><div class="key-dot team"></div> Vowel team letters</div>
-    <div class="key-item"><div class="key-dot cons"></div> Consonant</div>
-  </div>
-</header>
-
-<div id="app"></div>
-
-<footer>Vowel teams are powerful — keep reading! ⭐🌈</footer>
-
+</div>
+<script src="shared.js"></script>
 <script>
-const T = 'team';   // vowel team letters
-const C = 'cons';   // consonant
-
-const groups = [
-
-  /* ═══════════════════════════════════════════════
-     LONG A
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '💗 Long A Vowel Teams',
-    ghClass: 'gh-a',
-    sections: [
-      {
-        id: 'ai', secClass: 'sec-ai',
-        label: '💗 AI — rain, sail, wait',
-        badge: 'AI = Long A',
-        words: [
-          { text: 'rain',  parts: [['r',C],['ai',T],['n',C]],       phonetic: '/reɪn/' },
-          { text: 'sail',  parts: [['s',C],['ai',T],['l',C]],       phonetic: '/seɪl/' },
-          { text: 'wait',  parts: [['w',C],['ai',T],['t',C]],       phonetic: '/weɪt/' },
-          { text: 'mail',  parts: [['m',C],['ai',T],['l',C]],       phonetic: '/meɪl/' },
-          { text: 'tail',  parts: [['t',C],['ai',T],['l',C]],       phonetic: '/teɪl/' },
-          { text: 'pain',  parts: [['p',C],['ai',T],['n',C]],       phonetic: '/peɪn/' },
-          { text: 'bait',  parts: [['b',C],['ai',T],['t',C]],       phonetic: '/beɪt/' },
-          { text: 'train', parts: [['tr',C],['ai',T],['n',C]],      phonetic: '/treɪn/' },
-        ]
-      },
-      {
-        id: 'ay', secClass: 'sec-ay',
-        label: '🌅 AY — day, play, say',
-        badge: 'AY = Long A',
-        words: [
-          { text: 'day',   parts: [['d',C],['ay',T]],               phonetic: '/deɪ/' },
-          { text: 'play',  parts: [['pl',C],['ay',T]],              phonetic: '/pleɪ/' },
-          { text: 'say',   parts: [['s',C],['ay',T]],               phonetic: '/seɪ/' },
-          { text: 'hay',   parts: [['h',C],['ay',T]],               phonetic: '/heɪ/' },
-          { text: 'stay',  parts: [['st',C],['ay',T]],              phonetic: '/steɪ/' },
-          { text: 'spray', parts: [['spr',C],['ay',T]],             phonetic: '/spreɪ/' },
-          { text: 'clay',  parts: [['cl',C],['ay',T]],              phonetic: '/kleɪ/' },
-          { text: 'tray',  parts: [['tr',C],['ay',T]],              phonetic: '/treɪ/' },
-        ]
-      },
-      {
-        id: 'ea-a', secClass: 'sec-ea-a',
-        label: '🥩 EA (long A) — steak, break',
-        badge: 'EA = Long A',
-        words: [
-          { text: 'steak', parts: [['st',C],['ea',T],['k',C]],      phonetic: '/steɪk/' },
-          { text: 'break', parts: [['br',C],['ea',T],['k',C]],      phonetic: '/breɪk/' },
-          { text: 'great', parts: [['gr',C],['ea',T],['t',C]],      phonetic: '/greɪt/' },
-          { text: 'bear',  parts: [['b',C],['ea',T],['r',C]],       phonetic: '/bɛr/' },
-          { text: 'wear',  parts: [['w',C],['ea',T],['r',C]],       phonetic: '/wɛr/' },
-          { text: 'pear',  parts: [['p',C],['ea',T],['r',C]],       phonetic: '/pɛr/' },
-        ]
-      },
+const LONG_V = {
+  'Long A': {
+    patterns:[
+      {p:'ai',ex:[{w:'rain',e:'🌧️'},{w:'sail',e:'⛵'},{w:'tail',e:'🦊'},{w:'wait',e:'⏳'}]},
+      {p:'ay',ex:[{w:'play',e:'🎮'},{w:'day',e:'☀️'},{w:'say',e:'💬'},{w:'may',e:'📅'}]},
+      {p:'a_e',ex:[{w:'cake',e:'🎂'},{w:'name',e:'🏷️'},{w:'game',e:'🎯'},{w:'lake',e:'🏞️'}]},
     ]
   },
-
-  /* ═══════════════════════════════════════════════
-     LONG E
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '🔵 Long E Vowel Teams',
-    ghClass: 'gh-e',
-    sections: [
-      {
-        id: 'ee', secClass: 'sec-ee',
-        label: '🐝 EE — bee, feet, green',
-        badge: 'EE = Long E',
-        words: [
-          { text: 'bee',   parts: [['b',C],['ee',T]],               phonetic: '/biː/' },
-          { text: 'feet',  parts: [['f',C],['ee',T],['t',C]],       phonetic: '/fiːt/' },
-          { text: 'green', parts: [['gr',C],['ee',T],['n',C]],      phonetic: '/ɡriːn/' },
-          { text: 'seed',  parts: [['s',C],['ee',T],['d',C]],       phonetic: '/siːd/' },
-          { text: 'sheep', parts: [['sh',C],['ee',T],['p',C]],      phonetic: '/ʃiːp/' },
-          { text: 'tree',  parts: [['tr',C],['ee',T]],              phonetic: '/triː/' },
-          { text: 'sleep', parts: [['sl',C],['ee',T],['p',C]],      phonetic: '/sliːp/' },
-          { text: 'meet',  parts: [['m',C],['ee',T],['t',C]],       phonetic: '/miːt/' },
-        ]
-      },
-      {
-        id: 'ea-e', secClass: 'sec-ea-e',
-        label: '🍑 EA (long E) — eat, team, read',
-        badge: 'EA = Long E',
-        words: [
-          { text: 'eat',   parts: [['ea',T],['t',C]],               phonetic: '/iːt/' },
-          { text: 'team',  parts: [['t',C],['ea',T],['m',C]],       phonetic: '/tiːm/' },
-          { text: 'read',  parts: [['r',C],['ea',T],['d',C]],       phonetic: '/riːd/' },
-          { text: 'leaf',  parts: [['l',C],['ea',T],['f',C]],       phonetic: '/liːf/' },
-          { text: 'bean',  parts: [['b',C],['ea',T],['n',C]],       phonetic: '/biːn/' },
-          { text: 'peach', parts: [['p',C],['ea',T],['ch',C]],      phonetic: '/piːtʃ/' },
-          { text: 'beach', parts: [['b',C],['ea',T],['ch',C]],      phonetic: '/biːtʃ/' },
-          { text: 'seat',  parts: [['s',C],['ea',T],['t',C]],       phonetic: '/siːt/' },
-        ]
-      },
-      {
-        id: 'ie-e', secClass: 'sec-ie-e',
-        label: '🛡️ IE (long E) — chief, field',
-        badge: 'IE = Long E',
-        words: [
-          { text: 'chief', parts: [['ch',C],['ie',T],['f',C]],      phonetic: '/tʃiːf/' },
-          { text: 'field', parts: [['f',C],['ie',T],['ld',C]],      phonetic: '/fiːld/' },
-          { text: 'piece', parts: [['p',C],['ie',T],['ce',C]],      phonetic: '/piːs/' },
-          { text: 'thief', parts: [['th',C],['ie',T],['f',C]],      phonetic: '/θiːf/' },
-          { text: 'grief', parts: [['gr',C],['ie',T],['f',C]],      phonetic: '/ɡriːf/' },
-          { text: 'brief', parts: [['br',C],['ie',T],['f',C]],      phonetic: '/briːf/' },
-        ]
-      },
-      {
-        id: 'ey-e', secClass: 'sec-ey-e',
-        label: '🔑 EY (long E) — key, money',
-        badge: 'EY = Long E',
-        words: [
-          { text: 'key',   parts: [['k',C],['ey',T]],               phonetic: '/kiː/' },
-          { text: 'money', parts: [['m',C],['on',C],['ey',T]],      phonetic: '/ˈmʌni/' },
-          { text: 'honey', parts: [['h',C],['on',C],['ey',T]],      phonetic: '/ˈhʌni/' },
-          { text: 'turkey',parts: [['t',C],['urk',C],['ey',T]],     phonetic: '/ˈtɜːki/' },
-          { text: 'monkey',parts: [['m',C],['onk',C],['ey',T]],     phonetic: '/ˈmʌŋki/' },
-          { text: 'donkey',parts: [['d',C],['onk',C],['ey',T]],     phonetic: '/ˈdɒŋki/' },
-        ]
-      },
+  'Long E': {
+    patterns:[
+      {p:'ee',ex:[{w:'tree',e:'🌳'},{w:'bee',e:'🐝'},{w:'feet',e:'🦶'},{w:'see',e:'👀'}]},
+      {p:'ea',ex:[{w:'beach',e:'🏖️'},{w:'eat',e:'🍽️'},{w:'leaf',e:'🍃'},{w:'read',e:'📖'}]},
+      {p:'e_e',ex:[{w:'these',e:'👇'},{w:'here',e:'📍'},{w:'eve',e:'🌆'},{w:'gene',e:'🧬'}]},
     ]
   },
-
-  /* ═══════════════════════════════════════════════
-     LONG I
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '🟠 Long I Vowel Teams',
-    ghClass: 'gh-i',
-    sections: [
-      {
-        id: 'igh', secClass: 'sec-igh',
-        label: '💡 IGH — light, night, right',
-        badge: 'IGH = Long I',
-        words: [
-          { text: 'light', parts: [['l',C],['igh',T],['t',C]],      phonetic: '/laɪt/' },
-          { text: 'night', parts: [['n',C],['igh',T],['t',C]],      phonetic: '/naɪt/' },
-          { text: 'right', parts: [['r',C],['igh',T],['t',C]],      phonetic: '/raɪt/' },
-          { text: 'sight', parts: [['s',C],['igh',T],['t',C]],      phonetic: '/saɪt/' },
-          { text: 'fight', parts: [['f',C],['igh',T],['t',C]],      phonetic: '/faɪt/' },
-          { text: 'bright',parts: [['br',C],['igh',T],['t',C]],     phonetic: '/braɪt/' },
-          { text: 'flight',parts: [['fl',C],['igh',T],['t',C]],     phonetic: '/flaɪt/' },
-          { text: 'might', parts: [['m',C],['igh',T],['t',C]],      phonetic: '/maɪt/' },
-        ]
-      },
-      {
-        id: 'ie-i', secClass: 'sec-ie-i',
-        label: '🥧 IE (long I) — pie, tie, lie',
-        badge: 'IE = Long I',
-        words: [
-          { text: 'pie',   parts: [['p',C],['ie',T]],               phonetic: '/paɪ/' },
-          { text: 'tie',   parts: [['t',C],['ie',T]],               phonetic: '/taɪ/' },
-          { text: 'lie',   parts: [['l',C],['ie',T]],               phonetic: '/laɪ/' },
-          { text: 'die',   parts: [['d',C],['ie',T]],               phonetic: '/daɪ/' },
-          { text: 'cried', parts: [['cr',C],['ie',T],['d',C]],      phonetic: '/kraɪd/' },
-          { text: 'tried', parts: [['tr',C],['ie',T],['d',C]],      phonetic: '/traɪd/' },
-        ]
-      },
-      {
-        id: 'y-i', secClass: 'sec-y-i',
-        label: '🌙 Y (long I) — fly, sky, try',
-        badge: 'Y = Long I',
-        words: [
-          { text: 'fly',   parts: [['fl',C],['y',T]],               phonetic: '/flaɪ/' },
-          { text: 'sky',   parts: [['sk',C],['y',T]],               phonetic: '/skaɪ/' },
-          { text: 'try',   parts: [['tr',C],['y',T]],               phonetic: '/traɪ/' },
-          { text: 'dry',   parts: [['dr',C],['y',T]],               phonetic: '/draɪ/' },
-          { text: 'cry',   parts: [['cr',C],['y',T]],               phonetic: '/kraɪ/' },
-          { text: 'fry',   parts: [['fr',C],['y',T]],               phonetic: '/fraɪ/' },
-          { text: 'spy',   parts: [['sp',C],['y',T]],               phonetic: '/spaɪ/' },
-          { text: 'shy',   parts: [['sh',C],['y',T]],               phonetic: '/ʃaɪ/' },
-        ]
-      },
+  'Long I': {
+    patterns:[
+      {p:'ie',ex:[{w:'pie',e:'🥧'},{w:'tie',e:'👔'},{w:'die',e:'🎲'},{w:'lie',e:'💬'}]},
+      {p:'igh',ex:[{w:'night',e:'🌙'},{w:'light',e:'💡'},{w:'right',e:'✅'},{w:'fight',e:'🥊'}]},
+      {p:'i_e',ex:[{w:'kite',e:'🪁'},{w:'bike',e:'🚲'},{w:'ride',e:'🏇'},{w:'vine',e:'🍇'}]},
     ]
   },
-
-  /* ═══════════════════════════════════════════════
-     LONG O
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '🟢 Long O Vowel Teams',
-    ghClass: 'gh-o',
-    sections: [
-      {
-        id: 'oa', secClass: 'sec-oa',
-        label: '🚣 OA — boat, road, coat',
-        badge: 'OA = Long O',
-        words: [
-          { text: 'boat',  parts: [['b',C],['oa',T],['t',C]],       phonetic: '/boʊt/' },
-          { text: 'road',  parts: [['r',C],['oa',T],['d',C]],       phonetic: '/roʊd/' },
-          { text: 'coat',  parts: [['c',C],['oa',T],['t',C]],       phonetic: '/koʊt/' },
-          { text: 'goat',  parts: [['g',C],['oa',T],['t',C]],       phonetic: '/goʊt/' },
-          { text: 'load',  parts: [['l',C],['oa',T],['d',C]],       phonetic: '/loʊd/' },
-          { text: 'soap',  parts: [['s',C],['oa',T],['p',C]],       phonetic: '/soʊp/' },
-          { text: 'toast', parts: [['t',C],['oa',T],['st',C]],      phonetic: '/toʊst/' },
-          { text: 'groan', parts: [['gr',C],['oa',T],['n',C]],      phonetic: '/groʊn/' },
-        ]
-      },
-      {
-        id: 'ow-o', secClass: 'sec-ow-o',
-        label: '🌬️ OW (long O) — snow, blow, grow',
-        badge: 'OW = Long O',
-        words: [
-          { text: 'snow',  parts: [['sn',C],['ow',T]],              phonetic: '/snoʊ/' },
-          { text: 'blow',  parts: [['bl',C],['ow',T]],              phonetic: '/bloʊ/' },
-          { text: 'grow',  parts: [['gr',C],['ow',T]],              phonetic: '/groʊ/' },
-          { text: 'flow',  parts: [['fl',C],['ow',T]],              phonetic: '/floʊ/' },
-          { text: 'show',  parts: [['sh',C],['ow',T]],              phonetic: '/ʃoʊ/' },
-          { text: 'glow',  parts: [['gl',C],['ow',T]],              phonetic: '/gloʊ/' },
-          { text: 'crow',  parts: [['cr',C],['ow',T]],              phonetic: '/kroʊ/' },
-          { text: 'throw', parts: [['thr',C],['ow',T]],             phonetic: '/θroʊ/' },
-        ]
-      },
-      {
-        id: 'oe-o', secClass: 'sec-oe-o',
-        label: '👣 OE (long O) — toe, doe, foe',
-        badge: 'OE = Long O',
-        words: [
-          { text: 'toe',   parts: [['t',C],['oe',T]],               phonetic: '/toʊ/' },
-          { text: 'doe',   parts: [['d',C],['oe',T]],               phonetic: '/doʊ/' },
-          { text: 'foe',   parts: [['f',C],['oe',T]],               phonetic: '/foʊ/' },
-          { text: 'hoe',   parts: [['h',C],['oe',T]],               phonetic: '/hoʊ/' },
-          { text: 'woe',   parts: [['w',C],['oe',T]],               phonetic: '/woʊ/' },
-          { text: 'floe',  parts: [['fl',C],['oe',T]],              phonetic: '/floʊ/' },
-        ]
-      },
-      {
-        id: 'old', secClass: 'sec-old',
-        label: '🏆 OLD pattern — bold, cold, gold',
-        badge: 'OL = Long O',
-        words: [
-          { text: 'bold',  parts: [['b',C],['ol',T],['d',C]],       phonetic: '/boʊld/' },
-          { text: 'cold',  parts: [['c',C],['ol',T],['d',C]],       phonetic: '/koʊld/' },
-          { text: 'gold',  parts: [['g',C],['ol',T],['d',C]],       phonetic: '/goʊld/' },
-          { text: 'hold',  parts: [['h',C],['ol',T],['d',C]],       phonetic: '/hoʊld/' },
-          { text: 'fold',  parts: [['f',C],['ol',T],['d',C]],       phonetic: '/foʊld/' },
-          { text: 'told',  parts: [['t',C],['ol',T],['d',C]],       phonetic: '/toʊld/' },
-        ]
-      },
+  'Long O': {
+    patterns:[
+      {p:'oa',ex:[{w:'boat',e:'⛵'},{w:'road',e:'🛣️'},{w:'coat',e:'🧥'},{w:'toad',e:'🐸'}]},
+      {p:'ow',ex:[{w:'snow',e:'❄️'},{w:'flow',e:'🌊'},{w:'glow',e:'✨'},{w:'low',e:'🔽'}]},
+      {p:'o_e',ex:[{w:'note',e:'📝'},{w:'rope',e:'🪢'},{w:'bone',e:'🦴'},{w:'hole',e:'🕳️'}]},
     ]
   },
-
-  /* ═══════════════════════════════════════════════
-     LONG U / OO
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '🟣 Long U & OO Vowel Teams',
-    ghClass: 'gh-u',
-    sections: [
-      {
-        id: 'oo-l', secClass: 'sec-oo-l',
-        label: '🌕 OO (long) — moon, food, cool',
-        badge: 'OO = /uː/',
-        words: [
-          { text: 'moon',  parts: [['m',C],['oo',T],['n',C]],       phonetic: '/muːn/' },
-          { text: 'food',  parts: [['f',C],['oo',T],['d',C]],       phonetic: '/fuːd/' },
-          { text: 'cool',  parts: [['c',C],['oo',T],['l',C]],       phonetic: '/kuːl/' },
-          { text: 'soon',  parts: [['s',C],['oo',T],['n',C]],       phonetic: '/suːn/' },
-          { text: 'pool',  parts: [['p',C],['oo',T],['l',C]],       phonetic: '/puːl/' },
-          { text: 'zoo',   parts: [['z',C],['oo',T]],               phonetic: '/zuː/' },
-          { text: 'spoon', parts: [['sp',C],['oo',T],['n',C]],      phonetic: '/spuːn/' },
-          { text: 'troop', parts: [['tr',C],['oo',T],['p',C]],      phonetic: '/truːp/' },
-        ]
-      },
-      {
-        id: 'ew', secClass: 'sec-ew',
-        label: '💨 EW — flew, drew, stew',
-        badge: 'EW = Long U',
-        words: [
-          { text: 'flew',  parts: [['fl',C],['ew',T]],              phonetic: '/fluː/' },
-          { text: 'drew',  parts: [['dr',C],['ew',T]],              phonetic: '/druː/' },
-          { text: 'stew',  parts: [['st',C],['ew',T]],              phonetic: '/stjuː/' },
-          { text: 'brew',  parts: [['br',C],['ew',T]],              phonetic: '/bruː/' },
-          { text: 'crew',  parts: [['cr',C],['ew',T]],              phonetic: '/kruː/' },
-          { text: 'new',   parts: [['n',C],['ew',T]],               phonetic: '/njuː/' },
-          { text: 'chew',  parts: [['ch',C],['ew',T]],              phonetic: '/tʃuː/' },
-          { text: 'dew',   parts: [['d',C],['ew',T]],               phonetic: '/djuː/' },
-        ]
-      },
-      {
-        id: 'ue-u', secClass: 'sec-ue-u',
-        label: '🫐 UE — blue, glue, true',
-        badge: 'UE = Long U',
-        words: [
-          { text: 'blue',  parts: [['bl',C],['ue',T]],              phonetic: '/bluː/' },
-          { text: 'glue',  parts: [['gl',C],['ue',T]],              phonetic: '/gluː/' },
-          { text: 'true',  parts: [['tr',C],['ue',T]],              phonetic: '/truː/' },
-          { text: 'clue',  parts: [['cl',C],['ue',T]],              phonetic: '/kluː/' },
-          { text: 'flue',  parts: [['fl',C],['ue',T]],              phonetic: '/fluː/' },
-          { text: 'due',   parts: [['d',C],['ue',T]],               phonetic: '/djuː/' },
-        ]
-      },
-      {
-        id: 'ui', secClass: 'sec-ui',
-        label: '🍓 UI — fruit, suit, juice',
-        badge: 'UI = Long U',
-        words: [
-          { text: 'fruit', parts: [['fr',C],['ui',T],['t',C]],      phonetic: '/fruːt/' },
-          { text: 'suit',  parts: [['s',C],['ui',T],['t',C]],       phonetic: '/suːt/' },
-          { text: 'juice', parts: [['j',C],['ui',T],['ce',C]],      phonetic: '/dʒuːs/' },
-          { text: 'bruise',parts: [['br',C],['ui',T],['se',C]],     phonetic: '/bruːz/' },
-          { text: 'cruise',parts: [['cr',C],['ui',T],['se',C]],     phonetic: '/kruːz/' },
-          { text: 'fluid', parts: [['fl',C],['ui',T],['d',C]],      phonetic: '/ˈfluːɪd/' },
-        ]
-      },
+  'Long U': {
+    patterns:[
+      {p:'ue',ex:[{w:'blue',e:'🔵'},{w:'glue',e:'🫧'},{w:'clue',e:'🔎'},{w:'true',e:'✅'}]},
+      {p:'oo',ex:[{w:'moon',e:'🌙'},{w:'food',e:'🍔'},{w:'cool',e:'😎'},{w:'pool',e:'🏊'}]},
+      {p:'u_e',ex:[{w:'cube',e:'🧊'},{w:'cute',e:'🥰'},{w:'tune',e:'🎵'},{w:'rule',e:'📏'}]},
     ]
   },
-
-  /* ═══════════════════════════════════════════════
-     OO SHORT
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '⬛ OO Short Sound',
-    ghClass: 'gh-oo',
-    sections: [
-      {
-        id: 'oo-s', secClass: 'sec-oo-s',
-        label: '📚 OO (short) — book, foot, cook',
-        badge: 'OO = /ʊ/',
-        words: [
-          { text: 'book',  parts: [['b',C],['oo',T],['k',C]],       phonetic: '/bʊk/' },
-          { text: 'foot',  parts: [['f',C],['oo',T],['t',C]],       phonetic: '/fʊt/' },
-          { text: 'cook',  parts: [['c',C],['oo',T],['k',C]],       phonetic: '/kʊk/' },
-          { text: 'look',  parts: [['l',C],['oo',T],['k',C]],       phonetic: '/lʊk/' },
-          { text: 'hook',  parts: [['h',C],['oo',T],['k',C]],       phonetic: '/hʊk/' },
-          { text: 'wood',  parts: [['w',C],['oo',T],['d',C]],       phonetic: '/wʊd/' },
-          { text: 'wool',  parts: [['w',C],['oo',T],['l',C]],       phonetic: '/wʊl/' },
-          { text: 'good',  parts: [['g',C],['oo',T],['d',C]],       phonetic: '/gʊd/' },
-        ]
-      },
-    ]
-  },
-
-  /* ═══════════════════════════════════════════════
-     DIPHTHONGS & OTHER VOWEL TEAMS
-  ═══════════════════════════════════════════════ */
-  {
-    groupLabel: '🔴 Diphthongs & Special Teams',
-    ghClass: 'gh-dip',
-    sections: [
-      {
-        id: 'ou', secClass: 'sec-ou',
-        label: '🏡 OU — out, cloud, shout',
-        badge: 'OU = /aʊ/',
-        words: [
-          { text: 'out',   parts: [['ou',T],['t',C]],               phonetic: '/aʊt/' },
-          { text: 'cloud', parts: [['cl',C],['ou',T],['d',C]],      phonetic: '/klaʊd/' },
-          { text: 'shout', parts: [['sh',C],['ou',T],['t',C]],      phonetic: '/ʃaʊt/' },
-          { text: 'mouth', parts: [['m',C],['ou',T],['th',C]],      phonetic: '/maʊθ/' },
-          { text: 'found', parts: [['f',C],['ou',T],['nd',C]],      phonetic: '/faʊnd/' },
-          { text: 'round', parts: [['r',C],['ou',T],['nd',C]],      phonetic: '/raʊnd/' },
-          { text: 'proud', parts: [['pr',C],['ou',T],['d',C]],      phonetic: '/praʊd/' },
-          { text: 'south', parts: [['s',C],['ou',T],['th',C]],      phonetic: '/saʊθ/' },
-        ]
-      },
-      {
-        id: 'ow-ou', secClass: 'sec-ow-ou',
-        label: '🐄 OW (/aʊ/) — cow, owl, town',
-        badge: 'OW = /aʊ/',
-        words: [
-          { text: 'cow',   parts: [['c',C],['ow',T]],               phonetic: '/kaʊ/' },
-          { text: 'owl',   parts: [['ow',T],['l',C]],               phonetic: '/aʊl/' },
-          { text: 'town',  parts: [['t',C],['ow',T],['n',C]],       phonetic: '/taʊn/' },
-          { text: 'down',  parts: [['d',C],['ow',T],['n',C]],       phonetic: '/daʊn/' },
-          { text: 'brown', parts: [['br',C],['ow',T],['n',C]],      phonetic: '/braʊn/' },
-          { text: 'crown', parts: [['cr',C],['ow',T],['n',C]],      phonetic: '/kraʊn/' },
-          { text: 'frown', parts: [['fr',C],['ow',T],['n',C]],      phonetic: '/fraʊn/' },
-          { text: 'growl', parts: [['gr',C],['ow',T],['l',C]],      phonetic: '/graʊl/' },
-        ]
-      },
-      {
-        id: 'oi', secClass: 'sec-oi',
-        label: '💍 OI — coin, soil, joint',
-        badge: 'OI = /ɔɪ/',
-        words: [
-          { text: 'coin',  parts: [['c',C],['oi',T],['n',C]],       phonetic: '/kɔɪn/' },
-          { text: 'soil',  parts: [['s',C],['oi',T],['l',C]],       phonetic: '/sɔɪl/' },
-          { text: 'joint', parts: [['j',C],['oi',T],['nt',C]],      phonetic: '/dʒɔɪnt/' },
-          { text: 'voice', parts: [['v',C],['oi',T],['ce',C]],      phonetic: '/vɔɪs/' },
-          { text: 'point', parts: [['p',C],['oi',T],['nt',C]],      phonetic: '/pɔɪnt/' },
-          { text: 'moist', parts: [['m',C],['oi',T],['st',C]],      phonetic: '/mɔɪst/' },
-        ]
-      },
-      {
-        id: 'oy', secClass: 'sec-oy',
-        label: '🧸 OY — boy, toy, joy',
-        badge: 'OY = /ɔɪ/',
-        words: [
-          { text: 'boy',   parts: [['b',C],['oy',T]],               phonetic: '/bɔɪ/' },
-          { text: 'toy',   parts: [['t',C],['oy',T]],               phonetic: '/tɔɪ/' },
-          { text: 'joy',   parts: [['j',C],['oy',T]],               phonetic: '/dʒɔɪ/' },
-          { text: 'annoy', parts: [['ann',C],['oy',T]],             phonetic: '/əˈnɔɪ/' },
-          { text: 'enjoy', parts: [['enj',C],['oy',T]],             phonetic: '/ɪnˈdʒɔɪ/' },
-          { text: 'royal', parts: [['r',C],['oy',T],['al',C]],      phonetic: '/ˈrɔɪəl/' },
-        ]
-      },
-      {
-        id: 'au', secClass: 'sec-au',
-        label: '🦖 AU — sauce, fault, haul',
-        badge: 'AU = /ɔː/',
-        words: [
-          { text: 'sauce', parts: [['s',C],['au',T],['ce',C]],      phonetic: '/sɔːs/' },
-          { text: 'fault', parts: [['f',C],['au',T],['lt',C]],      phonetic: '/fɔːlt/' },
-          { text: 'haul',  parts: [['h',C],['au',T],['l',C]],       phonetic: '/hɔːl/' },
-          { text: 'cause', parts: [['c',C],['au',T],['se',C]],      phonetic: '/kɔːz/' },
-          { text: 'vault', parts: [['v',C],['au',T],['lt',C]],      phonetic: '/vɔːlt/' },
-          { text: 'pause', parts: [['p',C],['au',T],['se',C]],      phonetic: '/pɔːz/' },
-        ]
-      },
-      {
-        id: 'aw', secClass: 'sec-aw',
-        label: '🦅 AW — claw, draw, straw',
-        badge: 'AW = /ɔː/',
-        words: [
-          { text: 'claw',  parts: [['cl',C],['aw',T]],              phonetic: '/klɔː/' },
-          { text: 'draw',  parts: [['dr',C],['aw',T]],              phonetic: '/drɔː/' },
-          { text: 'straw', parts: [['str',C],['aw',T]],             phonetic: '/strɔː/' },
-          { text: 'jaw',   parts: [['j',C],['aw',T]],               phonetic: '/dʒɔː/' },
-          { text: 'saw',   parts: [['s',C],['aw',T]],               phonetic: '/sɔː/' },
-          { text: 'paw',   parts: [['p',C],['aw',T]],               phonetic: '/pɔː/' },
-          { text: 'yawn',  parts: [['y',C],['aw',T],['n',C]],       phonetic: '/jɔːn/' },
-          { text: 'crawl', parts: [['cr',C],['aw',T],['l',C]],      phonetic: '/krɔːl/' },
-        ]
-      },
-    ]
-  },
+};
+const SORT_ITEMS = [
+  {w:'rain',v:'Long A',p:'ai'},{w:'play',v:'Long A',p:'ay'},{w:'cake',v:'Long A',p:'a_e'},
+  {w:'tree',v:'Long E',p:'ee'},{w:'beach',v:'Long E',p:'ea'},{w:'night',v:'Long I',p:'igh'},
+  {w:'boat',v:'Long O',p:'oa'},{w:'snow',v:'Long O',p:'ow'},{w:'blue',v:'Long U',p:'ue'},
+  {w:'moon',v:'Long U',p:'oo'},
 ];
+let curV = 'Long A', sIdx = 0, sScore = 0, sTotal = 0;
+let sShuf = [...SORT_ITEMS].sort(()=>Math.random()-0.5);
 
-/* ── BUILD PAGE ─────────────────────────────── */
-function buildPage() {
-  const app = document.getElementById('app');
-
-  groups.forEach(group => {
-    const gh = document.createElement('div');
-    gh.className = `group-heading ${group.ghClass}`;
-    gh.innerHTML = `<span>${group.groupLabel}</span>`;
-    app.appendChild(gh);
-
-    group.sections.forEach(sec => {
-      const section = document.createElement('div');
-      section.className = `section ${sec.secClass}`;
-
-      const h2 = document.createElement('h2');
-      h2.className = 'section-title';
-      h2.textContent = sec.label;
-      section.appendChild(h2);
-
-      const grid = document.createElement('div');
-      grid.className = 'cards-grid';
-
-      sec.words.forEach(word => {
-        const card = document.createElement('div');
-        card.className = 'word-card';
-
-        /* sounds row */
-        const row = document.createElement('div');
-        row.className = 'sounds-row';
-        word.parts.forEach(([letters, type]) => {
-          const s = document.createElement('span');
-          s.className = `sound ${type}`;
-          s.textContent = letters;
-          s.addEventListener('click', e => {
-            e.stopPropagation();
-            s.classList.add('tapped', 'bounce-in');
-            setTimeout(() => s.classList.remove('tapped', 'bounce-in'), 600);
-          });
-          row.appendChild(s);
-        });
-
-        /* team badge */
-        const badge = document.createElement('div');
-        badge.className = 'team-badge';
-        badge.textContent = sec.badge;
-
-        /* phonetic */
-        const ph = document.createElement('div');
-        ph.className = 'phonetic-label';
-        ph.textContent = word.phonetic;
-
-        /* speak btn */
-        const btn = document.createElement('button');
-        btn.className = 'speak-btn';
-        btn.setAttribute('aria-label', `Hear ${word.text}`);
-        btn.textContent = '🔊';
-        btn.addEventListener('click', e => {
-          e.stopPropagation();
-          speakWord(word.text, btn);
-        });
-
-        card.appendChild(row);
-        card.appendChild(badge);
-        card.appendChild(ph);
-        card.appendChild(btn);
-        grid.appendChild(card);
-      });
-
-      section.appendChild(grid);
-      app.appendChild(section);
-    });
-  });
+function buildTabs() {
+  document.getElementById('vowel-tabs').innerHTML = Object.keys(LONG_V).map(v => `
+    <button class="v-tab${v===curV?' active':''}" onclick="selectVowel('${v}')">${v}</button>`).join('');
 }
-
-function speakWord(text, btn) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.75;
-  utter.pitch = 1.1;
-  utter.volume = 1;
-  btn.classList.add('speaking');
-  btn.textContent = '🎵';
-  utter.onend  = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
-  utter.onerror = () => { btn.classList.remove('speaking'); btn.textContent = '🔊'; };
-  window.speechSynthesis.speak(utter);
+function selectVowel(v) {
+  curV = v;
+  buildTabs();
+  buildContent();
+  speak(v + ' sounds!', 0.85);
 }
-
-buildPage();
+function buildContent() {
+  const data = LONG_V[curV];
+  document.getElementById('content').innerHTML = data.patterns.map(pat => `
+    <div class="pattern-box">
+      <div class="pb-title">"${pat.p}" pattern</div>
+      <div class="word-chips">
+        ${pat.ex.map(wd => `<div class="word-chip" onclick="speak('${wd.w}',0.72)">${wd.e} ${wd.w}</div>`).join('')}
+      </div>
+      <button class="ph-btn ph-btn-outline" style="width:100%;margin-top:8px" onclick="speak('${pat.ex.map(w=>w.w).join(', ')}',0.78)">🔊 Hear all words</button>
+    </div>`).join('');
+}
+function playSortWord() {
+  const item = sShuf[sIdx % sShuf.length];
+  document.getElementById('sort-word').textContent = item.w;
+  document.querySelectorAll('.pc-btn').forEach(b=>b.classList.remove('correct','wrong'));
+  document.getElementById('sort-fb').textContent = '';
+  // Build choices: correct + 1 wrong pattern from same vowel or different
+  const curPatterns = LONG_V[item.v].patterns.map(p=>p.p);
+  const choices = [item.p, ...curPatterns.filter(p=>p!==item.p).slice(0,1),
+    ...Object.values(LONG_V).flatMap(d=>d.patterns).map(p=>p.p)
+      .filter(p=>!curPatterns.includes(p)).sort(()=>Math.random()-0.5).slice(0,2)]
+    .slice(0,4).sort(()=>Math.random()-0.5);
+  document.getElementById('pattern-choices').innerHTML = choices.map(p => `
+    <button class="pc-btn" onclick="checkSort(this,'${p}','${item.p}','${item.w}',this)">${p}</button>`).join('');
+  speak(item.w, 0.72);
+}
+function checkSort(el,chosen,correct,word) {
+  sTotal++;
+  if (chosen===correct) {
+    el.classList.add('correct'); sScore++;
+    document.getElementById('sort-fb').textContent='✅ Yes! "'+word+'" uses the '+correct+' pattern!';
+    speak('Correct! '+word+' uses the '+correct+' pattern!');
+    awardStars('long-vowel',1);
+  } else {
+    el.classList.add('wrong');
+    document.querySelectorAll('.pc-btn').forEach(b=>{if(b.textContent.trim()===correct)b.classList.add('correct');});
+    document.getElementById('sort-fb').textContent='Try again! "'+word+'" uses the '+correct+' pattern!';
+    speak('Try again! '+word+' uses the '+correct+' pattern!');
+  }
+  sIdx++;
+  document.getElementById('sort-sc').textContent='Score: '+sScore+'/'+sTotal;
+  if(sTotal>=10){markComplete('long-vowel');awardStars('long-vowel',2);}
+  setTimeout(playSortWord,2000);
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  buildTabs(); buildContent();
+  injectMascot(["Long vowels say their own name! 🦉","AI, EE, IE, OA, OO are common patterns!","Tap the tabs to explore each long vowel!"]);
+  speak("Long vowels! The vowel says its own name — like A in cake, E in tree, I in kite!",0.85);
+  setTimeout(playSortWord,1000);
+});
 </script>
-
 </body>
 </html>
