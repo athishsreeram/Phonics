@@ -1,171 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Rhyme Time 🎵</title>
-<link rel="stylesheet" href="shared.css">
-<style>
-  .rhyme-box{background:white;border:2.5px solid var(--border);border-radius:22px;padding:28px 20px;margin:14px 0;text-align:center;}
-  .rhyme-pair{display:flex;align-items:center;justify-content:center;gap:20px;flex-wrap:wrap;margin:18px 0;}
-  .rhyme-word{background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:20px;padding:20px 28px;cursor:pointer;transition:transform 0.15s;touch-action:manipulation;}
-  .rhyme-word:hover{transform:scale(1.05);}
-  .rhyme-word:active{transform:scale(0.95);}
-  .rw-emoji{font-size:2.8rem;display:block;}
-  .rw-text{font-family:var(--font-display);font-size:2rem;font-weight:800;color:white;margin-top:6px;}
-  .rhyme-q{font-family:var(--font-display);font-size:1.1rem;font-weight:800;color:var(--primary);margin:14px 0 18px;}
-  .big-btns{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0;}
-  .big-btn{min-height:90px;border:3px solid var(--border);background:white;border-radius:20px;font-family:var(--font-display);font-size:1.5rem;font-weight:800;cursor:pointer;transition:all 0.18s;touch-action:manipulation;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;}
-  .big-btn:hover{transform:translateY(-4px);}
-  .big-btn:active{transform:scale(0.95);}
-  .big-btn.yes{border-color:#a8e6c4;color:var(--success);}
-  .big-btn.no{border-color:#ffb3b3;color:var(--danger);}
-  .big-btn.correct{background:#f0faf4;border-color:var(--success);}
-  .big-btn.wrong{background:#fff5f5;border-color:var(--danger);}
-  .score-box{background:white;border:2px solid var(--border);border-radius:14px;padding:12px 20px;text-align:center;margin:10px 0;}
-  .sb-num{font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--primary);}
-  .chain-box{background:#f0ecff;border:2.5px solid var(--border);border-radius:20px;padding:20px;margin:16px 0;}
-  .chain-title{font-family:var(--font-display);font-size:1rem;font-weight:800;color:var(--primary);margin-bottom:12px;text-align:center;}
-  .chain-tabs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
-  .ct{padding:6px 14px;border:2.5px solid var(--border);background:white;border-radius:14px;font-family:var(--font-display);font-size:0.85rem;font-weight:800;cursor:pointer;transition:all 0.2s;}
-  .ct.active,.ct:hover{border-color:var(--primary);background:#f0ecff;color:var(--primary);}
-  .chain-words{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;}
-  .chain-word{background:white;border:2.5px solid var(--border);border-radius:12px;padding:10px 16px;font-family:var(--font-display);font-size:1.1rem;font-weight:800;cursor:pointer;transition:all 0.15s;touch-action:manipulation;display:flex;gap:8px;align-items:center;}
-  .chain-word:hover{transform:translateY(-3px);border-color:var(--primary);}
-  .chain-word:active{transform:scale(0.93);}
-  .fb-text{font-family:var(--font-display);font-size:1.1rem;font-weight:800;min-height:32px;margin:8px 0;text-align:center;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>🎵 Rhyme Time · Phonics Hub</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── Rhyme family selector ── */
+    .family-selector {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .family-btn {
+      padding: 14px 20px;
+      border-radius: 50px;
+      border: 3px solid #eee;
+      background: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.2rem;
+      cursor: pointer;
+      min-height: var(--tap-min);
+      transition: all 0.15s;
+    }
+    .family-btn.active {
+      background: var(--clr-purple);
+      color: white;
+      border-color: var(--clr-purple);
+      transform: scale(1.05);
+    }
+    .family-btn:active { transform: scale(0.95); }
+
+    /* ── Rhyme card ── */
+    .rhyme-card {
+      background: white;
+      border-radius: 32px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 28px;
+    }
+    .rhyme-family-display {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3rem, 12vw, 6rem);
+      color: var(--clr-purple);
+      margin-bottom: 12px;
+    }
+    .rhyme-words-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 12px;
+      margin: 20px 0;
+    }
+    @media (min-width: 600px) {
+      .rhyme-words-grid { grid-template-columns: repeat(4, 1fr); }
+    }
+    .rhyme-word-btn {
+      background: #f8f0ff;
+      border: 3px solid var(--clr-purple);
+      border-radius: 16px;
+      padding: 16px 12px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 64px;
+      color: var(--clr-text);
+    }
+    .rhyme-word-btn:active {
+      transform: scale(0.93);
+      background: var(--clr-purple);
+      color: white;
+    }
+    .rhyme-word-btn:hover {
+      background: var(--clr-purple);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 0 rgba(167,139,250,0.4);
+    }
+
+    /* ── Rhyme quiz ── */
+    .rhyme-quiz-box {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+    }
+    .quiz-question {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 5vw, 2.4rem);
+      margin-bottom: 12px;
+    }
+    .quiz-target {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3rem, 12vw, 6rem);
+      color: var(--clr-primary);
+      display: block;
+      margin: 12px 0 24px;
+    }
+    .rhyme-choices {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    @media (min-width: 600px) {
+      .rhyme-choices { grid-template-columns: repeat(4, 1fr); }
+    }
+    .rhyme-choice {
+      background: #f8f8f8;
+      border: 4px solid transparent;
+      border-radius: 20px;
+      padding: 18px 12px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.5rem, 6vw, 2.2rem);
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .rhyme-choice:hover   { background: #f0f0f0; border-color: var(--clr-secondary); }
+    .rhyme-choice.correct { background: #f0fdf4; border-color: var(--clr-green); }
+    .rhyme-choice.wrong   { background: #fff0f0; border-color: var(--clr-primary); }
+    .rhyme-choice:active  { transform: scale(0.95); }
+  </style>
 </head>
 <body>
-<div class="ph-header">
-  <h1>🎵 Rhyme Time</h1>
-  <p>Do these words rhyme? Listen and decide!</p>
-  <span class="ph-stage-badge">Stage 2</span>
-</div>
-<div class="ph-wrap">
-  <div class="score-box">
-    <div class="sb-num">⭐ <span id="score-num">0</span> / <span id="score-total">0</span></div>
-    <div style="font-size:0.75rem;font-weight:700;color:var(--muted)">Rhyme Score</div>
-  </div>
-  <div class="rhyme-box">
-    <div class="rhyme-q" id="rhyme-q">Do these words RHYME?</div>
-    <div class="rhyme-pair" id="rhyme-pair"></div>
-    <button class="ph-btn ph-btn-outline" style="margin-bottom:14px" onclick="playBoth()">🔊 Hear Both Words</button>
-    <div class="big-btns">
-      <button class="big-btn yes" id="yes-btn" onclick="checkRhyme(true)">✅<span style="font-size:1rem">YES!</span><span style="font-size:0.8rem">They Rhyme!</span></button>
-      <button class="big-btn no"  id="no-btn"  onclick="checkRhyme(false)">❌<span style="font-size:1rem">NO!</span><span style="font-size:0.8rem">They Don't!</span></button>
+
+  <nav class="top-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-home-btn">🏠</a>
+      <span class="nav-title">Rhyme Time</span>
     </div>
-    <div class="fb-text" id="fb-text"></div>
+    <div class="nav-right"></div>
+  </nav>
+
+  <div class="page-header" style="background:linear-gradient(135deg,var(--clr-purple),#c4b5fd)">
+    <h1>🎵 Rhyme Time</h1>
+    <p>Find words that sound the same!</p>
   </div>
 
-  <div class="chain-box">
-    <div class="chain-title">🔗 Word Family Chains — tap any word to hear it!</div>
-    <div class="chain-tabs" id="chain-tabs"></div>
-    <div class="chain-words" id="chain-words"></div>
-    <div style="text-align:center;margin-top:10px">
-      <button class="ph-btn ph-btn-primary" onclick="playChain()">▶ Play Whole Chain</button>
-    </div>
-  </div>
-</div>
-<script src="shared.js"></script>
-<script>
-const PAIRS=[
-  {w1:'cat',e1:'🐱',w2:'hat',e2:'🎩',rhymes:true},
-  {w1:'dog',e1:'🐶',w2:'log',e2:'🪵',rhymes:true},
-  {w1:'sun',e1:'☀️', w2:'run',e2:'🏃',rhymes:true},
-  {w1:'cake',e1:'🎂',w2:'lake',e2:'🏞️',rhymes:true},
-  {w1:'bee',e1:'🐝', w2:'tree',e2:'🌳',rhymes:true},
-  {w1:'ship',e1:'🚢',w2:'lip',e2:'👄',rhymes:true},
-  {w1:'moon',e1:'🌙',w2:'spoon',e2:'🥄',rhymes:true},
-  {w1:'king',e1:'👑',w2:'ring',e2:'💍',rhymes:true},
-  {w1:'cat',e1:'🐱',w2:'dog',e2:'🐶',rhymes:false},
-  {w1:'sun',e1:'☀️', w2:'rain',e2:'🌧️',rhymes:false},
-  {w1:'cake',e1:'🎂',w2:'fish',e2:'🐟',rhymes:false},
-  {w1:'bee',e1:'🐝', w2:'frog',e2:'🐸',rhymes:false},
-  {w1:'star',e1:'⭐',w2:'moon',e2:'🌙',rhymes:false},
-  {w1:'book',e1:'📖',w2:'ball',e2:'⚽',rhymes:false},
-  {w1:'blue',e1:'🔵',w2:'red',e2:'🔴',rhymes:false},
-  {w1:'pig',e1:'🐷',w2:'dig',e2:'🪱',rhymes:true},
-  {w1:'fox',e1:'🦊',w2:'box',e2:'📦',rhymes:true},
-  {w1:'ball',e1:'⚽',w2:'wall',e2:'🧱',rhymes:true},
-];
-const CHAINS={
-  '-at':[{w:'cat',e:'🐱'},{w:'bat',e:'🦇'},{w:'hat',e:'🎩'},{w:'mat',e:'🛒'},{w:'rat',e:'🐀'},{w:'sat',e:'🪑'}],
-  '-og':[{w:'dog',e:'🐶'},{w:'frog',e:'🐸'},{w:'log',e:'🪵'},{w:'hog',e:'🐖'},{w:'fog',e:'🌫️'},{w:'jog',e:'🏃'}],
-  '-un':[{w:'sun',e:'☀️'},{w:'run',e:'🏃'},{w:'bun',e:'🍞'},{w:'fun',e:'🎉'},{w:'gun',e:'🎯'},{w:'nun',e:'👩'}],
-  '-ip':[{w:'ship',e:'🚢'},{w:'lip',e:'👄'},{w:'tip',e:'💡'},{w:'dip',e:'🏊'},{w:'hip',e:'🕺'},{w:'rip',e:'✂️'}],
-  '-ee':[{w:'bee',e:'🐝'},{w:'tree',e:'🌳'},{w:'see',e:'👀'},{w:'fee',e:'💰'},{w:'knee',e:'🦵'},{w:'free',e:'🕊️'}],
-  '-ig':[{w:'pig',e:'🐷'},{w:'big',e:'🏔️'},{w:'dig',e:'🪱'},{w:'fig',e:'🌿'},{w:'wig',e:'👱'},{w:'jig',e:'🎵'}],
-  '-ox':[{w:'fox',e:'🦊'},{w:'box',e:'📦'},{w:'ox',e:'🐂'},{w:'lock',e:'🔒'}],
-  '-all':[{w:'ball',e:'⚽'},{w:'wall',e:'🧱'},{w:'tall',e:'📏'},{w:'fall',e:'🍂'},{w:'call',e:'📞'},{w:'hall',e:'🚪'}],
-};
+  <main>
 
-let qIdx=0,score=0,total=0,shuffled=[...PAIRS].sort(()=>Math.random()-0.5);
-let curChain='-at';
-
-function loadPair(){
-  const p=shuffled[qIdx%shuffled.length];
-  document.getElementById('rhyme-pair').innerHTML=`
-    <div class="rhyme-word" onclick="speak('${p.w1}',0.72)">
-      <span class="rw-emoji">${p.e1}</span>
-      <span class="rw-text">${p.w1}</span>
+    <!-- Mode tabs -->
+    <div class="mode-tabs" style="margin-top:24px">
+      <button class="mode-tab active" data-mode="explore">🔍 Explore</button>
+      <button class="mode-tab" data-mode="quiz">🎯 Quiz</button>
     </div>
-    <div style="font-size:2rem;font-weight:800;color:var(--muted)">+</div>
-    <div class="rhyme-word" onclick="speak('${p.w2}',0.72)">
-      <span class="rw-emoji">${p.e2}</span>
-      <span class="rw-text">${p.w2}</span>
-    </div>`;
-  document.getElementById('fb-text').textContent='';
-  document.querySelectorAll('.big-btn').forEach(b=>b.classList.remove('correct','wrong'));
-  playBoth();
-}
-function playBoth(){
-  const p=shuffled[qIdx%shuffled.length];
-  speak(p.w1,0.75,1.1,()=>setTimeout(()=>speak(p.w2,0.75),400));
-}
-function checkRhyme(said){
-  const p=shuffled[qIdx%shuffled.length]; total++;
-  const correct=p.rhymes;
-  const yesBtn=document.getElementById('yes-btn');
-  const noBtn=document.getElementById('no-btn');
-  if(said===correct){
-    score++;
-    (said?yesBtn:noBtn).classList.add('correct');
-    const msg=p.rhymes?`Yes! "${p.w1}" and "${p.w2}" rhyme! They both end in -${p.w1.slice(-2)}!`:`Correct! "${p.w1}" and "${p.w2}" don't rhyme!`;
-    document.getElementById('fb-text').textContent='✅ '+msg;
-    speak(msg,0.85);awardStars('rhyme',1);
-    setTimeout(()=>{qIdx++;loadPair();},2200);
-  } else {
-    (said?yesBtn:noBtn).classList.add('wrong');
-    (!said?yesBtn:noBtn).classList.add('correct');
-    const msg=p.rhymes?`Try again! "${p.w1}" and "${p.w2}" DO rhyme!`:`Try again! "${p.w1}" and "${p.w2}" don't rhyme!`;
-    document.getElementById('fb-text').textContent='❌ '+msg;
-    speak(msg,0.82);
-    setTimeout(()=>{qIdx++;loadPair();},2500);
-  }
-  document.getElementById('score-num').textContent=score;
-  document.getElementById('score-total').textContent=total;
-  if(total>=12){markComplete('rhyme');awardStars('rhyme',2);}
-}
-function buildChainTabs(){
-  document.getElementById('chain-tabs').innerHTML=Object.keys(CHAINS).map(f=>`
-    <button class="ct${f===curChain?' active':''}" onclick="selectChain('${f}')">${f}</button>`).join('');
-}
-function selectChain(f){curChain=f;buildChainTabs();buildChainWords();}
-function buildChainWords(){
-  document.getElementById('chain-words').innerHTML=CHAINS[curChain].map(w=>`
-    <div class="chain-word" onclick="speak('${w.w}',0.72)">${w.e} ${w.w}</div>`).join('');
-}
-function playChain(){
-  const ws=CHAINS[curChain];let i=0;
-  function next(){if(i>=ws.length)return;speak(ws[i].w,0.72,1.1,()=>{i++;setTimeout(next,300);});}
-  speak('Listen to the '+curChain+' family!',0.85,1.1,()=>setTimeout(next,800));
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  buildChainTabs();buildChainWords();loadPair();
-  injectMascot(["Do the words sound the same at the end? 🦉","Cat and hat both end in -AT — they rhyme!","Tap the words to hear them clearly! 🔊"]);
-  speak("Rhyme time! Listen to two words — do they rhyme?",0.85);
-});
-</script>
+
+    <!-- ── Explore mode ── -->
+    <div id="mode-explore">
+      <div class="family-selector" id="family-selector"></div>
+
+      <div class="rhyme-card" id="rhyme-card">
+        <div class="rhyme-family-display" id="family-display">-at</div>
+        <p style="font-size:1.1rem;color:var(--clr-text-soft);margin-bottom:8px">Words that rhyme with <strong id="family-example">cat</strong>:</p>
+        <div class="rhyme-words-grid" id="rhyme-words-grid"></div>
+        <button class="btn btn-purple btn-lg" id="btn-read-all" style="margin-top:12px">
+          🔊 Read All Rhymes
+        </button>
+      </div>
+    </div>
+
+    <!-- ── Quiz mode ── -->
+    <div id="mode-quiz" style="display:none">
+      <div class="rhyme-quiz-box">
+        <div class="quiz-question">Which word rhymes with...</div>
+        <span class="quiz-target" id="quiz-target">cat</span>
+        <button class="btn btn-primary" id="quiz-play-sound" style="margin:0 auto 24px;display:flex">
+          🔊 Hear it
+        </button>
+        <div class="rhyme-choices" id="rhyme-choices"></div>
+        <p style="margin-top:20px;font-weight:800;font-size:1.1rem;color:var(--clr-text-soft)">
+          Score: <span id="rhyme-score">0</span> / <span id="rhyme-total">0</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="score-bar">
+      <div class="score-item">⭐ <span id="stars-display">0</span> <span class="score-label">Stars</span></div>
+    </div>
+
+  </main>
+
+  <script src="js/audio.js"></script>
+  <script src="js/materials.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    let families     = [];
+    let currentFamily = 0;
+    let quizScore     = 0;
+    let quizTotal     = 0;
+    let stars         = 0;
+
+    // ── Modes ──
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    modeTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        modeTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const m = tab.dataset.mode;
+        document.getElementById('mode-explore').style.display = m === 'explore' ? 'block' : 'none';
+        document.getElementById('mode-quiz').style.display    = m === 'quiz'    ? 'block' : 'none';
+        if (m === 'quiz') nextRhymeQuiz();
+        AudioManager.playTone('click');
+      });
+    });
+
+    function loadMaterial() {
+      const pack = MaterialsManager.getCurrent();
+      families = pack.rhymes || [];
+      currentFamily = 0;
+      buildFamilySelector();
+      showFamily(0);
+    }
+
+    function buildFamilySelector() {
+      const sel = document.getElementById('family-selector');
+      sel.innerHTML = '';
+      families.forEach((fam, i) => {
+        const btn = document.createElement('button');
+        btn.className = `family-btn ${i === 0 ? 'active' : ''}`;
+        btn.textContent = fam.family;
+        btn.addEventListener('click', () => {
+          sel.querySelectorAll('.family-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          showFamily(i);
+          AudioManager.playTone('click');
+        });
+        sel.appendChild(btn);
+      });
+    }
+
+    function showFamily(idx) {
+      currentFamily = idx;
+      const fam = families[idx];
+      if (!fam) return;
+      document.getElementById('family-display').textContent = fam.family;
+      document.getElementById('family-example').textContent = fam.words[0] || '';
+
+      const grid = document.getElementById('rhyme-words-grid');
+      grid.innerHTML = '';
+      fam.words.forEach(w => {
+        const btn = document.createElement('button');
+        btn.className = 'rhyme-word-btn';
+        btn.textContent = w;
+        btn.addEventListener('click', () => {
+          AudioManager.speak(w, { rate: 0.75 });
+          AudioManager.playTone('click');
+          UI.animateBtn(btn, 'animate-bounce');
+          stars++;
+          document.getElementById('stars-display').textContent = stars;
+          UI.setScore('rhyme', { stars });
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    document.getElementById('btn-read-all').addEventListener('click', () => {
+      const fam = families[currentFamily];
+      if (!fam) return;
+      let i = 0;
+      function readNext() {
+        if (i >= fam.words.length) return;
+        AudioManager.speak(fam.words[i++], { rate: 0.75, onEnd: () => setTimeout(readNext, 400) });
+      }
+      readNext();
+    });
+
+    // ── Quiz ──
+    let quizTarget = null;
+
+    function nextRhymeQuiz() {
+      // Pick random family
+      const fam = families[Math.floor(Math.random() * families.length)];
+      if (!fam || fam.words.length < 2) return;
+
+      // Target is a word from the family
+      const targetWord  = fam.words[Math.floor(Math.random() * fam.words.length)];
+      quizTarget = { word: targetWord, family: fam.family };
+
+      // Answer is another word from SAME family
+      const answer = fam.words.filter(w => w !== targetWord)[Math.floor(Math.random() * (fam.words.length - 1))];
+
+      // Distractors from other families
+      const others = families
+        .filter(f => f.family !== fam.family)
+        .flatMap(f => f.words);
+      const distractors = UI.shuffle(others).slice(0, 3);
+
+      const choices = UI.shuffle([answer, ...distractors]);
+
+      document.getElementById('quiz-target').textContent = targetWord;
+      AudioManager.speak(targetWord, { rate: 0.75 });
+
+      document.getElementById('quiz-play-sound').onclick = () => {
+        AudioManager.speak(targetWord, { rate: 0.75 });
+      };
+
+      const choicesEl = document.getElementById('rhyme-choices');
+      choicesEl.innerHTML = '';
+      choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'rhyme-choice';
+        btn.textContent = ch;
+        btn.addEventListener('click', () => {
+          quizTotal++;
+          const correct = ch === answer;
+          btn.classList.add(correct ? 'correct' : 'wrong');
+          if (correct) {
+            quizScore++;
+            AudioManager.playTone('correct');
+            UI.showFeedback(true, 900);
+            stars++;
+            document.getElementById('stars-display').textContent = stars;
+          } else {
+            AudioManager.playTone('wrong');
+            // Show correct
+            choicesEl.querySelectorAll('.rhyme-choice').forEach(b => {
+              if (b.textContent === answer) b.classList.add('correct');
+            });
+          }
+          document.getElementById('rhyme-score').textContent = quizScore;
+          document.getElementById('rhyme-total').textContent = quizTotal;
+          choicesEl.querySelectorAll('.rhyme-choice').forEach(b => b.style.pointerEvents = 'none');
+          setTimeout(nextRhymeQuiz, correct ? 1200 : 1800);
+        });
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    document.addEventListener('materialChanged', loadMaterial);
+    loadMaterial();
+  </script>
 </body>
 </html>

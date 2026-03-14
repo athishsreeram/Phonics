@@ -1,401 +1,451 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Phonics Learning Hub 🌟</title>
-<link rel="stylesheet" href="shared.css">
-<style>
-  body { background: var(--bg); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <title>Phonics Learning Hub 🌟</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── Index-specific styles ── */
+    .hero {
+      background: linear-gradient(135deg, #FF6B35 0%, #ff8c5a 50%, #FFE66D 100%);
+      padding: 48px 24px 56px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.06'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    }
+    .hero-content { position: relative; z-index: 1; }
+    .hero-logo {
+      font-size: 72px;
+      display: block;
+      margin-bottom: 8px;
+      animation: bounce 2s ease infinite;
+    }
+    .hero-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      color: white;
+      text-shadow: 0 3px 12px rgba(0,0,0,0.2);
+      margin-bottom: 8px;
+    }
+    .hero-sub {
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: rgba(255,255,255,0.92);
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .hero-stars {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.25);
+      backdrop-filter: blur(8px);
+      border-radius: 100px;
+      padding: 12px 28px;
+      display: inline-flex;
+      font-weight: 800;
+      color: white;
+    }
 
-  .hub-hero {
-    background: linear-gradient(135deg, #6c3fc5 0%, #a259e6 55%, #f59e2e 100%);
-    padding: 36px 20px 28px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hub-hero::before {
-    content:'';position:absolute;inset:0;
-    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23fff' fill-opacity='0.04'%3E%3Ccircle cx='40' cy='40' r='6'/%3E%3C/g%3E%3C/svg%3E");
-  }
-  .hub-title {
-    font-family: var(--font-display);
-    font-size: clamp(1.8rem,6vw,2.8rem);
-    font-weight: 800;
-    color: white;
-    text-shadow: 0 3px 14px rgba(0,0,0,0.3);
-    position: relative;
-  }
-  .hub-subtitle {
-    color: rgba(255,255,255,0.9);
-    font-size: clamp(0.9rem,3vw,1.05rem);
-    margin-top: 6px;
-    font-weight: 600;
-    position: relative;
-  }
-  .hub-star-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-    margin-top: 16px;
-    position: relative;
-  }
-  .hub-stars-display {
-    background: rgba(255,255,255,0.25);
-    border: 2px solid rgba(255,255,255,0.4);
-    border-radius: 20px;
-    padding: 5px 18px;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: white;
-  }
-  .hub-start-btn {
-    background: white;
-    color: var(--primary);
-    border: none;
-    border-radius: 20px;
-    padding: 8px 22px;
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    font-weight: 800;
-    cursor: pointer;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
-    animation: pulse 2s ease-in-out infinite;
-    transition: transform 0.15s;
-  }
-  .hub-start-btn:active { transform: scale(0.95); }
+    /* ── Stage sections ── */
+    .stages-wrap {
+      padding: 32px 20px 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
 
-  /* ─── SECTION ─── */
-  .hub-section {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 0 14px;
-  }
-  .hub-section-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 800;
-    color: var(--primary);
-    margin: 22px 0 12px;
-    padding-bottom: 8px;
-    border-bottom: 2.5px solid var(--border);
-  }
+    .stage-section {
+      margin-bottom: 40px;
+    }
 
-  /* ─── CARDS GRID ─── */
-  .hub-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
-    margin-bottom: 8px;
-  }
-  .hub-card {
-    background: white;
-    border: 2.5px solid var(--border);
-    border-radius: 18px;
-    padding: 18px 12px 14px;
-    text-align: center;
-    text-decoration: none;
-    color: var(--text);
-    cursor: pointer;
-    transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .hub-card:hover  { transform: translateY(-5px); box-shadow: 0 10px 28px rgba(108,63,197,0.18); border-color: var(--primary); }
-  .hub-card:active { transform: scale(0.95); }
+    .stage-heading {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.4rem, 4vw, 2rem);
+      margin-bottom: 16px;
+      padding: 14px 20px;
+      border-radius: 20px;
+      color: white;
+    }
 
-  .hub-card-icon  { font-size: 2.2rem; line-height: 1; }
-  .hub-card-name  { font-family: var(--font-display); font-size: 0.88rem; font-weight: 800; line-height: 1.2; }
-  .hub-card-stage {
-    position: absolute;
-    top: 7px; right: 7px;
-    background: var(--primary);
-    color: white;
-    border-radius: 8px;
-    padding: 2px 7px;
-    font-size: 0.62rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-  }
-  .hub-card-done .hub-card-stage { background: var(--success); }
-  .hub-card-done { border-color: #a8e6c4; }
-  .hub-card-done::after {
-    content: '✅';
-    position: absolute;
-    top: 7px; left: 8px;
-    font-size: 0.8rem;
-  }
+    .stage-1 .stage-heading { background: var(--stage1); }
+    .stage-2 .stage-heading { background: var(--stage2); }
+    .stage-3 .stage-heading { background: var(--stage3); }
+    .stage-4 .stage-heading { background: #f4a228; }
+    .stage-5 .stage-heading { background: var(--stage5); }
+    .stage-6 .stage-heading { background: var(--stage6); }
+    .tools-section .stage-heading { background: var(--clr-blue); }
 
-  /* progress bar under section */
-  .hub-section-progress {
-    height: 6px;
-    background: var(--border);
-    border-radius: 4px;
-    margin-bottom: 10px;
-    overflow: hidden;
-  }
-  .hub-section-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    border-radius: 4px;
-    transition: width 0.7s ease;
-  }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 16px;
+    }
 
-  .hub-footer {
-    text-align: center;
-    padding: 28px 20px 100px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--muted);
-  }
-  .hub-parent-link {
-    display: inline-block;
-    margin-top: 12px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    text-decoration: none;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-  }
-  .hub-parent-link:hover { opacity: 1; }
-</style>
+    /* ── Activity card ── */
+    .act-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px 16px;
+      text-align: center;
+      text-decoration: none;
+      color: var(--clr-text);
+      box-shadow: 0 4px 0 rgba(0,0,0,0.08);
+      border: 3px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      min-height: 130px;
+      -webkit-tap-highlight-color: transparent;
+      cursor: pointer;
+    }
+
+    .act-card:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.08);
+    }
+
+    .act-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 0 rgba(0,0,0,0.08);
+    }
+
+    .act-icon {
+      font-size: 2.6rem;
+      line-height: 1;
+    }
+
+    .act-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      font-weight: 400;
+      line-height: 1.2;
+    }
+
+    .act-stage-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: auto;
+    }
+
+    /* Stage dot colors */
+    .stage-1 .act-stage-dot { background: var(--stage1); }
+    .stage-2 .act-stage-dot { background: var(--stage2); }
+    .stage-3 .act-stage-dot { background: var(--stage3); }
+    .stage-4 .act-stage-dot { background: #f4a228; }
+    .stage-5 .act-stage-dot { background: var(--stage5); }
+    .stage-6 .act-stage-dot { background: var(--stage6); }
+    .tools-section .act-stage-dot { background: var(--clr-blue); }
+
+    /* Card hover border tint by stage */
+    .stage-1 .act-card:hover { border-color: var(--stage1); }
+    .stage-2 .act-card:hover { border-color: var(--stage2); }
+    .stage-3 .act-card:hover { border-color: var(--stage3); }
+    .stage-4 .act-card:hover { border-color: #f4a228; }
+    .stage-5 .act-card:hover { border-color: var(--stage5); }
+    .stage-6 .act-card:hover { border-color: var(--stage6); }
+    .tools-section .act-card:hover { border-color: var(--clr-blue); }
+
+    /* Parents link */
+    .parents-btn {
+      display: block;
+      text-align: center;
+      padding: 20px;
+      background: var(--clr-text);
+      color: white;
+      text-decoration: none;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border-radius: 20px;
+      margin: 0 20px 40px;
+      max-width: 400px;
+      margin: 0 auto 40px;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .parents-btn:active { transform: scale(0.97); opacity: 0.85; }
+
+    /* Responsive tweaks */
+    @media (min-width: 600px) {
+      .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      }
+    }
+    @media (min-width: 1024px) {
+      .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<!-- HERO -->
-<div class="hub-hero">
-  <div class="hub-title">🔤 Phonics Learning Hub</div>
-  <div class="hub-subtitle">Tap a card to start learning! 🚀</div>
-  <div class="hub-star-bar">
-    <div class="hub-stars-display" id="total-stars">⭐ 0</div>
-    <button class="hub-start-btn" onclick="startHere()">▶ Start Here!</button>
+  <!-- Top Navigation -->
+  <nav class="top-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-left">
+      <span style="font-size:1.8rem">🔤</span>
+      <span class="nav-title" style="font-family:'Fredoka One',cursive">Phonics Hub</span>
+    </div>
+    <div class="nav-right">
+      <!-- Audio toggle + Material selector injected by JS modules -->
+    </div>
+  </nav>
+
+  <!-- Hero Banner -->
+  <header class="hero">
+    <div class="hero-content">
+      <span class="hero-logo" role="img" aria-label="star">⭐</span>
+      <h1 class="hero-title">Phonics Learning Hub</h1>
+      <p class="hero-sub">Tap a card to start learning! 🚀</p>
+      <div class="hero-stars" id="total-stars-display">
+        ⭐ <span id="total-stars">0</span> Stars Earned
+      </div>
+    </div>
+  </header>
+
+  <!-- Material pack indicator -->
+  <div id="material-banner" style="
+    background: var(--clr-secondary);
+    color: white;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    display: none;
+  "></div>
+
+  <!-- All Stages -->
+  <div class="stages-wrap">
+
+    <!-- Stage 1 -->
+    <section class="stage-section stage-1">
+      <div class="stage-heading">🌱 Stage 1 <span style="font-size:0.75em;opacity:0.85">· Alphabet &amp; Sounds</span></div>
+      <div class="cards-grid">
+        <a href="alphabet.html" class="act-card" data-speak="Alphabet A to Z">
+          <span class="act-icon">🔤</span>
+          <span class="act-label">Alphabet A–Z</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="phonic-set1.html" class="act-card" data-speak="Phonic Set 1">
+          <span class="act-icon">1️⃣</span>
+          <span class="act-label">Phonic Set 1</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="phonic-set2.html" class="act-card" data-speak="Phonic Set 2">
+          <span class="act-icon">2️⃣</span>
+          <span class="act-label">Phonic Set 2</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stage 2 -->
+    <section class="stage-section stage-2">
+      <div class="stage-heading">🌿 Stage 2 <span style="font-size:0.75em;opacity:0.85">· Vowels &amp; CVC Words</span></div>
+      <div class="cards-grid">
+        <a href="vowels.html" class="act-card" data-speak="Vowels A E I O U">
+          <span class="act-icon">🗣️</span>
+          <span class="act-label">Vowels A E I O U</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="cvc.html" class="act-card" data-speak="C V C Words">
+          <span class="act-icon">🔠</span>
+          <span class="act-label">CVC Words</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="rhyme.html" class="act-card" data-speak="Rhyme Time">
+          <span class="act-icon">🎵</span>
+          <span class="act-label">Rhyme Time</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="listen-choose.html" class="act-card" data-speak="Listen and Choose">
+          <span class="act-icon">👂</span>
+          <span class="act-label">Listen &amp; Choose</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stage 3 -->
+    <section class="stage-section stage-3">
+      <div class="stage-heading">🌳 Stage 3 <span style="font-size:0.75em;opacity:0.85">· Digraphs &amp; Blends</span></div>
+      <div class="cards-grid">
+        <a href="digraphs.html" class="act-card" data-speak="Digraph Practice">
+          <span class="act-icon">🔠</span>
+          <span class="act-label">Digraph Practice</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="digraph_fill.html" class="act-card" data-speak="Digraph Test">
+          <span class="act-icon">✏️</span>
+          <span class="act-label">Digraph Test</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="consonant-blend.html" class="act-card" data-speak="Consonant Blends">
+          <span class="act-icon">🔡</span>
+          <span class="act-label">Consonant Blends</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stage 4 -->
+    <section class="stage-section stage-4">
+      <div class="stage-heading">✨ Stage 4 <span style="font-size:0.75em;opacity:0.85">· Magic E &amp; Long Vowels</span></div>
+      <div class="cards-grid">
+        <a href="magic-e.html" class="act-card" data-speak="Magic E">
+          <span class="act-icon">✨</span>
+          <span class="act-label">Magic E</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="long-vowel.html" class="act-card" data-speak="Long Vowels">
+          <span class="act-icon">🔆</span>
+          <span class="act-label">Long Vowels</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stage 5 -->
+    <section class="stage-section stage-5">
+      <div class="stage-heading">📖 Stage 5 <span style="font-size:0.75em;opacity:0.85">· Reading</span></div>
+      <div class="cards-grid">
+        <a href="sight-words.html" class="act-card" data-speak="Sight Words">
+          <span class="act-icon">👁️</span>
+          <span class="act-label">Sight Words</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="read.html" class="act-card" data-speak="Read Practice">
+          <span class="act-icon">📗</span>
+          <span class="act-label">Read Practice</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="read2.html" class="act-card" data-speak="Read and Voice">
+          <span class="act-icon">🎙️</span>
+          <span class="act-label">Read + Voice</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="story.html" class="act-card" data-speak="Mini Stories">
+          <span class="act-icon">📖</span>
+          <span class="act-label">Mini Stories</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="word-match.html" class="act-card" data-speak="Word Match">
+          <span class="act-icon">🎯</span>
+          <span class="act-label">Word Match</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Stage 6 -->
+    <section class="stage-section stage-6">
+      <div class="stage-heading">✍️ Stage 6 <span style="font-size:0.75em;opacity:0.85">· Writing</span></div>
+      <div class="cards-grid">
+        <a href="trace.html" class="act-card" data-speak="Letter Tracing">
+          <span class="act-icon">✍️</span>
+          <span class="act-label">Letter Tracing</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="sentence-builder.html" class="act-card" data-speak="Sentence Builder">
+          <span class="act-icon">🧩</span>
+          <span class="act-label">Sentence Builder</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Tools & Games -->
+    <section class="stage-section tools-section">
+      <div class="stage-heading">🛠️ Tools &amp; Games</div>
+      <div class="cards-grid">
+        <a href="word-explore.html" class="act-card" data-speak="Word Explorer">
+          <span class="act-icon">🌟</span>
+          <span class="act-label">Word Explorer</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="phkids.html" class="act-card" data-speak="Phonic Games">
+          <span class="act-icon">🎮</span>
+          <span class="act-label">Phonic Games</span>
+          <span class="act-stage-dot"></span>
+        </a>
+        <a href="alphabet-ballon-pop.html" class="act-card" data-speak="Balloon Pop">
+          <span class="act-icon">🎈</span>
+          <span class="act-label">Balloon Pop</span>
+          <span class="act-stage-dot"></span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Parents link -->
+    <a href="parent-dashboard.html" class="parents-btn">
+      👨‍👩‍👧 Parent Dashboard
+    </a>
+
+    <p style="text-align:center;color:var(--clr-text-soft);font-size:1rem;padding-bottom:32px">
+      Happy Learning! 🌈⭐
+    </p>
+
   </div>
-</div>
 
-<div class="hub-section">
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/materials.js"></script>
+  <script src="js/ui.js"></script>
 
-  <!-- ── STAGE 1: ALPHABET & SOUNDS ── -->
-  <div class="hub-section-label">🌱 Stage 1 · Alphabet & Sounds</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-1" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="alphabet.html" onclick="cardClick(event,'alphabet','Let\'s learn the Alphabet!')">
-      <span class="hub-card-stage">S1</span>
-      <span class="hub-card-icon">🔤</span>
-      <span class="hub-card-name">Alphabet A–Z</span>
-    </a>
-    <a class="hub-card" href="phonic-set1.html" onclick="cardClick(event,'phonic-set1','Phonics Set One! Let\'s go!')">
-      <span class="hub-card-stage">S1</span>
-      <span class="hub-card-icon">1️⃣</span>
-      <span class="hub-card-name">Phonic Set 1</span>
-    </a>
-    <a class="hub-card" href="phonic-set2.html" onclick="cardClick(event,'phonic-set2','Phonics Set Two!')">
-      <span class="hub-card-stage">S1</span>
-      <span class="hub-card-icon">2️⃣</span>
-      <span class="hub-card-name">Phonic Set 2</span>
-    </a>
-  </div>
+  <script>
+    // ── Stars counter ──
+    function refreshStars() {
+      let total = 0;
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('phonics_score_')) {
+          try {
+            const d = JSON.parse(localStorage.getItem(k));
+            if (d && typeof d.stars === 'number') total += d.stars;
+            else if (d && typeof d.total === 'number') total += d.total;
+          } catch {}
+        }
+      }
+      document.getElementById('total-stars').textContent = total;
+    }
+    refreshStars();
 
-  <!-- ── STAGE 2: CVC & VOWELS ── -->
-  <div class="hub-section-label">🌿 Stage 2 · Vowels & CVC Words</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-2" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="vowels.html" onclick="cardClick(event,'vowels','Let\'s practice vowels! A E I O U!')">
-      <span class="hub-card-stage">S2</span>
-      <span class="hub-card-icon">🗣️</span>
-      <span class="hub-card-name">Vowels A E I O U</span>
-    </a>
-    <a class="hub-card" href="cvc.html" onclick="cardClick(event,'cvc','CVC words! Cat, dog, sun!')">
-      <span class="hub-card-stage">S2</span>
-      <span class="hub-card-icon">🔠</span>
-      <span class="hub-card-name">CVC Words</span>
-    </a>
-    <a class="hub-card" href="rhyme.html" onclick="cardClick(event,'rhyme','Rhyme Time! Do cat and hat rhyme?')">
-      <span class="hub-card-stage">S2</span>
-      <span class="hub-card-icon">🎵</span>
-      <span class="hub-card-name">Rhyme Time</span>
-    </a>
-    <a class="hub-card" href="listen-choose.html" onclick="cardClick(event,'listen-choose','Listen and choose the right sound!')">
-      <span class="hub-card-stage">S2</span>
-      <span class="hub-card-icon">👂</span>
-      <span class="hub-card-name">Listen & Choose</span>
-    </a>
-  </div>
+    // ── Material banner ──
+    function updateMaterialBanner() {
+      const pack = MaterialsManager.getCurrent();
+      const banner = document.getElementById('material-banner');
+      if (MaterialsManager.getCurrentKey() !== 'default') {
+        banner.style.display = 'block';
+        banner.textContent = `${pack.emoji} ${pack.name} materials active — ${pack.description}`;
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+    updateMaterialBanner();
+    document.addEventListener('materialChanged', updateMaterialBanner);
 
-  <!-- ── STAGE 3: DIGRAPHS & BLENDS ── -->
-  <div class="hub-section-label">🌳 Stage 3 · Digraphs & Blends</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-3" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="digraphs.html" onclick="cardClick(event,'digraphs','Digraphs! S H makes the sh sound!')">
-      <span class="hub-card-stage">S3</span>
-      <span class="hub-card-icon">🔠</span>
-      <span class="hub-card-name">Digraph Practice</span>
-    </a>
-    <a class="hub-card" href="digraph_fill.html" onclick="cardClick(event,'digraph-fill','Digraph test! Fill in the missing letters!')">
-      <span class="hub-card-stage">S3</span>
-      <span class="hub-card-icon">✏️</span>
-      <span class="hub-card-name">Digraph Test</span>
-    </a>
-    <a class="hub-card" href="consonant-blend.html" onclick="cardClick(event,'blends','Consonant blends! Blue, star, frog!')">
-      <span class="hub-card-stage">S3</span>
-      <span class="hub-card-icon">🔡</span>
-      <span class="hub-card-name">Consonant Blends</span>
-    </a>
-  </div>
-
-  <!-- ── STAGE 4: MAGIC E & LONG VOWELS ── -->
-  <div class="hub-section-label">✨ Stage 4 · Magic E & Long Vowels</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-4" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="magic-e.html" onclick="cardClick(event,'magic-e','Magic E! Cap becomes cape with a magic E!')">
-      <span class="hub-card-stage">S4</span>
-      <span class="hub-card-icon">✨</span>
-      <span class="hub-card-name">Magic E</span>
-    </a>
-    <a class="hub-card" href="long-vowel.html" onclick="cardClick(event,'long-vowel','Long vowels! Rain, sleep, boat!')">
-      <span class="hub-card-stage">S4</span>
-      <span class="hub-card-icon">🔆</span>
-      <span class="hub-card-name">Long Vowels</span>
-    </a>
-  </div>
-
-  <!-- ── STAGE 5: READING ── -->
-  <div class="hub-section-label">📖 Stage 5 · Reading</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-5" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="sight-words.html" onclick="cardClick(event,'sight-words','Sight words! The, is, and, a!')">
-      <span class="hub-card-stage">S5</span>
-      <span class="hub-card-icon">👁️</span>
-      <span class="hub-card-name">Sight Words</span>
-    </a>
-    <a class="hub-card" href="read.html" onclick="cardClick(event,'read','Read practice! Let\'s read together!')">
-      <span class="hub-card-stage">S5</span>
-      <span class="hub-card-icon">📗</span>
-      <span class="hub-card-name">Read Practice</span>
-    </a>
-    <a class="hub-card" href="read2.html" onclick="cardClick(event,'read2','Read with voice! Listen and follow along!')">
-      <span class="hub-card-stage">S5</span>
-      <span class="hub-card-icon">🎙️</span>
-      <span class="hub-card-name">Read + Voice</span>
-    </a>
-    <a class="hub-card" href="story.html" onclick="cardClick(event,'story','Story time! Let\'s read a fun story!')">
-      <span class="hub-card-stage">S5</span>
-      <span class="hub-card-icon">📖</span>
-      <span class="hub-card-name">Mini Stories</span>
-    </a>
-    <a class="hub-card" href="word-match.html" onclick="cardClick(event,'word-match','Word match! Hear a word, tap the picture!')">
-      <span class="hub-card-stage">S5</span>
-      <span class="hub-card-icon">🎯</span>
-      <span class="hub-card-name">Word Match</span>
-    </a>
-  </div>
-
-  <!-- ── STAGE 6: WRITING ── -->
-  <div class="hub-section-label">✍️ Stage 6 · Writing</div>
-  <div class="hub-section-progress"><div class="hub-section-progress-fill" id="prog-6" style="width:0%"></div></div>
-  <div class="hub-grid">
-    <a class="hub-card" href="trace.html" onclick="cardClick(event,'trace','Letter tracing! Draw the letters with your finger!')">
-      <span class="hub-card-stage">S6</span>
-      <span class="hub-card-icon">✍️</span>
-      <span class="hub-card-name">Letter Tracing</span>
-    </a>
-    <a class="hub-card" href="sentence-builder.html" onclick="cardClick(event,'sentence-builder','Sentence builder! Put the words in order!')">
-      <span class="hub-card-stage">S6</span>
-      <span class="hub-card-icon">🧩</span>
-      <span class="hub-card-name">Sentence Builder</span>
-    </a>
-  </div>
-
-  <!-- ── TOOLS & GAMES ── -->
-  <div class="hub-section-label">🛠️ Tools & Games</div>
-  <div class="hub-grid">
-    <a class="hub-card" href="word-explore.html" onclick="cardClick(event,'word-explore','Word Explorer! Type any word to learn about it!')">
-      <span class="hub-card-icon">🌟</span>
-      <span class="hub-card-name">Word Explorer</span>
-    </a>
-    <a class="hub-card" href="phkids.html" onclick="cardClick(event,'phkids','Phonic Games! Let\'s play and learn!')">
-      <span class="hub-card-icon">🎮</span>
-      <span class="hub-card-name">Phonic Games</span>
-    </a>
-    <a class="hub-card" href="alphabet-ballon-pop.html" onclick="cardClick(event,'balloon-pop','Balloon Pop! Pop the right balloon!')">
-      <span class="hub-card-icon">🎈</span>
-      <span class="hub-card-name">Balloon Pop</span>
-    </a>
-  </div>
-
-</div>
-
-<div class="hub-footer">
-  Happy Learning! 🌈⭐
-  <br>
-  <a class="hub-parent-link" href="parent-dashboard.html">👨‍👩‍👧 Parents</a>
-</div>
-
-<script src="shared.js"></script>
-<script>
-  function cardClick(e, id, msg) {
-    e.preventDefault();
-    const href = e.currentTarget.href;
-    speak(msg, 0.88);
-    const card = e.currentTarget;
-    card.style.transform = 'scale(0.95)';
-    setTimeout(() => { card.style.transform = ''; location.href = href; }, 700);
-  }
-
-  function startHere() {
-    speak("Let\'s start learning! Beginning with the Alphabet!");
-    setTimeout(() => location.href = 'alphabet.html', 1200);
-  }
-
-  function updateHubStars() {
-    const s = localStorage.getItem('ph_stars') || '0';
-    document.getElementById('total-stars').textContent = '⭐ ' + s;
-  }
-
-  function updateProgress() {
-    const prog = JSON.parse(localStorage.getItem('ph_progress') || '{}');
-    const sections = [
-      { id: 'prog-1', modules: ['alphabet','phonic-set1','phonic-set2'] },
-      { id: 'prog-2', modules: ['vowels','cvc','rhyme','listen-choose'] },
-      { id: 'prog-3', modules: ['digraphs','digraph-fill','blends'] },
-      { id: 'prog-4', modules: ['magic-e','long-vowel'] },
-      { id: 'prog-5', modules: ['sight-words','read','read2','story','word-match'] },
-      { id: 'prog-6', modules: ['trace','sentence-builder'] },
-    ];
-    sections.forEach(sec => {
-      const done = sec.modules.filter(m => prog[m + '_done']).length;
-      const pct  = Math.round((done / sec.modules.length) * 100);
-      const el   = document.getElementById(sec.id);
-      if (el) el.style.width = pct + '%';
+    // ── Card tap sound ──
+    document.querySelectorAll('.act-card').forEach(card => {
+      card.addEventListener('click', (e) => {
+        AudioManager.playTone('click');
+        const label = card.dataset.speak;
+        if (label) AudioManager.speak(label);
+      });
     });
-    // mark completed cards
-    document.querySelectorAll('.hub-card').forEach(card => {
-      const href  = card.getAttribute('href').replace('.html','');
-      const click = card.getAttribute('onclick') || '';
-      const match = click.match(/'([^']+)'/);
-      if (match && prog[match[1] + '_done']) card.classList.add('hub-card-done');
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    updateHubStars();
-    updateProgress();
-    injectMascot([
-      "Tap a card to start learning! 🦉",
-      "Try Stage 1 first — the Alphabet!",
-      "Every star you earn goes here! ⭐"
-    ]);
-  });
-</script>
+  </script>
 </body>
 </html>

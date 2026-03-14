@@ -1,349 +1,542 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Alphabet A–Z 🔤</title>
-<link rel="stylesheet" href="shared.css">
-<style>
-  .alpha-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-    gap: 10px;
-    margin: 16px 0;
-  }
-  .alpha-card {
-    background: white;
-    border: 3px solid var(--border);
-    border-radius: 16px;
-    padding: 14px 8px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.18s, border-color 0.18s, background 0.18s;
-    position: relative;
-    user-select: none;
-    touch-action: manipulation;
-  }
-  .alpha-card:hover  { transform: translateY(-4px); border-color: var(--primary); }
-  .alpha-card:active { transform: scale(0.92); }
-  .alpha-card.mastered { border-color: var(--success); background: #f0faf4; }
-  .alpha-card.active-glow { border-color: var(--accent); background: #fff8ed; transform: scale(1.06); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>🔤 Alphabet A–Z · Phonics Hub</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── Alphabet grid ── */
+    .alphabet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 14px;
+      margin-bottom: 32px;
+    }
 
-  .alpha-upper { font-family: var(--font-display); font-size: 1.9rem; font-weight: 800; line-height:1; display:block; }
-  .alpha-lower { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--muted); }
-  .alpha-emoji { font-size: 1.3rem; display: block; margin-top: 4px; }
-  .alpha-word  { font-size: 0.62rem; font-weight: 700; color: var(--muted); margin-top: 2px; }
-  .alpha-check { position:absolute;top:4px;right:5px;font-size:0.75rem;display:none; }
-  .alpha-card.mastered .alpha-check { display:block; }
+    @media (min-width: 600px)  { .alphabet-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 16px; } }
+    @media (min-width: 1024px) { .alphabet-grid { grid-template-columns: repeat(7, 1fr); gap: 18px; } }
 
-  .alpha-tap-count {
-    position: absolute; top: 4px; left: 6px;
-    display: flex; gap: 2px;
-  }
-  .tap-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: var(--border);
-  }
-  .tap-dot.filled { background: var(--success); }
+    .alpha-card {
+      aspect-ratio: 1;
+      background: white;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 rgba(0,0,0,0.10);
+      border: 4px solid #eee;
+      transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s, background 0.2s;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    .alpha-card:active {
+      transform: translateY(3px);
+      box-shadow: 0 1px 0 rgba(0,0,0,0.10);
+    }
+    .alpha-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 0 rgba(0,0,0,0.10);
+    }
+    .alpha-card.mastered {
+      background: #f0fdf4;
+      border-color: var(--clr-green);
+    }
+    .alpha-card .big-letter {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      line-height: 1;
+    }
+    .alpha-card .example-word {
+      font-size: clamp(0.75rem, 2vw, 0.95rem);
+      font-weight: 700;
+      color: var(--clr-text-soft);
+    }
+    .alpha-card .example-emoji {
+      font-size: clamp(1rem, 3vw, 1.4rem);
+    }
+    .alpha-card .mastered-check {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      font-size: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .alpha-card.mastered .mastered-check { opacity: 1; }
 
-  .mode-bar {
-    display: flex; gap: 10px; justify-content: center;
-    margin: 14px 0; flex-wrap: wrap;
-  }
-  .mode-btn {
-    padding: 8px 20px;
-    border: 2.5px solid var(--border);
-    background: white;
-    border-radius: 20px;
-    font-family: var(--font-display);
-    font-size: 0.88rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .mode-btn.active, .mode-btn:hover { border-color: var(--primary); background: #f0ecff; color: var(--primary); }
+    /* Color coding by vowel/consonant */
+    .alpha-card.vowel    { border-color: var(--clr-primary); }
+    .alpha-card.consonant { }
 
-  .quiz-box {
-    display: none;
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 20px;
-    padding: 24px 20px;
-    text-align: center;
-    margin: 16px 0;
-  }
-  .quiz-box.visible { display: block; }
-  .quiz-question {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: var(--primary);
-    margin-bottom: 16px;
-  }
-  .quiz-sound-btn {
-    width: 80px; height: 80px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--primary), var(--primary-light));
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    margin-bottom: 20px;
-    box-shadow: 0 6px 20px rgba(108,63,197,0.35);
-    transition: transform 0.15s;
-  }
-  .quiz-sound-btn:active { transform: scale(0.92); }
-  .quiz-choices {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
-  .quiz-choice {
-    background: white;
-    border: 3px solid var(--border);
-    border-radius: 14px;
-    padding: 16px 8px;
-    font-family: var(--font-display);
-    font-size: 1.8rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.18s;
-  }
-  .quiz-choice:hover  { border-color: var(--primary); transform: translateY(-3px); }
-  .quiz-choice.correct{ border-color: var(--success); background: #f0faf4; }
-  .quiz-choice.wrong  { border-color: var(--danger);  background: #fff5f5; }
+    /* ── Controls bar ── */
+    .controls-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+      align-items: center;
+      justify-content: center;
+    }
 
-  .stats-bar {
-    display: flex; gap: 12px; justify-content: center;
-    margin: 12px 0; flex-wrap: wrap;
-  }
-  .stat-pill {
-    background: white;
-    border: 2px solid var(--border);
-    border-radius: 14px;
-    padding: 6px 16px;
-    font-family: var(--font-display);
-    font-size: 0.88rem;
-    font-weight: 700;
-  }
-</style>
+    /* ── Score + progress ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .stat-box {
+      background: white;
+      border-radius: 16px;
+      padding: 14px 12px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+    .stat-num {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      line-height: 1;
+      display: block;
+    }
+    .stat-lbl {
+      font-size: 0.9rem;
+      color: var(--clr-text-soft);
+      font-weight: 600;
+    }
+
+    /* ── Quiz overlay ── */
+    .quiz-section {
+      background: white;
+      border-radius: 28px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 32px;
+      display: none;
+    }
+    .quiz-section.active { display: block; animation: fadeIn 0.3s ease; }
+    .quiz-prompt {
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--clr-text);
+    }
+    .quiz-choices {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    @media (min-width: 600px) {
+      .quiz-choices { grid-template-columns: repeat(4, 1fr); }
+    }
+    .quiz-choice {
+      background: #f8f8f8;
+      border: 4px solid transparent;
+      border-radius: 20px;
+      padding: 20px 12px;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      cursor: pointer;
+      transition: transform 0.15s, border-color 0.15s, background 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .quiz-choice:active { transform: scale(0.95); }
+    .quiz-choice:hover  { background: #f0f0f0; border-color: var(--clr-secondary); }
+    .quiz-choice.correct  { background: #f0fdf4; border-color: var(--clr-green); }
+    .quiz-choice.wrong    { background: #fff0f0; border-color: var(--clr-primary); }
+    .quiz-score { font-size: clamp(1rem, 3vw, 1.3rem); font-weight: 700; color: var(--clr-text-soft); margin-top: 20px; }
+
+    /* ── Letter detail panel ── */
+    .letter-detail {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: white;
+      border-radius: 32px 32px 0 0;
+      padding: 28px 28px calc(28px + env(safe-area-inset-bottom));
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+      z-index: 150;
+      transform: translateY(100%);
+      transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+      text-align: center;
+    }
+    .letter-detail.open { transform: translateY(0); }
+    .detail-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.35);
+      z-index: 140;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .detail-backdrop.open { opacity: 1; pointer-events: auto; }
+
+    .detail-letter {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(5rem, 18vw, 10rem);
+      line-height: 1;
+      display: block;
+    }
+    .detail-cases {
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 700;
+      color: var(--clr-text-soft);
+      margin: 4px 0 12px;
+    }
+    .detail-word {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: 20px;
+    }
+    .detail-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: #eee;
+      border: none;
+      border-radius: 50%;
+      width: 44px; height: 44px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .detail-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+  </style>
 </head>
 <body>
 
-<div class="ph-header">
-  <h1>🔤 Alphabet A–Z</h1>
-  <p>Tap each letter to hear its name and sound!</p>
-  <span class="ph-stage-badge">Stage 1</span>
-</div>
+  <!-- Nav -->
+  <nav class="top-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-home-btn" aria-label="Home">🏠</a>
+      <span class="nav-title">Alphabet A–Z</span>
+    </div>
+    <div class="nav-right"></div>
+  </nav>
 
-<div class="ph-wrap">
-  <div class="stats-bar">
-    <div class="stat-pill">✅ Mastered: <span id="mastered-count">0</span>/26</div>
-    <div class="stat-pill">⭐ Stars: <span id="star-count">0</span></div>
+  <!-- Page header -->
+  <div class="page-header" style="background: linear-gradient(135deg, var(--stage1), #ff8c5a)">
+    <h1>🔤 Alphabet A–Z</h1>
+    <p>Tap each letter to hear its name and sound!</p>
   </div>
 
-  <div class="mode-bar">
-    <button class="mode-btn active" id="btn-explore" onclick="setMode('explore')">🔍 Explore</button>
-    <button class="mode-btn" id="btn-auto"    onclick="setMode('auto')">▶️ Auto-Play</button>
-    <button class="mode-btn" id="btn-quiz"    onclick="setMode('quiz')">🎯 Quiz</button>
-  </div>
+  <main>
 
-  <!-- EXPLORE MODE -->
-  <div id="explore-mode">
-    <div class="alpha-grid" id="alpha-grid"></div>
-    <div class="ph-btn-row">
-      <button class="ph-btn ph-btn-primary" onclick="resetMastery()">🔄 Reset Progress</button>
+    <!-- Stats -->
+    <div class="stats-bar" style="margin-top:24px">
+      <div class="stat-box">
+        <span class="stat-num" id="mastered-count">0</span>
+        <span class="stat-lbl">Mastered</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num" id="stars-count">0</span>
+        <span class="stat-lbl">⭐ Stars</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-num">26</span>
+        <span class="stat-lbl">Letters</span>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="progress-wrap" style="margin-bottom:20px">
+      <div class="progress-bar" id="mastery-bar" style="width:0%"></div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls-bar">
+      <button class="btn btn-secondary" id="btn-explore">🔍 Explore</button>
+      <button class="btn btn-primary"   id="btn-autoplay">▶️ Auto-Play</button>
+      <button class="btn btn-purple"    id="btn-quiz">🎯 Quiz Mode</button>
+      <button class="btn btn-accent" style="font-size:1rem" id="btn-reset" title="Reset progress">🔄 Reset</button>
+    </div>
+
+    <!-- Quiz section -->
+    <div class="quiz-section" id="quiz-section">
+      <p class="quiz-prompt" id="quiz-prompt">Which letter makes this sound?</p>
+      <button class="btn btn-primary btn-lg" id="quiz-play-btn" style="margin:0 auto 24px;display:flex">
+        🔊 Play Sound
+      </button>
+      <div class="quiz-choices" id="quiz-choices"></div>
+      <p class="quiz-score">Score: <span id="quiz-score">0</span> / <span id="quiz-total">0</span></p>
+    </div>
+
+    <!-- Alphabet grid -->
+    <div class="alphabet-grid" id="alphabet-grid"></div>
+
+  </main>
+
+  <!-- Letter detail panel -->
+  <div class="detail-backdrop" id="detail-backdrop"></div>
+  <div class="letter-detail" id="letter-detail">
+    <button class="detail-close" id="detail-close" aria-label="Close">✕</button>
+    <span class="detail-letter" id="detail-letter">A</span>
+    <div class="detail-cases" id="detail-cases">A a</div>
+    <div class="detail-word" id="detail-word">🍎 Apple</div>
+    <div class="detail-actions">
+      <button class="btn btn-primary btn-lg" id="detail-speak-name">🔊 Name</button>
+      <button class="btn btn-secondary btn-lg" id="detail-speak-sound">🎵 Sound</button>
+      <button class="btn btn-green btn-lg" id="detail-mastered-btn">✅ Mastered!</button>
     </div>
   </div>
 
-  <!-- QUIZ MODE -->
-  <div class="quiz-box" id="quiz-mode">
-    <div class="quiz-question" id="quiz-q">Which letter makes this sound?</div>
-    <button class="quiz-sound-btn" id="quiz-play" onclick="playQuizSound()">🔊</button>
-    <div class="quiz-choices" id="quiz-choices"></div>
-    <div style="margin-top:16px;font-size:0.85rem;color:var(--muted);font-weight:700" id="quiz-score">Score: 0/0</div>
-  </div>
-</div>
+  <script src="js/audio.js"></script>
+  <script src="js/materials.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    // ── Data ────────────────────────────────────────────────
+    const LETTERS = [
+      { l:'A', word:'Apple',    emoji:'🍎', sound:'aah'  },
+      { l:'B', word:'Ball',     emoji:'⚽', sound:'buh'  },
+      { l:'C', word:'Cat',      emoji:'🐱', sound:'kuh'  },
+      { l:'D', word:'Dog',      emoji:'🐶', sound:'duh'  },
+      { l:'E', word:'Elephant', emoji:'🐘', sound:'eh'   },
+      { l:'F', word:'Fish',     emoji:'🐟', sound:'fuh'  },
+      { l:'G', word:'Gorilla',  emoji:'🦍', sound:'guh'  },
+      { l:'H', word:'Hat',      emoji:'🎩', sound:'huh'  },
+      { l:'I', word:'Igloo',    emoji:'🏔️', sound:'ih'   },
+      { l:'J', word:'Jet',      emoji:'✈️', sound:'juh'  },
+      { l:'K', word:'Kite',     emoji:'🪁', sound:'kuh'  },
+      { l:'L', word:'Lion',     emoji:'🦁', sound:'luh'  },
+      { l:'M', word:'Moon',     emoji:'🌙', sound:'muh'  },
+      { l:'N', word:'Net',      emoji:'🥅', sound:'nuh'  },
+      { l:'O', word:'Orange',   emoji:'🍊', sound:'oh'   },
+      { l:'P', word:'Pig',      emoji:'🐷', sound:'puh'  },
+      { l:'Q', word:'Queen',    emoji:'👑', sound:'kwuh' },
+      { l:'R', word:'Rabbit',   emoji:'🐰', sound:'ruh'  },
+      { l:'S', word:'Sun',      emoji:'☀️', sound:'sss'  },
+      { l:'T', word:'Tiger',    emoji:'🐯', sound:'tuh'  },
+      { l:'U', word:'Umbrella', emoji:'☂️', sound:'uh'   },
+      { l:'V', word:'Van',      emoji:'🚐', sound:'vuh'  },
+      { l:'W', word:'Whale',    emoji:'🐋', sound:'wuh'  },
+      { l:'X', word:'X-ray',    emoji:'🩻', sound:'ksss' },
+      { l:'Y', word:'Yak',      emoji:'🐃', sound:'yuh'  },
+      { l:'Z', word:'Zebra',    emoji:'🦓', sound:'zzz'  },
+    ];
+    const VOWELS = new Set(['A','E','I','O','U']);
 
-<script src="shared.js"></script>
-<script>
-const LETTERS = [
-  {l:'A',w:'Apple',e:'🍎',s:'a (short a)'},
-  {l:'B',w:'Ball', e:'🏀',s:'buh'},
-  {l:'C',w:'Cat',  e:'🐱',s:'kuh'},
-  {l:'D',w:'Dog',  e:'🐶',s:'duh'},
-  {l:'E',w:'Egg',  e:'🥚',s:'e (short e)'},
-  {l:'F',w:'Fish', e:'🐟',s:'fuh'},
-  {l:'G',w:'Goat', e:'🐐',s:'guh'},
-  {l:'H',w:'Hat',  e:'🎩',s:'huh'},
-  {l:'I',w:'Igloo',e:'🧊',s:'i (short i)'},
-  {l:'J',w:'Jar',  e:'🫙',s:'juh'},
-  {l:'K',w:'Kite', e:'🪁',s:'kuh'},
-  {l:'L',w:'Lion', e:'🦁',s:'luh'},
-  {l:'M',w:'Moon', e:'🌙',s:'muh'},
-  {l:'N',w:'Nest', e:'🪺',s:'nuh'},
-  {l:'O',w:'Owl',  e:'🦉',s:'o (short o)'},
-  {l:'P',w:'Pig',  e:'🐷',s:'puh'},
-  {l:'Q',w:'Queen',e:'👑',s:'kwuh'},
-  {l:'R',w:'Rain', e:'🌧️',s:'ruh'},
-  {l:'S',w:'Sun',  e:'☀️',s:'sss'},
-  {l:'T',w:'Tree', e:'🌳',s:'tuh'},
-  {l:'U',w:'Umbrella',e:'☂️',s:'u (short u)'},
-  {l:'V',w:'Van',  e:'🚐',s:'vuh'},
-  {l:'W',w:'Water',e:'💧',s:'wuh'},
-  {l:'X',w:'X-ray',e:'🩻',s:'ks'},
-  {l:'Y',w:'Yak',  e:'🦬',s:'yuh'},
-  {l:'Z',w:'Zebra',e:'🦓',s:'zzz'},
-];
-const VOWELS = ['A','E','I','O','U'];
-let mastery = JSON.parse(localStorage.getItem('ph_alpha_mastery') || '{}');
-let mode = 'explore';
-let quizLetter = null, quizScore = 0, quizTotal = 0;
-let autoInterval = null;
-let autoIdx = 0;
+    // ── State ────────────────────────────────────────────────
+    let mastered     = new Set(JSON.parse(localStorage.getItem('alpha_mastered') || '[]'));
+    let quizScore    = 0;
+    let quizTotal    = 0;
+    let quizActive   = false;
+    let autoPlaying  = false;
+    let autoTimer    = null;
+    let currentLetter = null;
 
-function buildGrid() {
-  const grid = document.getElementById('alpha-grid');
-  grid.innerHTML = '';
-  LETTERS.forEach((item, idx) => {
-    const taps = mastery[item.l] || 0;
-    const done = taps >= 3;
-    const isVowel = VOWELS.includes(item.l);
-    const card = document.createElement('div');
-    card.className = 'alpha-card' + (done ? ' mastered' : '') + (isVowel ? ' ph-vowel' : '');
-    card.id = 'card-' + item.l;
-    card.innerHTML = `
-      <div class="alpha-tap-count">
-        ${[0,1,2].map(i => `<div class="tap-dot${i < taps ? ' filled':''}"></div>`).join('')}
-      </div>
-      <span class="alpha-check">✅</span>
-      <span class="alpha-upper">${item.l}</span>
-      <span class="alpha-lower">${item.l.toLowerCase()}</span>
-      <span class="alpha-emoji">${item.e}</span>
-      <span class="alpha-word">${item.w}</span>`;
-    card.onclick = () => tapLetter(item);
-    grid.appendChild(card);
-  });
-  updateStats();
-}
+    // ── Build grid ───────────────────────────────────────────
+    const grid = document.getElementById('alphabet-grid');
 
-function tapLetter(item) {
-  const card = document.getElementById('card-' + item.l);
-  card.classList.add('active-glow');
-  setTimeout(() => card.classList.remove('active-glow'), 800);
+    function buildGrid() {
+      grid.innerHTML = '';
+      LETTERS.forEach(data => {
+        const card = document.createElement('div');
+        card.className = `alpha-card ${VOWELS.has(data.l) ? 'vowel' : 'consonant'} ${mastered.has(data.l) ? 'mastered' : ''}`;
+        card.dataset.letter = data.l;
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', `Letter ${data.l}, ${data.word}`);
+        card.tabIndex = 0;
 
-  const msg = `${item.l}... ${item.s}... ${item.w}!`;
-  speak(msg, 0.78);
+        // Color each card uniquely
+        const hue = (data.l.charCodeAt(0) - 65) * 14;
+        card.style.setProperty('--card-accent', `hsl(${hue},80%,60%)`);
+        if (!mastered.has(data.l)) {
+          card.style.borderColor = `hsl(${hue},60%,80%)`;
+        }
 
-  if (!mastery[item.l]) mastery[item.l] = 0;
-  if (mastery[item.l] < 3) {
-    mastery[item.l]++;
-    localStorage.setItem('ph_alpha_mastery', JSON.stringify(mastery));
-    if (mastery[item.l] >= 3) {
-      awardStars('alphabet', 1);
-      setTimeout(() => {
-        card.classList.add('mastered');
-        speak('You learned the letter ' + item.l + '! Great job!');
-      }, 1200);
+        card.innerHTML = `
+          <span class="example-emoji">${data.emoji}</span>
+          <span class="big-letter" style="color:hsl(${hue},70%,45%)">${data.l}</span>
+          <span class="example-word">${data.word}</span>
+          <span class="mastered-check">✅</span>
+        `;
+
+        card.addEventListener('click', () => openDetail(data));
+        card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' ') openDetail(data); });
+        grid.appendChild(card);
+      });
     }
-  }
-  // update dots
-  const dots = card.querySelectorAll('.tap-dot');
-  dots.forEach((d, i) => d.classList.toggle('filled', i < mastery[item.l]));
-  if (mastery[item.l] >= 3) card.querySelector('.alpha-check').style.display = 'block';
-  updateStats();
-}
 
-function updateStats() {
-  const done = Object.values(mastery).filter(v => v >= 3).length;
-  document.getElementById('mastered-count').textContent = done;
-  document.getElementById('star-count').textContent = localStorage.getItem('ph_stars') || 0;
-  if (done >= 20) markComplete('alphabet');
-}
+    // ── Stats refresh ─────────────────────────────────────────
+    function refreshStats() {
+      const n = mastered.size;
+      document.getElementById('mastered-count').textContent = n;
+      document.getElementById('stars-count').textContent    = n;
+      UI.updateProgress(document.getElementById('mastery-bar'), n, 26);
+    }
 
-function setMode(m) {
-  mode = m;
-  clearInterval(autoInterval);
-  document.getElementById('explore-mode').style.display = m === 'quiz' ? 'none' : 'block';
-  document.getElementById('quiz-mode').classList.toggle('visible', m === 'quiz');
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('btn-' + m).classList.add('active');
+    function saveMastered() {
+      localStorage.setItem('alpha_mastered', JSON.stringify([...mastered]));
+      UI.setScore('alphabet', { stars: mastered.size, total: mastered.size });
+    }
 
-  if (m === 'auto') startAuto();
-  if (m === 'quiz') nextQuiz();
-}
+    // ── Detail panel ──────────────────────────────────────────
+    function openDetail(data) {
+      currentLetter = data;
+      document.getElementById('detail-letter').textContent = data.l;
+      document.getElementById('detail-letter').style.color = `hsl(${(data.l.charCodeAt(0)-65)*14},70%,50%)`;
+      document.getElementById('detail-cases').textContent  = `${data.l}  ${data.l.toLowerCase()}`;
+      document.getElementById('detail-word').innerHTML     = `${data.emoji} <strong>${data.word}</strong>`;
 
-function startAuto() {
-  autoIdx = 0;
-  function playNext() {
-    if (mode !== 'auto') return;
-    const item = LETTERS[autoIdx % 26];
-    const card = document.getElementById('card-' + item.l);
-    document.querySelectorAll('.alpha-card').forEach(c => c.classList.remove('active-glow'));
-    card.classList.add('active-glow');
-    card.scrollIntoView({behavior:'smooth', block:'center'});
-    speak(`${item.l}... ${item.s}... ${item.w}!`, 0.75);
-    autoIdx++;
-    autoInterval = setTimeout(playNext, 3200);
-  }
-  playNext();
-}
+      const btn = document.getElementById('detail-mastered-btn');
+      btn.textContent = mastered.has(data.l) ? '💚 Mastered!' : '✅ Mark Mastered';
+      btn.style.background = mastered.has(data.l) ? 'var(--clr-green)' : '';
 
-function nextQuiz() {
-  const idx = Math.floor(Math.random() * 26);
-  quizLetter = LETTERS[idx];
-  document.getElementById('quiz-q').textContent = 'Which letter makes this sound?';
-  // 4 choices including correct
-  const choices = [idx];
-  while (choices.length < 4) {
-    const r = Math.floor(Math.random() * 26);
-    if (!choices.includes(r)) choices.push(r);
-  }
-  choices.sort(() => Math.random() - 0.5);
-  const box = document.getElementById('quiz-choices');
-  box.innerHTML = choices.map(i => `
-    <div class="quiz-choice" onclick="checkQuiz(this,'${LETTERS[i].l}','${quizLetter.l}')">
-      ${LETTERS[i].l}
-    </div>`).join('');
-  playQuizSound();
-}
+      document.getElementById('letter-detail').classList.add('open');
+      document.getElementById('detail-backdrop').classList.add('open');
 
-function playQuizSound() {
-  if (quizLetter) speak(quizLetter.s + '... ' + quizLetter.s, 0.7);
-}
+      // Auto-speak the letter
+      AudioManager.speak(`${data.l}. ${data.sound}. ${data.word}`);
+      AudioManager.playTone('click');
+    }
 
-function checkQuiz(el, chosen, correct) {
-  quizTotal++;
-  if (chosen === correct) {
-    el.classList.add('correct');
-    quizScore++;
-    speak('Correct! ' + correct + ' for ' + quizLetter.w + '!');
-    awardStars('alphabet-quiz', 1);
-    setTimeout(nextQuiz, 1600);
-  } else {
-    el.classList.add('wrong');
-    shakeWrong(el);
-    document.querySelectorAll('.quiz-choice').forEach(c => {
-      if (c.textContent.trim() === correct) c.classList.add('correct');
+    function closeDetail() {
+      document.getElementById('letter-detail').classList.remove('open');
+      document.getElementById('detail-backdrop').classList.remove('open');
+      AudioManager.stop();
+    }
+
+    document.getElementById('detail-close').addEventListener('click', closeDetail);
+    document.getElementById('detail-backdrop').addEventListener('click', closeDetail);
+
+    document.getElementById('detail-speak-name').addEventListener('click', () => {
+      if (currentLetter) AudioManager.speak(currentLetter.l, { rate: 0.7 });
     });
-    setTimeout(nextQuiz, 2000);
-  }
-  document.getElementById('quiz-score').textContent = `Score: ${quizScore}/${quizTotal}`;
-}
+    document.getElementById('detail-speak-sound').addEventListener('click', () => {
+      if (currentLetter) AudioManager.speak(`${currentLetter.sound}`, { rate: 0.7 });
+    });
+    document.getElementById('detail-mastered-btn').addEventListener('click', () => {
+      if (!currentLetter) return;
+      if (mastered.has(currentLetter.l)) {
+        mastered.delete(currentLetter.l);
+      } else {
+        mastered.add(currentLetter.l);
+        AudioManager.playTone('star');
+        UI.showFeedback(true);
+      }
+      saveMastered();
+      buildGrid();
+      refreshStats();
+      closeDetail();
+    });
 
-function resetMastery() {
-  if (confirm('Reset all alphabet progress?')) {
-    mastery = {};
-    localStorage.removeItem('ph_alpha_mastery');
+    // ── Auto-play ─────────────────────────────────────────────
+    document.getElementById('btn-autoplay').addEventListener('click', () => {
+      if (autoPlaying) {
+        clearTimeout(autoTimer);
+        autoPlaying = false;
+        document.getElementById('btn-autoplay').textContent = '▶️ Auto-Play';
+        return;
+      }
+      autoPlaying = true;
+      document.getElementById('btn-autoplay').textContent = '⏹ Stop';
+      let i = 0;
+      function playNext() {
+        if (!autoPlaying || i >= LETTERS.length) {
+          autoPlaying = false;
+          document.getElementById('btn-autoplay').textContent = '▶️ Auto-Play';
+          return;
+        }
+        const data = LETTERS[i++];
+        AudioManager.speak(`${data.l}. ${data.word}`, { onEnd: () => {
+          autoTimer = setTimeout(playNext, 600);
+        }});
+      }
+      playNext();
+    });
+
+    // ── Quiz mode ─────────────────────────────────────────────
+    document.getElementById('btn-quiz').addEventListener('click', () => {
+      quizActive = !quizActive;
+      document.getElementById('quiz-section').classList.toggle('active', quizActive);
+      document.getElementById('btn-quiz').textContent = quizActive ? '✕ Close Quiz' : '🎯 Quiz Mode';
+      if (quizActive) nextQuestion();
+    });
+
+    let quizAnswer = null;
+
+    function nextQuestion() {
+      const idx = Math.floor(Math.random() * LETTERS.length);
+      quizAnswer = LETTERS[idx];
+
+      // Build 4 choices (answer + 3 distractors)
+      const pool = UI.shuffle(LETTERS.filter(l => l.l !== quizAnswer.l)).slice(0, 3);
+      const choices = UI.shuffle([quizAnswer, ...pool]);
+
+      document.getElementById('quiz-prompt').textContent = `Which letter makes the "${quizAnswer.sound}" sound?`;
+      document.getElementById('quiz-play-btn').onclick = () => {
+        AudioManager.speak(quizAnswer.sound, { rate: 0.7 });
+      };
+      AudioManager.speak(quizAnswer.sound, { rate: 0.7 });
+
+      const choicesEl = document.getElementById('quiz-choices');
+      choicesEl.innerHTML = '';
+      choices.forEach(ch => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-choice';
+        btn.textContent = ch.l;
+        btn.addEventListener('click', () => answerQuiz(ch.l === quizAnswer.l, btn, choicesEl));
+        choicesEl.appendChild(btn);
+      });
+    }
+
+    function answerQuiz(correct, btn, container) {
+      quizTotal++;
+      if (correct) {
+        quizScore++;
+        btn.classList.add('correct');
+        AudioManager.playTone('correct');
+        UI.showFeedback(true, 900);
+        setTimeout(nextQuestion, 1200);
+      } else {
+        btn.classList.add('wrong');
+        AudioManager.playTone('wrong');
+        // Reveal correct answer
+        container.querySelectorAll('.quiz-choice').forEach(b => {
+          if (b.textContent === quizAnswer.l) b.classList.add('correct');
+        });
+        setTimeout(nextQuestion, 1600);
+      }
+      document.getElementById('quiz-score').textContent = quizScore;
+      document.getElementById('quiz-total').textContent = quizTotal;
+      // Disable all choices
+      container.querySelectorAll('.quiz-choice').forEach(b => b.style.pointerEvents = 'none');
+    }
+
+    // ── Explore button ────────────────────────────────────────
+    document.getElementById('btn-explore').addEventListener('click', () => {
+      // Scroll to grid and auto-open first unmastered
+      const first = LETTERS.find(l => !mastered.has(l.l)) || LETTERS[0];
+      openDetail(first);
+    });
+
+    // ── Reset ─────────────────────────────────────────────────
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      if (!confirm('Reset all alphabet progress?')) return;
+      mastered.clear();
+      saveMastered();
+      buildGrid();
+      refreshStats();
+      UI.toast('Progress reset! Start fresh! 🌟');
+    });
+
+    // ── Init ──────────────────────────────────────────────────
     buildGrid();
-  }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-  buildGrid();
-  injectMascot(["Tap each letter to hear its sound! 🦉","Vowels are in red — A, E, I, O, U!","Try Quiz mode when you feel ready! 🎯"]);
-  speak("Let's learn the alphabet! Tap any letter to hear its sound!", 0.85);
-});
-</script>
+    refreshStats();
+  </script>
 </body>
 </html>

@@ -1,304 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>CVC Words 🔠</title>
-<link rel="stylesheet" href="shared.css">
-<style>
-  .family-tabs {
-    display: flex; gap: 8px; flex-wrap: wrap;
-    justify-content: center; margin: 14px 0;
-  }
-  .family-tab {
-    padding: 7px 16px;
-    border: 2.5px solid var(--border);
-    border-radius: 20px;
-    background: white;
-    font-family: var(--font-display);
-    font-size: 0.9rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.2s;
-    touch-action: manipulation;
-  }
-  .family-tab.active, .family-tab:hover { border-color: var(--primary); background: #f0ecff; color: var(--primary); }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>🔠 CVC Words · Phonics Hub</title>
+  <link rel="stylesheet" href="css/shared.css">
+  <style>
+    /* ── Mode tabs ── */
+    .mode-tabs {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+    .mode-tab {
+      padding: 12px 24px;
+      border: 3px solid #eee;
+      border-radius: 50px;
+      background: white;
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+      min-height: var(--tap-min);
+    }
+    .mode-tab.active {
+      background: var(--clr-secondary);
+      color: white;
+      border-color: var(--clr-secondary);
+    }
+    .mode-tab:active { transform: scale(0.96); }
 
-  .blend-stage {
-    background: white;
-    border: 2.5px solid var(--border);
-    border-radius: 22px;
-    padding: 24px 20px;
-    text-align: center;
-    margin: 16px 0;
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 16px;
-  }
-  .blend-tiles {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  .blend-tile {
-    width: 70px; height: 80px;
-    border: 3px solid var(--border);
-    border-radius: 14px;
-    background: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.25s, border-color 0.25s;
-    touch-action: manipulation;
-  }
-  .blend-tile:hover  { transform: translateY(-4px); border-color: var(--primary); }
-  .blend-tile:active { transform: scale(0.9); }
-  .blend-tile.vowel  { border-color: #ffcdd2; color: var(--vowel); }
-  .blend-tile.cons   { border-color: #bbdefb; color: var(--consonant); }
-  .blend-tile.highlight { animation: pulse 0.5s ease; border-color: var(--accent); background: #fff8ed; }
+    /* ── Word display ── */
+    .word-card {
+      background: white;
+      border-radius: 32px;
+      padding: 32px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+      animation: fadeIn 0.3s ease;
+    }
+    .word-letters {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .letter-block {
+      width: clamp(60px, 16vw, 100px);
+      height: clamp(60px, 16vw, 100px);
+      background: #f8f8f8;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 8vw, 3.6rem);
+      border: 3px solid #eee;
+      transition: all 0.3s;
+    }
+    .letter-block.consonant { border-color: var(--clr-blue);   color: var(--clr-blue); }
+    .letter-block.vowel     { border-color: var(--clr-primary); color: var(--clr-primary); }
+    .letter-block.lit {
+      transform: scale(1.15);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
 
-  .blend-plus, .blend-arrow { font-size: 1.6rem; color: var(--muted); font-weight: 800; }
-  .blend-equals { font-size: 2rem; color: var(--success); }
+    .word-full {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.4rem, 10vw, 4.5rem);
+      color: var(--clr-text);
+      margin-bottom: 8px;
+    }
+    .word-emoji {
+      font-size: clamp(3rem, 12vw, 6rem);
+      margin-bottom: 12px;
+      display: block;
+    }
+    .word-family-tag {
+      background: var(--clr-accent);
+      color: var(--clr-text);
+      border-radius: 50px;
+      padding: 6px 18px;
+      font-weight: 800;
+      font-size: 1rem;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
 
-  .blend-word-big {
-    font-family: var(--font-display);
-    font-size: 3.2rem;
-    font-weight: 800;
-    color: var(--primary);
-    opacity: 0;
-    transition: opacity 0.4s, transform 0.4s;
-    transform: translateY(10px);
-  }
-  .blend-word-big.show { opacity: 1; transform: translateY(0); }
+    .action-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
 
-  .word-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-    gap: 10px;
-    margin: 14px 0;
-  }
-  .word-item {
-    background: white;
-    border: 2.5px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 10px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.18s, border-color 0.18s;
-    touch-action: manipulation;
-  }
-  .word-item:hover  { transform: translateY(-3px); border-color: var(--primary); }
-  .word-item:active { transform: scale(0.92); }
-  .word-item .wi-emoji { font-size: 1.8rem; display: block; }
-  .word-item .wi-word  { font-family: var(--font-display); font-size: 1.1rem; font-weight: 800; margin-top: 6px; }
+    /* ── Vowel family tabs ── */
+    .vowel-tabs {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .vowel-tab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 3px solid #eee;
+      background: white;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.6rem;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vowel-tab.active {
+      background: var(--clr-primary);
+      color: white;
+      border-color: var(--clr-primary);
+      transform: scale(1.1);
+    }
 
-  .spinner-game {
-    background: white;
-    border: 2.5px solid var(--border);
-    border-radius: 22px;
-    padding: 24px 20px;
-    margin: 20px 0;
-    text-align: center;
-  }
-  .spinners {
-    display: flex;
-    gap: 8px;
-    justify-content: center;
-    align-items: stretch;
-    margin: 16px 0;
-  }
-  .spinner-col {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    overflow: hidden;
-    height: 80px;
-    border: 3px solid var(--border);
-    border-radius: 14px;
-    width: 70px;
-    position: relative;
-    background: white;
-  }
-  .spinner-item {
-    flex-shrink: 0;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 800;
-    transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  }
-  .spinner-col.vowel { border-color: #ffcdd2; }
-  .spinner-col.vowel .spinner-item { color: var(--vowel); }
-  .spinner-col.cons  { border-color: #bbdefb; }
-  .spinner-col.cons  .spinner-item { color: var(--consonant); }
-</style>
+    /* ── Word family grid ── */
+    .family-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .family-word-btn {
+      background: white;
+      border: 3px solid #eee;
+      border-radius: 16px;
+      padding: 14px 10px;
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .family-word-btn:active { transform: scale(0.95); }
+    .family-word-btn:hover  { border-color: var(--clr-secondary); background: #f0fefe; }
+
+    /* ── Spinner ── */
+    .spinner-wrap {
+      background: white;
+      border-radius: 32px;
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: var(--shadow-md);
+      margin-bottom: 24px;
+    }
+    .spinner-slots {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+    .slot {
+      width: clamp(70px, 18vw, 110px);
+      height: clamp(70px, 18vw, 110px);
+      border-radius: 16px;
+      background: #f0f8ff;
+      border: 3px solid var(--clr-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2.2rem, 8vw, 3.6rem);
+      transition: all 0.3s;
+      color: var(--clr-blue);
+      overflow: hidden;
+    }
+    .slot.spinning {
+      animation: slotSpin 0.1s linear infinite;
+      background: #fff8e1;
+      border-color: var(--clr-accent);
+    }
+    @keyframes slotSpin {
+      0%   { transform: translateY(-8px); opacity: 0.5; }
+      50%  { transform: translateY(0);    opacity: 1; }
+      100% { transform: translateY(8px);  opacity: 0.5; }
+    }
+    .slot-vowel { color: var(--clr-primary); border-color: var(--clr-primary); background: #fff0ec; }
+  </style>
 </head>
 <body>
-<div class="ph-header">
-  <h1>🔠 CVC Words</h1>
-  <p>Blend 3 sounds to make words!</p>
-  <span class="ph-stage-badge">Stage 2</span>
-</div>
 
-<div class="ph-wrap">
-  <div class="family-tabs" id="family-tabs"></div>
-
-  <!-- Blend Stage -->
-  <div class="blend-stage" id="blend-stage">
-    <div class="blend-tiles" id="blend-tiles"></div>
-    <div class="blend-word-big" id="blend-result"></div>
-    <div class="ph-btn-row">
-      <button class="ph-btn ph-btn-primary" onclick="blendWord()">🔊 Blend It!</button>
-      <button class="ph-btn ph-btn-outline" onclick="nextWord()">Next ▶</button>
+  <nav class="top-nav">
+    <div class="nav-left">
+      <a href="index.html" class="nav-home-btn">🏠</a>
+      <span class="nav-title">CVC Words</span>
     </div>
+    <div class="nav-right"></div>
+  </nav>
+
+  <div class="page-header" style="background:linear-gradient(135deg,var(--stage2),#5dd8d0)">
+    <h1>🔠 CVC Words</h1>
+    <p>Blend 3 sounds to make words!</p>
   </div>
 
-  <!-- Word List -->
-  <div class="ph-section-title">📋 Word Family</div>
-  <div class="word-list" id="word-list"></div>
+  <main>
 
-  <!-- Spinner Game -->
-  <div class="spinner-game">
-    <div class="ph-section-title" style="justify-content:center;border:none">🎰 Word Builder Spinner</div>
-    <p style="font-size:0.88rem;color:var(--muted);font-weight:700;margin-bottom:12px">Tap Spin to get a random CVC word!</p>
-    <div class="spinners" id="spinners">
-      <div class="spinner-col cons" id="spin-c1"><div class="spinner-item" id="s1">c</div></div>
-      <div class="spinner-col vowel" id="spin-v"><div class="spinner-item" id="sv">a</div></div>
-      <div class="spinner-col cons" id="spin-c2"><div class="spinner-item" id="s2">t</div></div>
+    <!-- Mode tabs -->
+    <div class="mode-tabs" style="margin-top:24px">
+      <button class="mode-tab active" data-mode="card">📇 Flash Cards</button>
+      <button class="mode-tab" data-mode="family">👨‍👩‍👧 Word Family</button>
+      <button class="mode-tab" data-mode="spinner">🎰 Spinner</button>
     </div>
-    <div style="font-family:var(--font-display);font-size:2rem;font-weight:800;color:var(--primary);margin:8px 0" id="spin-result">cat</div>
-    <div class="ph-btn-row">
-      <button class="ph-btn ph-btn-accent" onclick="spin()">🎰 Spin!</button>
-      <button class="ph-btn ph-btn-primary" onclick="hearSpin()">🔊 Hear It</button>
+
+    <!-- ── Flash Card Mode ── -->
+    <div id="mode-card">
+      <div class="word-card" id="word-card">
+        <div class="word-letters" id="word-letters">
+          <div class="letter-block consonant" id="lb-c">c</div>
+          <div class="letter-block vowel"     id="lb-v">a</div>
+          <div class="letter-block consonant" id="lb-t">t</div>
+        </div>
+        <span class="word-emoji" id="word-emoji">🐱</span>
+        <div class="word-full" id="word-full">cat</div>
+        <div class="word-family-tag" id="word-family-tag">-at family</div>
+      </div>
+
+      <div class="action-row">
+        <button class="btn btn-primary btn-lg" id="btn-blend">🔊 Blend It!</button>
+        <button class="btn btn-secondary btn-lg" id="btn-next">Next ▶</button>
+      </div>
+
+      <!-- Vowel filter -->
+      <div class="vowel-tabs" id="vowel-tabs">
+        <button class="vowel-tab active" data-vowel="all">All</button>
+        <button class="vowel-tab" data-vowel="a">A</button>
+        <button class="vowel-tab" data-vowel="e">E</button>
+        <button class="vowel-tab" data-vowel="i">I</button>
+        <button class="vowel-tab" data-vowel="o">O</button>
+        <button class="vowel-tab" data-vowel="u">U</button>
+      </div>
     </div>
-  </div>
-</div>
 
-<script src="shared.js"></script>
-<script>
-const FAMILIES = {
-  '-at': { words:[{w:'cat',e:'🐱'},{w:'bat',e:'🦇'},{w:'hat',e:'🎩'},{w:'mat',e:'🛒'},{w:'rat',e:'🐀'},{w:'sat',e:'🪑'}] },
-  '-an': { words:[{w:'can',e:'🥫'},{w:'fan',e:'🌬️'},{w:'man',e:'👨'},{w:'pan',e:'🍳'},{w:'ran',e:'🏃'},{w:'van',e:'🚐'}] },
-  '-in': { words:[{w:'bin',e:'🗑️'},{w:'fin',e:'🐟'},{w:'pin',e:'📌'},{w:'sin',e:'😈'},{w:'tin',e:'🥫'},{w:'win',e:'🏆'}] },
-  '-og': { words:[{w:'dog',e:'🐶'},{w:'fog',e:'🌫️'},{w:'hog',e:'🐖'},{w:'jog',e:'🏃'},{w:'log',e:'🪵'},{w:'frog',e:'🐸'}] },
-  '-un': { words:[{w:'bun',e:'🍞'},{w:'fun',e:'🎉'},{w:'gun',e:'🔫'},{w:'run',e:'🏃'},{w:'sun',e:'☀️'},{w:'nun',e:'👩'}] },
-  '-en': { words:[{w:'den',e:'🏠'},{w:'hen',e:'🐔'},{w:'men',e:'👨‍👨'},{w:'pen',e:'🖊️'},{w:'ten',e:'🔟'},{w:'yen',e:'💴'}] },
-  '-it': { words:[{w:'bit',e:'🔣'},{w:'fit',e:'💪'},{w:'hit',e:'⚾'},{w:'kit',e:'🧰'},{w:'pit',e:'🕳️'},{w:'sit',e:'🪑'}] },
-  '-ot': { words:[{w:'cot',e:'🛏️'},{w:'dot',e:'●'},{w:'got',e:'✅'},{w:'hot',e:'🥵'},{w:'lot',e:'🅿️'},{w:'pot',e:'🪴'}] },
-};
-const SPIN_C = ['b','c','d','f','g','h','j','k','l','m','n','p','r','s','t','v','w'];
-const SPIN_V = ['a','e','i','o','u'];
-const SPIN_C2= ['b','d','g','k','l','m','n','p','r','s','t','x'];
+    <!-- ── Word Family Mode ── -->
+    <div id="mode-family" style="display:none">
+      <div class="vowel-tabs" id="family-vowel-tabs">
+        <button class="vowel-tab active" data-vowel="a">A</button>
+        <button class="vowel-tab" data-vowel="e">E</button>
+        <button class="vowel-tab" data-vowel="i">I</button>
+        <button class="vowel-tab" data-vowel="o">O</button>
+        <button class="vowel-tab" data-vowel="u">U</button>
+      </div>
+      <div class="family-grid" id="family-grid"></div>
+    </div>
 
-let currentFamily = '-at', wordIdx = 0;
+    <!-- ── Spinner Mode ── -->
+    <div id="mode-spinner" style="display:none">
+      <div class="spinner-wrap">
+        <p style="font-size:1.2rem;font-weight:700;margin-bottom:8px">🎰 Word Builder Spinner</p>
+        <p style="font-size:1rem;color:var(--clr-text-soft)">Tap Spin to get a random CVC word!</p>
+        <div class="spinner-slots">
+          <div class="slot" id="spin-c">c</div>
+          <div class="slot slot-vowel" id="spin-v">a</div>
+          <div class="slot" id="spin-t">t</div>
+        </div>
+        <div style="font-family:'Fredoka One',cursive;font-size:2.8rem;margin-bottom:20px" id="spin-result">cat</div>
+        <div class="action-row">
+          <button class="btn btn-purple btn-lg" id="btn-spin">🎰 Spin!</button>
+          <button class="btn btn-primary btn-lg" id="btn-spin-speak">🔊 Hear It</button>
+        </div>
+      </div>
+    </div>
 
-function buildTabs() {
-  const tabs = document.getElementById('family-tabs');
-  tabs.innerHTML = Object.keys(FAMILIES).map(f => `
-    <button class="family-tab${f===currentFamily?' active':''}" onclick="selectFamily('${f}')">${f}</button>`).join('');
-}
+    <!-- Score bar -->
+    <div class="score-bar" style="margin-top:16px">
+      <div class="score-item">
+        <span>🔤</span>
+        <span id="words-seen">0</span>
+        <span class="score-label">Words Seen</span>
+      </div>
+      <div class="score-item">
+        <span>⭐</span>
+        <span id="words-stars">0</span>
+        <span class="score-label">Stars</span>
+      </div>
+    </div>
 
-function selectFamily(f) {
-  currentFamily = f;
-  wordIdx = 0;
-  buildTabs();
-  buildWordList();
-  showCurrentWord();
-}
+  </main>
 
-function buildWordList() {
-  const fam = FAMILIES[currentFamily];
-  document.getElementById('word-list').innerHTML = fam.words.map(wd => `
-    <div class="word-item" onclick="speak('${wd.w}',0.72)">
-      <span class="wi-emoji">${wd.e}</span>
-      <span class="wi-word">${wd.w}</span>
-    </div>`).join('');
-}
+  <script src="js/audio.js"></script>
+  <script src="js/materials.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    // ── Word data (with emoji from materials or defaults) ──
+    const DEFAULT_EMOJI = {
+      cat:'🐱', bat:'🦇', hat:'🎩', man:'🧔', van:'🚐', bag:'👜', lap:'🪑', sat:'💺', rat:'🐀', fan:'🌀',
+      bed:'🛏️', red:'🔴', hen:'🐔', ten:'🔟', wet:'💧', pet:'🐾', leg:'🦵', net:'🥅', set:'📦', men:'👥',
+      big:'🔵', pig:'🐷', six:'6️⃣', mix:'🥣', sit:'🪑', bit:'🍎', hit:'🎯', lid:'🫙', fit:'💪', tip:'💡',
+      hot:'🌡️', pot:'🍳', dog:'🐶', log:'🪵', fox:'🦊', box:'📦', hop:'🐇', top:'🔝', mop:'🧹', cot:'🪑',
+      bug:'🐛', mug:'☕', run:'🏃', sun:'☀️', cup:'🥤', pup:'🐶', bus:'🚌', cut:'✂️', nut:'🥜', fun:'🎉',
+    };
 
-function showCurrentWord() {
-  const words = FAMILIES[currentFamily].words;
-  const word  = words[wordIdx % words.length];
-  const letters = word.w.split('');
-  const tiles = document.getElementById('blend-tiles');
-  const result = document.getElementById('blend-result');
-  result.classList.remove('show');
-  result.textContent = word.w + ' ' + word.e;
+    let allWords = [];
+    let filteredWords = [];
+    let currentIdx = 0;
+    let wordsSeenCount = 0;
+    let starsCount = 0;
+    let currentVowel = 'all';
 
-  tiles.innerHTML = letters.map((l, i) => {
-    const isVowel = 'aeiou'.includes(l);
-    const cls = isVowel ? 'vowel' : 'cons';
-    return `<div class="blend-tile ${cls}" onclick="speakPhoneme('${l}')">${l}</div>
-            ${i < letters.length-1 ? '<div class="blend-plus">+</div>' : ''}`;
-  }).join('');
-}
+    function loadMaterial() {
+      const pack = MaterialsManager.getCurrent();
+      const cvc  = pack.cvc || MaterialsManager.getCurrent().cvc;
+      allWords = [];
+      Object.entries(cvc).forEach(([vowel, words]) => {
+        words.forEach(w => {
+          // Find vowel position
+          const v = [...w].find(c => 'aeiou'.includes(c)) || vowel;
+          const parts = w.split('');
+          const vIdx  = parts.findIndex(c => 'aeiou'.includes(c));
+          allWords.push({
+            word: w,
+            vowel,
+            c1: vIdx > 0 ? parts.slice(0, vIdx).join('') : parts[0],
+            v:  vIdx >= 0 ? parts[vIdx] : vowel,
+            c2: vIdx >= 0 && vIdx < parts.length-1 ? parts.slice(vIdx+1).join('') : parts[parts.length-1],
+            emoji: (pack.wordSets?.find(s => s.word === w)?.emoji) || DEFAULT_EMOJI[w] || '📝',
+          });
+        });
+      });
+      filteredWords = currentVowel === 'all' ? allWords : allWords.filter(w => w.vowel === currentVowel);
+      currentIdx = 0;
+      showCurrentWord();
+    }
 
-function blendWord() {
-  const words = FAMILIES[currentFamily].words;
-  const word  = words[wordIdx % words.length];
-  const tiles = document.querySelectorAll('.blend-tile');
-  const result = document.getElementById('blend-result');
-  result.classList.remove('show');
-  let delay = 0;
-  tiles.forEach((tile, i) => {
-    setTimeout(() => {
-      tile.classList.add('highlight');
-      speak(tile.textContent, 0.65);
-      setTimeout(() => tile.classList.remove('highlight'), 450);
-    }, delay);
-    delay += 600;
-  });
-  setTimeout(() => {
-    speak(word.w, 0.7);
-    result.textContent = word.w + ' ' + word.e;
-    result.classList.add('show');
-    awardStars('cvc', 1);
-  }, delay + 200);
-}
+    function showCurrentWord() {
+      if (!filteredWords.length) return;
+      const word = filteredWords[currentIdx % filteredWords.length];
+      document.getElementById('lb-c').textContent = word.c1;
+      document.getElementById('lb-v').textContent = word.v;
+      document.getElementById('lb-t').textContent = word.c2;
+      document.getElementById('word-full').textContent = word.word;
+      document.getElementById('word-emoji').textContent = word.emoji;
+      document.getElementById('word-family-tag').textContent = `-${word.v}${word.c2} family`;
+      // Spinner too
+      document.getElementById('spin-c').textContent = word.c1;
+      document.getElementById('spin-v').textContent = word.v;
+      document.getElementById('spin-t').textContent = word.c2;
+      document.getElementById('spin-result').textContent = word.word;
+    }
 
-function nextWord() {
-  wordIdx++;
-  const words = FAMILIES[currentFamily].words;
-  if (wordIdx >= words.length) { wordIdx = 0; celebrate('You finished the ' + currentFamily + ' family! 🎉', 2); markComplete('cvc'); return; }
-  showCurrentWord();
-  document.getElementById('blend-result').classList.remove('show');
-}
+    // ── Blend animation ──
+    function blendWord() {
+      if (!filteredWords.length) return;
+      const word = filteredWords[currentIdx % filteredWords.length];
+      const blocks = [
+        document.getElementById('lb-c'),
+        document.getElementById('lb-v'),
+        document.getElementById('lb-t'),
+      ];
+      // Light up each block then speak
+      blocks.forEach((b, i) => {
+        setTimeout(() => {
+          blocks.forEach(x => x.classList.remove('lit'));
+          b.classList.add('lit');
+          const sounds = [word.c1, word.v, word.c2];
+          AudioManager.speak(sounds[i], { rate: 0.6 });
+        }, i * 600);
+      });
+      setTimeout(() => {
+        blocks.forEach(x => x.classList.remove('lit'));
+        AudioManager.speak(word.word, { rate: 0.75 });
+      }, blocks.length * 600 + 300);
+      wordsSeenCount++;
+      starsCount = Math.floor(wordsSeenCount / 3);
+      document.getElementById('words-seen').textContent  = wordsSeenCount;
+      document.getElementById('words-stars').textContent = starsCount;
+      UI.setScore('cvc', { stars: starsCount, total: wordsSeenCount });
+    }
 
-function spin() {
-  const c1 = SPIN_C[Math.floor(Math.random()*SPIN_C.length)];
-  const v  = SPIN_V[Math.floor(Math.random()*SPIN_V.length)];
-  const c2 = SPIN_C2[Math.floor(Math.random()*SPIN_C2.length)];
-  document.getElementById('s1').textContent = c1;
-  document.getElementById('sv').textContent = v;
-  document.getElementById('s2').textContent = c2;
-  const word = c1+v+c2;
-  document.getElementById('spin-result').textContent = word;
-  speak(word, 0.72);
-}
+    document.getElementById('btn-blend').addEventListener('click', blendWord);
+    document.getElementById('btn-next').addEventListener('click', () => {
+      currentIdx = (currentIdx + 1) % filteredWords.length;
+      showCurrentWord();
+      AudioManager.playTone('click');
+    });
 
-function hearSpin() {
-  const w = document.getElementById('spin-result').textContent;
-  speak(w, 0.7);
-}
+    // ── Vowel filter tabs ──
+    document.querySelectorAll('#vowel-tabs .vowel-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#vowel-tabs .vowel-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        currentVowel = tab.dataset.vowel;
+        filteredWords = currentVowel === 'all' ? allWords : allWords.filter(w => w.vowel === currentVowel);
+        currentIdx = 0;
+        showCurrentWord();
+        AudioManager.playTone('click');
+      });
+    });
 
-document.addEventListener('DOMContentLoaded', () => {
-  buildTabs();
-  buildWordList();
-  showCurrentWord();
-  injectMascot(["Tap each letter to hear its sound! 🦉","Then tap Blend It to hear the whole word!","Try different word families with the tabs!"]);
-  speak("CVC words! Let's blend sounds together! Tap a letter, then tap Blend It!", 0.85);
-});
-</script>
+    // ── Mode tabs ──
+    const modes = { card: 'mode-card', family: 'mode-family', spinner: 'mode-spinner' };
+    document.querySelectorAll('.mode-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.mode-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        Object.values(modes).forEach(id => { document.getElementById(id).style.display = 'none'; });
+        document.getElementById(modes[tab.dataset.mode]).style.display = 'block';
+        if (tab.dataset.mode === 'family') buildFamilyGrid('a');
+        AudioManager.playTone('click');
+      });
+    });
+
+    // ── Word family grid ──
+    let familyVowel = 'a';
+    document.querySelectorAll('#family-vowel-tabs .vowel-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('#family-vowel-tabs .vowel-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        buildFamilyGrid(tab.dataset.vowel);
+      });
+    });
+
+    function buildFamilyGrid(vowel) {
+      familyVowel = vowel;
+      const words = allWords.filter(w => w.vowel === vowel);
+      const grid  = document.getElementById('family-grid');
+      grid.innerHTML = '';
+      words.forEach(w => {
+        const btn = document.createElement('button');
+        btn.className = 'family-word-btn';
+        btn.innerHTML = `${w.emoji}<br>${w.word}`;
+        btn.addEventListener('click', () => {
+          AudioManager.speak(w.word, { rate: 0.75 });
+          AudioManager.playTone('click');
+          UI.animateBtn(btn);
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    // ── Spinner ──
+    const CONSONANTS = 'bcdfghjklmnpqrstvwxyz'.split('');
+    const VOWEL_LIST  = 'aeiou'.split('');
+
+    document.getElementById('btn-spin').addEventListener('click', () => {
+      const sc = document.getElementById('spin-c');
+      const sv = document.getElementById('spin-v');
+      const st = document.getElementById('spin-t');
+      const result = document.getElementById('spin-result');
+
+      [sc, sv, st].forEach(s => s.classList.add('spinning'));
+
+      let ticks = 0;
+      const spinInt = setInterval(() => {
+        sc.textContent = CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
+        sv.textContent = VOWEL_LIST[Math.floor(Math.random() * VOWEL_LIST.length)];
+        st.textContent = CONSONANTS[Math.floor(Math.random() * CONSONANTS.length)];
+        ticks++;
+        if (ticks > 18) {
+          clearInterval(spinInt);
+          [sc, sv, st].forEach(s => s.classList.remove('spinning'));
+          const word = sc.textContent + sv.textContent + st.textContent;
+          result.textContent = word;
+          AudioManager.playTone('pop');
+        }
+      }, 80);
+    });
+
+    document.getElementById('btn-spin-speak').addEventListener('click', () => {
+      const word = document.getElementById('spin-result').textContent;
+      AudioManager.speak(word, { rate: 0.75 });
+    });
+
+    // ── Material change listener ──
+    document.addEventListener('materialChanged', loadMaterial);
+
+    // ── Init ──
+    loadMaterial();
+  </script>
 </body>
 </html>
