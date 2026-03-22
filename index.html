@@ -36,22 +36,40 @@
 <!-- Navigation -->
 <nav class="navbar">
   <a href="index.html" class="logo">📚 Phonics Hub</a>
-  <button class="upgrade-btn" onclick="paymentManager.initiateSubscription()">⭐ Go Premium</button>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="pages/progress.html" style="font-size:.85rem;font-weight:800;color:#667eea;text-decoration:none;padding:8px 12px;background:#eef2ff;border-radius:10px">📈 Progress</a>
+    <button class="upgrade-btn" onclick="analytics.trackUpgradeClick('navbar');paymentManager.initiateSubscription()">⭐ Go Premium</button>
+  </div>
 </nav>
 
 <!-- Main container -->
 <div class="container">
 
+  <!-- Progress widget (injected by progress.js for returning users) -->
+  <div id="progress-widget-slot"></div>
+
   <!-- Hero -->
   <div class="hero">
-    <h1>Master Phonics with Interactive Games</h1>
+    <h1 id="hero-headline">Master Phonics with Interactive Games</h1>
     <p>Learn letter sounds, blending, and reading with our fun activities</p>
+
+    <!-- Social proof -->
+    <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;margin:16px 0;opacity:.92">
+      <div style="display:flex;align-items:center;gap:6px;font-size:.85rem;font-weight:700">
+        <span>⭐⭐⭐⭐⭐</span> <span>Loved by parents</span>
+      </div>
+      <div style="width:1px;height:16px;background:rgba(255,255,255,.3)"></div>
+      <div style="font-size:.85rem;font-weight:700">🔒 No ads · No tracking</div>
+      <div style="width:1px;height:16px;background:rgba(255,255,255,.3)"></div>
+      <div style="font-size:.85rem;font-weight:700">📴 Works offline</div>
+    </div>
+
     <div class="pricing-badge">
       <span class="price">$9.99/month</span>
       <span style="opacity:.7">or</span>
-      <button onclick="paymentManager.initiateSubscription()">Start 7-Day Free Trial</button>
+      <button onclick="analytics.trackUpgradeClick('hero');paymentManager.initiateSubscription()">Start 7-Day Free Trial</button>
     </div>
-    <p style="margin-top:12px;font-size:.85rem;opacity:.85">Start free with 3 activities · Unlock 16+ premium activities</p>
+    <p style="margin-top:12px;font-size:.85rem;opacity:.85">Start free with 3 activities · Unlock 16+ premium activities · Cancel anytime</p>
   </div>
 
   <!-- FREE Activities -->
@@ -212,24 +230,48 @@
 </div>
 
 <footer class="site-footer">
-  <p>© 2026 Phonics Hub · Built with ❤️ for little readers · <a href="mailto:startdreamhere123@gmail.com">Contact</a></p>
+  <p>© 2026 Phonics Hub · Built with ❤️ for little readers ·
+    <a href="mailto:startdreamhere123@gmail.com">Contact</a> ·
+    <a href="pages/progress.html">My Progress</a> ·
+    <a href="pages/founder-dash.html" style="color:#ccc;font-size:.8rem">📊</a>
+  </p>
 </footer>
 
-<!-- Scripts — load in order: payment first, then gating, then analytics -->
+<!-- Scripts — order matters -->
 <script src="js/payment.js"></script>
 <script src="js/activity-gating.js"></script>
 <script src="js/analytics.js"></script>
+<script src="js/onboarding.js"></script>
+<script src="js/progress.js"></script>
 <script>
 window.addEventListener('load', async () => {
-  // Wire up gating (adds click handlers, checks premium)
+  // 1. Wire activity gating + unlock if premium
   await activityGating.initializeActivityGating();
-
-  // If premium — fully unlock all cards including pointer-events
   if (paymentManager.isPremium()) {
     paymentManager.unlockPremiumCards();
   }
 
-  console.log('✅ Phonics Hub loaded, premium:', paymentManager.isPremium());
+  // 2. Render progress widget for returning users
+  progressWidget.render();
+
+  // 3. Personalise hero headline for returning users
+  const profile = analytics.getProfile();
+  if (profile.childName) {
+    const h = document.getElementById('hero-headline');
+    if (h) h.textContent = `Ready to learn, ${profile.childName}? 🌟`;
+  }
+
+  // 4. Show onboarding for new users
+  setTimeout(() => {
+    if (onboarding.shouldShow()) onboarding.start();
+  }, 600);
+
+  // 5. Show email capture for returning non-premium users who haven't given email
+  if (!onboarding.shouldShow() && !analytics.isPremium() && !analytics.getProfile().email) {
+    setTimeout(() => analytics.showEmailCapture('returning_free'), 20000);
+  }
+
+  console.log('✅ Phonics Hub | premium:', analytics.isPremium(), '| newUser:', onboarding.shouldShow());
 });
 </script>
 

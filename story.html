@@ -41,6 +41,7 @@
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
@@ -102,5 +103,6 @@ document.getElementById('btn-stop').addEventListener('click', () => AudioManager
 
 renderTabs(); renderStory();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("story-time");</script>
 </body>
 </html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📈 Progress · Phonics Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --primary:#667eea; --green:#22c55e; --yellow:#fbbf24; --red:#ef4444;
+  --text:#1e1e2e; --soft:#6b7280; --bg:#f8f9fa;
+}
+body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--text); }
+
+/* Nav */
+.top-nav { background:white; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; box-shadow:0 2px 8px rgba(0,0,0,.08); position:sticky; top:0; z-index:10; }
+.nav-home { background:#f3f4f6; border:none; border-radius:12px; width:44px; height:44px; font-size:1.4rem; cursor:pointer; display:flex; align-items:center; justify-content:center; text-decoration:none; }
+.nav-title { font-family:'Fredoka One',cursive; font-size:1.3rem; }
+
+main { max-width: 800px; margin: 0 auto; padding: 24px 16px 80px; }
+
+/* Header */
+.profile-header {
+  background: linear-gradient(135deg, var(--primary), #764ba2);
+  border-radius: 24px; padding: 28px 24px; color: white; margin-bottom: 24px;
+  display: flex; align-items: center; gap: 20px; flex-wrap: wrap;
+}
+.avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,.25); display: flex; align-items: center; justify-content: center; font-size: 2rem; flex-shrink: 0; }
+.profile-info h2 { font-family:'Fredoka One',cursive; font-size:1.8rem; }
+.profile-info p  { opacity:.85; font-size:.9rem; font-weight:600; }
+
+/* Stat cards */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 14px; margin-bottom: 28px; }
+.stat-card { background: white; border-radius: 18px; padding: 18px 14px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+.stat-big  { font-family:'Fredoka One',cursive; font-size: 2.4rem; line-height: 1; display: block; }
+.stat-lbl  { font-size: .8rem; font-weight: 800; color: var(--soft); margin-top: 4px; }
+
+/* Streak */
+.streak-card {
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  border-radius: 20px; padding: 20px 24px; margin-bottom: 24px; color: white;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.streak-left h3 { font-family:'Fredoka One',cursive; font-size: 1.4rem; }
+.streak-left p  { font-size: .85rem; opacity: .9; font-weight: 600; }
+.streak-flame   { font-size: 3rem; }
+
+/* Section headers */
+.section-head { font-family:'Fredoka One',cursive; font-size: 1.2rem; margin: 28px 0 14px; color: #444; display:flex; align-items:center; gap:8px; }
+
+/* Activity progress list */
+.activity-rows { display: flex; flex-direction: column; gap: 10px; }
+.act-row {
+  background: white; border-radius: 16px; padding: 16px 18px; display: flex; align-items: center; gap: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.06); transition: transform .15s;
+}
+.act-row:hover { transform: translateX(4px); }
+.act-emoji  { font-size: 1.8rem; flex-shrink: 0; }
+.act-info   { flex: 1; min-width: 0; }
+.act-name   { font-weight: 800; font-size: .95rem; }
+.act-meta   { font-size: .8rem; color: var(--soft); font-weight: 600; margin-top: 2px; }
+.act-bar-wrap { width: 100px; flex-shrink: 0; }
+.act-bar    { height: 8px; background: #e5e7eb; border-radius: 999px; overflow: hidden; }
+.act-fill   { height: 100%; border-radius: 999px; transition: width .5s ease; }
+.act-pct    { font-family:'Fredoka One',cursive; font-size: .9rem; color: var(--primary); text-align: right; margin-top: 3px; }
+
+/* Alphabet mastery */
+.alpha-wrap { background: white; border-radius: 20px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.07); margin-bottom: 24px; }
+.alpha-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
+.alpha-chip { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-family:'Fredoka One',cursive; font-size: 1rem; font-weight: 800; transition: transform .15s; }
+.alpha-chip:hover { transform: scale(1.15); }
+.alpha-chip.done  { background: #dcfce7; color: #15803d; }
+.alpha-chip.todo  { background: #f3f4f6; color: #9ca3af; }
+
+/* Empty state */
+.empty { text-align: center; padding: 40px 20px; }
+.empty div { font-size: 3.5rem; margin-bottom: 12px; }
+.empty p   { color: var(--soft); font-weight: 700; }
+
+/* Upgrade nudge */
+.upgrade-nudge {
+  background: linear-gradient(135deg, var(--primary), #764ba2);
+  border-radius: 20px; padding: 24px 20px; text-align: center; color: white; margin-top: 24px;
+}
+.upgrade-nudge h3 { font-family:'Fredoka One',cursive; font-size: 1.4rem; margin-bottom: 8px; }
+.upgrade-nudge p  { font-size: .9rem; opacity: .9; margin-bottom: 16px; }
+.upgrade-btn { background: white; color: var(--primary); border: none; border-radius: 12px; padding: 12px 24px; font-family:'Nunito',sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; transition: transform .15s; }
+.upgrade-btn:hover { transform: scale(1.04); }
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <a href="../index.html" class="nav-home">🏠</a>
+    <span class="nav-title">Progress</span>
+  </div>
+  <button onclick="shareProgress()" style="background:#f3f4f6;border:none;border-radius:10px;padding:8px 14px;font-weight:800;font-size:.85rem;cursor:pointer">📤 Share</button>
+</nav>
+
+<main>
+  <!-- Profile header -->
+  <div class="profile-header" id="profile-header">
+    <div class="avatar" id="profile-avatar">🧒</div>
+    <div class="profile-info">
+      <h2 id="profile-name">Loading…</h2>
+      <p id="profile-sub">Let's see how you're doing!</p>
+    </div>
+  </div>
+
+  <!-- Stats row -->
+  <div class="stats-row" id="stats-row"></div>
+
+  <!-- Streak -->
+  <div class="streak-card" id="streak-card" style="display:none">
+    <div class="streak-left">
+      <h3 id="streak-title">🔥 3-Day Streak!</h3>
+      <p id="streak-sub">Keep it up — come back tomorrow!</p>
+    </div>
+    <div class="streak-flame">🔥</div>
+  </div>
+
+  <!-- Alphabet mastery -->
+  <div class="alpha-wrap" id="alpha-section">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="section-head" style="margin:0">🔤 Alphabet Mastery</span>
+      <span id="alpha-count" style="font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--primary)">0/26</span>
+    </div>
+    <div class="act-bar" style="margin-top:10px;height:10px"><div class="act-fill" id="alpha-bar" style="width:0%;background:linear-gradient(90deg,#22c55e,#667eea)"></div></div>
+    <div class="alpha-grid" id="alpha-grid"></div>
+  </div>
+
+  <!-- Activity progress -->
+  <div class="section-head">📊 Activity Progress</div>
+  <div class="activity-rows" id="activity-rows">
+    <div class="empty"><div>📭</div><p>No activities completed yet.<br>Play some activities to see your progress!</p></div>
+  </div>
+
+  <!-- Upgrade nudge (free users only) -->
+  <div class="upgrade-nudge" id="upgrade-nudge" style="display:none">
+    <h3>🔓 Unlock 16+ More Activities</h3>
+    <p>You're doing great! Premium unlocks digraphs, sight words, stories, and much more.</p>
+    <button class="upgrade-btn" onclick="goUpgrade()">⭐ Go Premium — $9.99/mo</button>
+  </div>
+</main>
+
+<script>
+// ── Data ───────────────────────────────────────────────────────────────────
+const ACTIVITY_META = {
+  'sound-matching':    { label:'Sound Matching',     emoji:'🔊', total:10  },
+  'letter-recognition':{ label:'Alphabet A–Z',       emoji:'🔤', total:26  },
+  'blending-intro':    { label:'Blending Intro',      emoji:'🔤', total:10  },
+  'digraph-practice':  { label:'Digraph Practice',    emoji:'📖', total:8   },
+  'vowel-blends':      { label:'Vowel Blends',        emoji:'🎵', total:10  },
+  'cvc-words':         { label:'CVC Words',           emoji:'📝', total:18  },
+  'sight-words':       { label:'Sight Words',         emoji:'⭐', total:50  },
+  'sentence-reading':  { label:'Sentence Reading',    emoji:'📚', total:12  },
+  'word-families':     { label:'Word Families',       emoji:'👨‍👩‍👧', total:6  },
+  'consonant-blends':  { label:'Consonant Blends',    emoji:'🔗', total:22  },
+  'r-controlled-vowels':{ label:'R-Controlled Vowels',emoji:'🎯', total:5  },
+  'silent-e-words':    { label:'Silent E Words',      emoji:'🤫', total:8  },
+  'vowel-digraphs':    { label:'Vowel Digraphs',      emoji:'🔊', total:8  },
+  'phonics-review':    { label:'Phonics Review',      emoji:'🔄', total:20 },
+  'word-match':        { label:'Word Match',          emoji:'📊', total:12 },
+  'word-explore':      { label:'Word Explorer',       emoji:'📊', total:26 },
+  'story-time':        { label:'Story Time',          emoji:'📖', total:4  },
+  'alphabet-balloon':  { label:'Balloon Pop',         emoji:'🎈', total:20 },
+};
+
+function getProgress() {
+  // Collect from multiple storage keys used across the app
+  const raw = {};
+  // From activity-gating / ui.js setScore
+  Object.keys(ACTIVITY_META).forEach(id => {
+    const s = localStorage.getItem(`ph_score_${id}`);
+    if (s) {
+      try {
+        const d = JSON.parse(s);
+        raw[id] = { bestScore: d.stars || 0, bestPct: d.total > 0 ? Math.round(((d.stars||0)/d.total)*100) : 0, attempts: 1 };
+      } catch(e) {}
+    }
+  });
+  // Also from newer analytics progress key
+  try {
+    const p = JSON.parse(localStorage.getItem('ph_progress') || '{}');
+    Object.keys(p).forEach(id => {
+      if (!raw[id] || (p[id].bestPct || 0) > (raw[id].bestPct || 0)) raw[id] = p[id];
+    });
+  } catch(e) {}
+  return raw;
+}
+
+function getProfile() {
+  try { return JSON.parse(localStorage.getItem('ph_profile') || '{}'); } catch(e) { return {}; }
+}
+
+function isPremium() { return localStorage.getItem('ph_premium') === 'true'; }
+
+function getStreak() {
+  const d = JSON.parse(localStorage.getItem('ph_streak') || '{"last":"","count":0}');
+  const today = new Date().toDateString(); const yest = new Date(Date.now()-864e5).toDateString();
+  return (d.last===today||d.last===yest) ? d.count : 0;
+}
+
+// ── Render ─────────────────────────────────────────────────────────────────
+function render() {
+  const profile  = getProfile();
+  const progress = getProgress();
+  const premium  = isPremium();
+  const streak   = getStreak();
+  const mastered = new Set(JSON.parse(localStorage.getItem('alpha_mastered') || '[]'));
+
+  const name  = profile.childName || localStorage.getItem('ph_child_name') || 'Explorer';
+  const age   = profile.childAge  || localStorage.getItem('ph_child_age');
+  const completed = Object.values(progress).filter(p => (p.attempts||0) > 0).length;
+  const totalStars= Object.values(progress).reduce((s,p) => s + (p.bestScore||0), 0);
+
+  // Profile header
+  document.getElementById('profile-name').textContent = name + "'s Progress";
+  document.getElementById('profile-sub').textContent  =
+    age ? `Age ${age} · ${premium ? 'Premium' : 'Free plan'} · ${completed} activities` :
+    `${premium ? 'Premium' : 'Free plan'} · ${completed} activities completed`;
+
+  // Stats
+  const statDefs = [
+    { num: completed,           lbl: 'Activities', color: '#667eea' },
+    { num: totalStars,          lbl: '⭐ Stars',   color: '#f59e0b' },
+    { num: mastered.size,       lbl: 'Letters',    color: '#22c55e' },
+    { num: streak > 0 ? `🔥${streak}` : '0', lbl: 'Day Streak', color: '#f97316' },
+  ];
+  const statsRow = document.getElementById('stats-row');
+  statsRow.innerHTML = '';
+  statDefs.forEach(s => {
+    statsRow.innerHTML += `<div class="stat-card"><span class="stat-big" style="color:${s.color}">${s.num}</span><div class="stat-lbl">${s.lbl}</div></div>`;
+  });
+
+  // Streak card
+  if (streak > 0) {
+    const sc = document.getElementById('streak-card');
+    sc.style.display = 'flex';
+    document.getElementById('streak-title').textContent = `🔥 ${streak}-Day Streak!`;
+    document.getElementById('streak-sub').textContent   = streak >= 7 ? 'Amazing consistency! Keep it up!' : 'Come back tomorrow to keep your streak!';
+  }
+
+  // Alphabet
+  const alphaGrid = document.getElementById('alpha-grid');
+  alphaGrid.innerHTML = '';
+  document.getElementById('alpha-count').textContent = `${mastered.size}/26`;
+  document.getElementById('alpha-bar').style.width   = `${Math.round((mastered.size/26)*100)}%`;
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(l => {
+    const chip = document.createElement('div');
+    chip.className = `alpha-chip ${mastered.has(l) ? 'done' : 'todo'}`;
+    chip.textContent = l;
+    chip.title = mastered.has(l) ? `${l} — mastered!` : `${l} — not yet`;
+    alphaGrid.appendChild(chip);
+  });
+
+  // Activity rows
+  const actRows = document.getElementById('activity-rows');
+  const entries = Object.entries(progress).filter(([,p]) => (p.attempts||0) > 0);
+  if (entries.length === 0) {
+    actRows.innerHTML = '<div class="empty"><div>📭</div><p>No activities completed yet.<br>Play some activities to see your progress!</p></div>';
+  } else {
+    actRows.innerHTML = '';
+    // Sort by best score desc
+    entries.sort((a,b) => (b[1].bestPct||0) - (a[1].bestPct||0)).forEach(([id, p]) => {
+      const meta = ACTIVITY_META[id] || { label: id, emoji: '📝', total: 10 };
+      const pct  = p.bestPct || 0;
+      const color = pct >= 80 ? '#22c55e' : pct >= 50 ? '#f59e0b' : '#ef4444';
+      actRows.innerHTML += `
+        <div class="act-row">
+          <div class="act-emoji">${meta.emoji}</div>
+          <div class="act-info">
+            <div class="act-name">${meta.label}</div>
+            <div class="act-meta">${p.attempts||1} attempt${(p.attempts||1)>1?'s':''} · Best: ${p.bestScore||0}/${meta.total}</div>
+          </div>
+          <div class="act-bar-wrap">
+            <div class="act-bar"><div class="act-fill" style="width:${pct}%;background:${color}"></div></div>
+            <div class="act-pct" style="color:${color}">${pct}%</div>
+          </div>
+        </div>`;
+    });
+  }
+
+  // Upgrade nudge
+  if (!premium) {
+    document.getElementById('upgrade-nudge').style.display = 'block';
+  }
+}
+
+function goUpgrade() {
+  const stripeLink = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
+  window.location.href = stripeLink;
+}
+
+function shareProgress() {
+  const profile  = getProfile();
+  const progress = getProgress();
+  const mastered = JSON.parse(localStorage.getItem('alpha_mastered') || '[]');
+  const completed = Object.values(progress).filter(p=>(p.attempts||0)>0).length;
+  const name  = profile.childName || 'My child';
+  const text  = `${name} is learning phonics on Phonics Hub! 🎉\n✅ ${completed} activities completed · 🔤 ${mastered.length}/26 letters mastered\nhttps://phonics77-app.vercel.app`;
+  if (navigator.share) {
+    navigator.share({ title:'Phonics Hub Progress', text, url:'https://phonics77-app.vercel.app' });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('Progress copied to clipboard! 📋'));
+  }
+}
+
+render();
+</script>
+</body>
+</html>

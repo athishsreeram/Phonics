@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome to Phonics Hub! 🎉</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --primary: #667eea; --purple: #764ba2; --green: #22c55e;
+    --red: #ff6b6b; --yellow: #fbbf24; --text: #1e1e2e; --soft: #6b7280;
+  }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: white; border-radius: 28px; padding: 40px 32px;
+    max-width: 480px; width: 100%;
+    box-shadow: 0 24px 64px rgba(0,0,0,.25);
+    animation: slideUp .4s ease;
+  }
+  @keyframes slideUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+
+  /* ── Steps ── */
+  .step { display: none; }
+  .step.active { display: block; }
+
+  .step-indicator {
+    display: flex; gap: 8px; justify-content: center; margin-bottom: 28px;
+  }
+  .step-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: #e5e7eb;
+    transition: background .3s, transform .3s;
+  }
+  .step-dot.done    { background: var(--green); }
+  .step-dot.current { background: var(--primary); transform: scale(1.3); }
+
+  /* ── Content ── */
+  .step-emoji { font-size: 4rem; display: block; text-align: center; margin-bottom: 16px; }
+  .step-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(1.6rem, 5vw, 2.2rem);
+    text-align: center; color: var(--text); margin-bottom: 8px;
+  }
+  .step-sub { text-align: center; color: var(--soft); font-size: .95rem; font-weight: 600; margin-bottom: 28px; line-height: 1.5; }
+
+  /* ── Age picker ── */
+  .age-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .age-btn {
+    background: #f3f4f6; border: 3px solid transparent; border-radius: 16px;
+    padding: 16px 8px; text-align: center; cursor: pointer; transition: all .2s;
+    font-family: 'Nunito', sans-serif;
+  }
+  .age-btn:hover  { border-color: var(--primary); background: #eef2ff; }
+  .age-btn.selected { border-color: var(--primary); background: #eef2ff; }
+  .age-btn .age-num  { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--primary); display: block; }
+  .age-btn .age-lbl  { font-size: .75rem; font-weight: 800; color: var(--soft); }
+
+  /* ── Goal picker ── */
+  .goal-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .goal-btn {
+    background: #f3f4f6; border: 3px solid transparent; border-radius: 14px;
+    padding: 14px 16px; text-align: left; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 12px;
+    font-family: 'Nunito', sans-serif; font-size: .95rem; font-weight: 700;
+  }
+  .goal-btn:hover   { border-color: var(--primary); background: #eef2ff; }
+  .goal-btn.selected { border-color: var(--primary); background: #eef2ff; }
+  .goal-icon { font-size: 1.6rem; flex-shrink: 0; }
+
+  /* ── Name input ── */
+  .name-input {
+    width: 100%; padding: 16px 18px; border: 3px solid #e5e7eb; border-radius: 14px;
+    font-family: 'Fredoka One', cursive; font-size: 1.4rem; text-align: center;
+    outline: none; transition: border-color .2s; margin-bottom: 20px; color: var(--text);
+  }
+  .name-input:focus { border-color: var(--primary); }
+  .name-input::placeholder { color: #d1d5db; }
+
+  /* ── Plan selector ── */
+  .plan-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px; }
+  .plan-card {
+    border: 3px solid #e5e7eb; border-radius: 18px; padding: 20px 14px; text-align: center;
+    cursor: pointer; transition: all .2s; position: relative;
+  }
+  .plan-card:hover   { border-color: var(--primary); }
+  .plan-card.selected { border-color: var(--primary); background: #eef2ff; }
+  .plan-card .plan-name  { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--text); margin-bottom: 4px; }
+  .plan-card .plan-price { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--primary); }
+  .plan-card .plan-desc  { font-size: .75rem; font-weight: 700; color: var(--soft); margin-top: 4px; }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--yellow); color: #78350f; font-size: .7rem; font-weight: 800;
+    padding: 3px 10px; border-radius: 999px; white-space: nowrap;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    display: block; width: 100%; padding: 16px; border-radius: 14px; border: none;
+    background: linear-gradient(135deg, var(--primary), var(--purple));
+    color: white; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem;
+    cursor: pointer; transition: transform .15s, box-shadow .15s; text-decoration: none;
+    text-align: center;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(102,126,234,.35); }
+  .btn-secondary {
+    display: block; width: 100%; padding: 12px; border-radius: 14px; border: 2px solid #e5e7eb;
+    background: white; color: var(--soft); font-family: 'Nunito', sans-serif; font-weight: 700;
+    font-size: .9rem; cursor: pointer; margin-top: 10px; text-align: center; transition: all .2s;
+  }
+  .btn-secondary:hover { border-color: #d1d5db; color: var(--text); }
+
+  /* ── Activity preview ── */
+  .activity-preview {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px;
+  }
+  .prev-chip {
+    background: #f3f4f6; border-radius: 12px; padding: 12px 6px; text-align: center; font-size: .8rem; font-weight: 800;
+  }
+  .prev-chip .emoji { font-size: 1.6rem; display: block; margin-bottom: 4px; }
+
+  /* ── Progress bar ── */
+  .progress-track { background: #e5e7eb; border-radius: 999px; height: 6px; margin-bottom: 28px; }
+  .progress-fill  { height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--primary), var(--purple)); transition: width .4s ease; }
+
+  /* ── Confetti step ── */
+  .confetti-row { display: flex; justify-content: center; gap: 6px; font-size: 2rem; margin-bottom: 16px; }
+  .summary-pills { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+  .pill { background: #eef2ff; color: var(--primary); border-radius: 999px; padding: 6px 14px; font-size: .85rem; font-weight: 800; }
+</style>
+</head>
+<body>
+<div class="card" id="card">
+
+  <!-- Step indicators -->
+  <div class="step-indicator" id="step-indicator"></div>
+  <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:20%"></div></div>
+
+  <!-- STEP 1: Welcome -->
+  <div class="step active" id="step-1">
+    <span class="step-emoji">👋</span>
+    <h1 class="step-title">Welcome to Phonics Hub!</h1>
+    <p class="step-sub">The fun way for kids ages 3–7 to learn letters, sounds, and reading.<br>Let's set up your child's profile in 60 seconds!</p>
+    <button class="btn-primary" onclick="nextStep()">Let's Go! 🚀</button>
+  </div>
+
+  <!-- STEP 2: Child's name -->
+  <div class="step" id="step-2">
+    <span class="step-emoji">🧒</span>
+    <h1 class="step-title">What's your child's name?</h1>
+    <p class="step-sub">We'll personalise their learning journey.</p>
+    <input class="name-input" id="child-name" type="text" placeholder="e.g. Mia" maxlength="20" autocomplete="off">
+    <button class="btn-primary" onclick="saveName()">Next →</button>
+    <button class="btn-secondary" onclick="skipName()">Skip for now</button>
+  </div>
+
+  <!-- STEP 3: Age -->
+  <div class="step" id="step-3">
+    <span class="step-emoji">🎂</span>
+    <h1 class="step-title">How old is <span id="name-display">your child</span>?</h1>
+    <p class="step-sub">We'll recommend the best starting activities.</p>
+    <div class="age-grid" id="age-grid">
+      <div class="age-btn" onclick="selectAge(3, this)"><span class="age-num">3</span><span class="age-lbl">years old</span></div>
+      <div class="age-btn" onclick="selectAge(4, this)"><span class="age-num">4</span><span class="age-lbl">years old</span></div>
+      <div class="age-btn" onclick="selectAge(5, this)"><span class="age-num">5</span><span class="age-lbl">years old</span></div>
+      <div class="age-btn" onclick="selectAge(6, this)"><span class="age-num">6</span><span class="age-lbl">years old</span></div>
+      <div class="age-btn" onclick="selectAge(7, this)"><span class="age-num">7</span><span class="age-lbl">years old</span></div>
+      <div class="age-btn" onclick="selectAge(8, this)"><span class="age-num">8+</span><span class="age-lbl">years old</span></div>
+    </div>
+    <button class="btn-primary" id="age-next-btn" onclick="saveAge()" disabled style="opacity:.5;cursor:default">Next →</button>
+  </div>
+
+  <!-- STEP 4: Goal -->
+  <div class="step" id="step-4">
+    <span class="step-emoji">🎯</span>
+    <h1 class="step-title">What's your main goal?</h1>
+    <p class="step-sub">We'll focus on what matters most to you.</p>
+    <div class="goal-list">
+      <div class="goal-btn" onclick="selectGoal('abc', this)"><span class="goal-icon">🔤</span>Learn the ABCs & letter sounds</div>
+      <div class="goal-btn" onclick="selectGoal('read', this)"><span class="goal-icon">📖</span>Start reading simple words & sentences</div>
+      <div class="goal-btn" onclick="selectGoal('blend', this)"><span class="goal-icon">🔗</span>Practice blending & phonics patterns</div>
+      <div class="goal-btn" onclick="selectGoal('fun', this)"><span class="goal-icon">🎮</span>Just make learning fun!</div>
+    </div>
+    <button class="btn-primary" id="goal-next-btn" onclick="saveGoal()" disabled style="opacity:.5;cursor:default">Next →</button>
+  </div>
+
+  <!-- STEP 5: Recommended activities preview -->
+  <div class="step" id="step-5">
+    <span class="step-emoji">✨</span>
+    <h1 class="step-title">Your personalised plan</h1>
+    <p class="step-sub" id="plan-sub">Based on your answers, we recommend starting here:</p>
+    <div class="activity-preview" id="activity-preview"></div>
+    <button class="btn-primary" onclick="nextStep()">Looks great! →</button>
+  </div>
+
+  <!-- STEP 6: Free vs Premium -->
+  <div class="step" id="step-6">
+    <span class="step-emoji">🔓</span>
+    <h1 class="step-title">Choose your plan</h1>
+    <p class="step-sub">Start free — upgrade anytime to unlock everything.</p>
+    <div class="plan-cards">
+      <div class="plan-card selected" id="plan-free" onclick="selectPlan('free', this)">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">$0</div>
+        <div class="plan-desc">3 activities · No card needed</div>
+      </div>
+      <div class="plan-card" id="plan-premium" onclick="selectPlan('premium', this)">
+        <div class="plan-badge">⭐ Most Popular</div>
+        <div class="plan-name">Premium</div>
+        <div class="plan-price">$9.99<span style="font-size:1rem">/mo</span></div>
+        <div class="plan-desc">19+ activities · 7-day free trial</div>
+      </div>
+    </div>
+    <div id="trial-note" style="text-align:center;font-size:.8rem;font-weight:700;color:#22c55e;margin-bottom:16px;display:none">
+      🎉 7-day free trial — no charge today!
+    </div>
+    <button class="btn-primary" id="plan-cta" onclick="finishOnboarding()">Start Learning Free 🚀</button>
+    <button class="btn-secondary" id="plan-skip" onclick="finishOnboarding()">Start with free activities</button>
+  </div>
+
+  <!-- STEP 7: All set! -->
+  <div class="step" id="step-7">
+    <div class="confetti-row">🎉 🌟 🎈 🏆 🎊</div>
+    <h1 class="step-title">You're all set, <span id="final-name">friend</span>!</h1>
+    <p class="step-sub">Your learning journey starts now. Let's make reading fun!</p>
+    <div class="summary-pills" id="summary-pills"></div>
+    <a href="../index.html" class="btn-primary" id="start-btn">▶️ Start Learning!</a>
+  </div>
+
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+const state = { step: 1, totalSteps: 6, childName: '', childAge: null, goal: null, plan: 'free' };
+
+const ACTIVITIES_BY_GOAL = {
+  abc:   [{ emoji:'🔤', name:'Alphabet A–Z' }, { emoji:'🔊', name:'Sound Match' }, { emoji:'🎈', name:'Balloon Pop' }],
+  read:  [{ emoji:'📚', name:'Sentence Read' }, { emoji:'⭐', name:'Sight Words' }, { emoji:'📖', name:'Story Time' }],
+  blend: [{ emoji:'🔤', name:'Blending Intro' }, { emoji:'📝', name:'CVC Words' }, { emoji:'🔗', name:'Consonant Blends' }],
+  fun:   [{ emoji:'🎈', name:'Balloon Pop' }, { emoji:'🎯', name:'Phonics Quiz' }, { emoji:'🎵', name:'Vowel Blends' }],
+};
+
+// ── Navigation ─────────────────────────────────────────────────────────────
+function showStep(n) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(`step-${n}`).classList.add('active');
+  state.step = n;
+  const pct = Math.round((n / state.totalSteps) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+  buildDots();
+  trackStep(n);
+}
+
+function nextStep() { showStep(state.step + 1); }
+
+function buildDots() {
+  const ind = document.getElementById('step-indicator');
+  ind.innerHTML = '';
+  for (let i = 1; i <= state.totalSteps; i++) {
+    const d = document.createElement('div');
+    d.className = `step-dot ${i < state.step ? 'done' : i === state.step ? 'current' : ''}`;
+    ind.appendChild(d);
+  }
+}
+
+// ── Step logic ─────────────────────────────────────────────────────────────
+function saveName() {
+  const val = document.getElementById('child-name').value.trim();
+  state.childName = val || '';
+  if (state.childName) {
+    document.getElementById('name-display').textContent = state.childName;
+    localStorage.setItem('ph_child_name', state.childName);
+  }
+  nextStep();
+}
+function skipName() { nextStep(); }
+
+let selectedAge = null;
+function selectAge(age, el) {
+  document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedAge = age;
+  const btn = document.getElementById('age-next-btn');
+  btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+}
+function saveAge() {
+  if (!selectedAge) return;
+  state.childAge = selectedAge;
+  localStorage.setItem('ph_child_age', selectedAge);
+  nextStep();
+}
+
+let selectedGoal = null;
+function selectGoal(goal, el) {
+  document.querySelectorAll('.goal-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedGoal = goal;
+  const btn = document.getElementById('goal-next-btn');
+  btn.disabled = false; btn.style.opacity = '1'; btn.style.cursor = 'pointer';
+}
+function saveGoal() {
+  if (!selectedGoal) return;
+  state.goal = selectedGoal;
+  localStorage.setItem('ph_goal', selectedGoal);
+  buildActivityPreview();
+  nextStep();
+}
+
+function buildActivityPreview() {
+  const acts = ACTIVITIES_BY_GOAL[state.goal] || ACTIVITIES_BY_GOAL.fun;
+  const preview = document.getElementById('activity-preview');
+  const name = state.childName || 'your child';
+  document.getElementById('plan-sub').textContent = `Perfect for ${name} — here's where we'll start:`;
+  preview.innerHTML = '';
+  acts.forEach(a => {
+    const chip = document.createElement('div');
+    chip.className = 'prev-chip';
+    chip.innerHTML = `<span class="emoji">${a.emoji}</span>${a.name}`;
+    preview.appendChild(chip);
+  });
+}
+
+let selectedPlan = 'free';
+function selectPlan(plan, el) {
+  document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPlan = plan;
+  const cta  = document.getElementById('plan-cta');
+  const note = document.getElementById('trial-note');
+  const skip = document.getElementById('plan-skip');
+  if (plan === 'premium') {
+    cta.textContent  = '🚀 Start Free Trial';
+    note.style.display = 'block';
+    skip.style.display = 'none';
+  } else {
+    cta.textContent  = 'Start Learning Free 🚀';
+    note.style.display = 'none';
+    skip.style.display = 'block';
+  }
+}
+
+function finishOnboarding() {
+  // Save profile
+  localStorage.setItem('ph_onboarding_done', 'true');
+  const profile = {
+    childName: state.childName,
+    childAge:  state.childAge,
+    goal:      state.goal,
+    plan:      selectedPlan,
+    onboardedTs: Date.now(),
+  };
+  localStorage.setItem('ph_profile', JSON.stringify(profile));
+
+  if (selectedPlan === 'premium') {
+    // Redirect to Stripe — use the payment link from payment.js config
+    // Read it from localStorage if available, else hard-code
+    const stripeLink = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
+    window.location.href = stripeLink;
+    return;
+  }
+
+  // Show completion step
+  const finalName = document.getElementById('final-name');
+  finalName.textContent = state.childName || 'friend';
+  const pills = document.getElementById('summary-pills');
+  pills.innerHTML = '';
+  if (state.childName) pills.innerHTML += `<div class="pill">👤 ${state.childName}</div>`;
+  if (state.childAge)  pills.innerHTML += `<div class="pill">🎂 Age ${state.childAge}</div>`;
+  if (state.goal)      pills.innerHTML += `<div class="pill">🎯 ${state.goal === 'abc' ? 'Learn ABCs' : state.goal === 'read' ? 'Start Reading' : state.goal === 'blend' ? 'Phonics Blending' : 'Make it Fun'}</div>`;
+  pills.innerHTML += `<div class="pill">🆓 Free plan</div>`;
+  showStep(7);
+}
+
+// ── Analytics stub ─────────────────────────────────────────────────────────
+function trackStep(n) {
+  try {
+    const e = { type: 'onboarding_step', step: n, ts: Date.now(), childName: state.childName, childAge: state.childAge, goal: state.goal };
+    const events = JSON.parse(localStorage.getItem('ph_events') || '[]');
+    events.push(e); localStorage.setItem('ph_events', JSON.stringify(events));
+    fetch('/api/log-events', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(e) }).catch(()=>{});
+  } catch(e) {}
+}
+
+// ── Init ───────────────────────────────────────────────────────────────────
+// If already onboarded, skip to index
+if (localStorage.getItem('ph_onboarding_done') === 'true') {
+  window.location.href = '../index.html';
+}
+
+buildDots();
+document.getElementById('child-name').addEventListener('keydown', (e) => { if (e.key === 'Enter') saveName(); });
+</script>
+</body>
+</html>

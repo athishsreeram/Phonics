@@ -1,7 +1,6 @@
 /* js/payment.js – Stripe Checkout Session flow + manual fallback */
 'use strict';
 
-
 const paymentManager = (() => {
 
   // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -11,7 +10,7 @@ const paymentManager = (() => {
   //   https://phonics77-app.vercel.app/pages/success.html
   //
   // Your current link from the screenshots:
-  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_cNi28ta2Rdi4g0736G0ZW00';
+  const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
 
   // The exact URL Stripe should redirect to after payment
   // Must match what you set in Stripe Dashboard → Payment Link → After payment

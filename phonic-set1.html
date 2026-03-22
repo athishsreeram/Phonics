@@ -67,6 +67,7 @@
   </div>
 </main>
 
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -133,9 +134,12 @@ function endGame() {
       <br><br><a href="index.html" class="btn btn-secondary">🏠 Home</a>
     </div>`;
   UI.setScore('blending-intro', { stars: score, total: WORDS.length });
+  if(typeof analytics !== 'undefined') analytics.trackActivityComplete('blending-intro', score, WORDS.length);
+  if(typeof analytics!=='undefined') analytics.trackActivityComplete('blending-intro', score, WORDS.length);
 }
 
 loadWord();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("blending-intro");</script>
 </body>
 </html>

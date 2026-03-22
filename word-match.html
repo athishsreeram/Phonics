@@ -39,6 +39,7 @@
   <p style="margin-top:16px;font-weight:700;color:var(--clr-text-soft)">⭐ <span id="mscore">0</span> / <span id="mtotal">0</span></p>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -86,8 +87,11 @@ function endGame(){
       <br><br><a href="index.html" class="btn btn-secondary">🏠 Home</a>
     </div>`;
   UI.setScore('word-match',{stars:mscore,total:TOTAL});
+  if(typeof analytics !== 'undefined') analytics.trackActivityComplete('word-match', mscore, TOTAL);
+  if(typeof analytics!=='undefined') analytics.trackActivityComplete('word-match', mscore, TOTAL);
 }
 loadRound();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-match");</script>
 </body>
 </html>

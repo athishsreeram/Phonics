@@ -41,6 +41,7 @@
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
@@ -82,5 +83,6 @@ document.getElementById('btn-next').addEventListener('click', () => { idx=(idx+1
 
 render();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("sentence-reading");</script>
 </body>
 </html>

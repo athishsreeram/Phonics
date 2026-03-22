@@ -43,6 +43,7 @@
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
@@ -99,5 +100,6 @@ document.getElementById('btn-stop').addEventListener('click', () => AudioManager
 
 buildTabs(); renderPassage();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("read-advanced");</script>
 </body>
 </html>

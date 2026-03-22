@@ -69,6 +69,7 @@
   </div>
 </main>
 
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -142,9 +143,12 @@ function endGame() {
       <a href="index.html" class="btn btn-secondary">🏠 Home</a>
     </div>`;
   UI.setScore('sound-matching', { stars: score, total: TOTAL_ROUNDS });
+  if(typeof analytics !== 'undefined') analytics.trackActivityComplete('sound-matching', score, TOTAL_ROUNDS);
+    if(typeof analytics!=='undefined') analytics.trackActivityComplete('sound-matching', score, TOTAL_ROUNDS);
 }
 
 loadRound();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("sound-matching");</script>
 </body>
 </html>

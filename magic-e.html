@@ -59,6 +59,7 @@
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -89,5 +90,6 @@ document.getElementById('btn-next').addEventListener('click', () => { idx=(idx+1
 
 render();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("silent-e-words");</script>
 </body>
 </html>

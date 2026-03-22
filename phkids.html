@@ -46,6 +46,7 @@
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -134,9 +135,12 @@ function endGame() {
     <button class="btn btn-primary btn-lg" onclick="location.reload()">🔄 Try Again</button>
     <br><br><a href="index.html" class="btn btn-secondary">🏠 Home</a>`;
   UI.setScore('phonics-review', {stars:correct, total:TOTAL});
+  if(typeof analytics !== 'undefined') analytics.trackActivityComplete('phonics-review', correct, TOTAL);
+  if(typeof analytics!=='undefined') analytics.trackActivityComplete('phonics-review', correct, TOTAL);
 }
 
 loadQ();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("phonics-review");</script>
 </body>
 </html>

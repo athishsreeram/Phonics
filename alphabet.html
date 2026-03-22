@@ -135,6 +135,7 @@
   </div>
 </div>
 
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -284,5 +285,6 @@ document.getElementById('btn-reset').addEventListener('click', () => {
 buildGrid();
 refreshStats();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("letter-recognition");</script>
 </body>
 </html>

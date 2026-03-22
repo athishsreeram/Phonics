@@ -49,6 +49,7 @@ canvas { border:3px dashed #e5e7eb; border-radius:20px; cursor:crosshair; touch-
   </div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -94,5 +95,6 @@ document.getElementById('btn-done').addEventListener('click',  ()=>{ AudioManage
 
 render();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("progress-tracker");</script>
 </body>
 </html>

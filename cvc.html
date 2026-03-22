@@ -56,6 +56,7 @@
   <div class="score-badge">⭐ <span id="seen">0</span> seen</div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
 <script src="js/ui.js"></script>
@@ -88,5 +89,6 @@ document.getElementById('btn-next').addEventListener('click', () => { idx++; loa
 
 loadWord();
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("cvc-words");</script>
 </body>
 </html>

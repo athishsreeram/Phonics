@@ -3,7 +3,8 @@
   "rewrites": [
     { "source": "/api/create-subscription", "destination": "/api/create-subscription.js" },
     { "source": "/api/verify-subscription",  "destination": "/api/verify-subscription.js"  },
-    { "source": "/api/log-events",           "destination": "/api/log-events.js"           }
+    { "source": "/api/log-events",           "destination": "/api/log-events.js"           },
+    { "source": "/api/capture-email",        "destination": "/api/capture-email.js"        }
   ],
   "headers": [
     {

@@ -28,6 +28,7 @@
   <p style="text-align:center;font-weight:700;color:var(--clr-text-soft);margin-top:20px">Tap a card to hear the sound and example words.</p>
   <div class="r-grid" id="r-grid"></div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
@@ -52,5 +53,6 @@ R_VOWELS.forEach((rv, i) => {
   grid.appendChild(card);
 });
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("r-controlled-vowels");</script>
 </body>
 </html>

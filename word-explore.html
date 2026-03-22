@@ -37,6 +37,7 @@
   <div class="builder-row" id="builder-row"></div>
 </div>
 </main>
+<script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
@@ -67,5 +68,6 @@ document.getElementById('btn-hear').addEventListener('click', () => {
 });
 document.getElementById('btn-clear').addEventListener('click', () => { built=[]; render(); });
 </script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-explore");</script>
 </body>
 </html>

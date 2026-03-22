@@ -3,131 +3,390 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>👨‍👩‍👧 Parent Dashboard · Phonics Hub</title>
+<title>📊 Dashboard · Phonics Hub</title>
 <link rel="stylesheet" href="css/shared.css">
 <style>
-.dash-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
-.stat-card  { background:white; border-radius:20px; padding:22px 18px; box-shadow:var(--shadow-sm); text-align:center; }
-.stat-big   { font-family:'Fredoka One',cursive; font-size:2.6rem; line-height:1; }
-.stat-lbl   { font-size:.85rem; font-weight:700; color:var(--clr-text-soft); margin-top:4px; }
-.activity-row { display:flex; align-items:center; justify-content:space-between; background:white; border-radius:14px; padding:14px 18px; margin-bottom:10px; box-shadow:var(--shadow-sm); }
-.act-name   { font-weight:800; font-size:.95rem; }
-.act-score  { font-family:'Fredoka One',cursive; font-size:1.2rem; color:var(--clr-primary); }
-.section-head { font-family:'Fredoka One',cursive; font-size:1.3rem; margin:28px 0 12px; color:#444; }
-.bar-wrap    { height:10px; background:#e5e7eb; border-radius:999px; flex:1; margin:0 12px; overflow:hidden; }
-.bar-fill    { height:100%; background:linear-gradient(90deg,var(--clr-accent),var(--clr-primary)); border-radius:999px; transition:width .5s; }
-.empty-state { text-align:center; padding:40px 20px; color:var(--clr-text-soft); }
-.empty-state div { font-size:4rem; margin-bottom:12px; }
-.reset-btn { background:none; border:2px solid #e5e7eb; border-radius:10px; padding:8px 16px; font-size:.85rem; font-weight:700; cursor:pointer; color:var(--clr-text-soft); transition:all .2s; }
-.reset-btn:hover { border-color:var(--clr-primary); color:var(--clr-primary); }
+.dash-tabs { display:flex; gap:4px; background:#f3f4f6; border-radius:14px; padding:4px; margin:20px 0; }
+.dash-tab { flex:1; text-align:center; padding:10px; border-radius:10px; font-weight:800; font-size:.9rem; cursor:pointer; border:none; background:none; transition:all .2s; color:#666; }
+.dash-tab.active { background:white; color:#667eea; box-shadow:0 2px 8px rgba(0,0,0,.08); }
+
+.section-title { font-family:'Fredoka One',cursive; font-size:1.2rem; color:#444; margin:28px 0 14px; display:flex; align-items:center; gap:8px; }
+
+/* Stat cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:12px; margin-bottom:8px; }
+.kpi-card { background:white; border-radius:18px; padding:18px 14px; text-align:center; box-shadow:0 2px 10px rgba(0,0,0,.06); }
+.kpi-num  { font-family:'Fredoka One',cursive; font-size:2.2rem; line-height:1; }
+.kpi-lbl  { font-size:.75rem; font-weight:800; color:#888; margin-top:4px; text-transform:uppercase; letter-spacing:.04em; }
+.kpi-sub  { font-size:.7rem; color:#bbb; margin-top:2px; }
+
+/* Activity rows */
+.act-row { display:flex; align-items:center; gap:12px; background:white; border-radius:14px; padding:14px 16px; margin-bottom:8px; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+.act-info { flex:1; min-width:0; }
+.act-name { font-weight:800; font-size:.9rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.act-meta { font-size:.75rem; color:#888; font-weight:700; margin-top:2px; }
+.act-bar-wrap { width:80px; height:8px; background:#f3f4f6; border-radius:999px; overflow:hidden; }
+.act-bar-fill { height:100%; border-radius:999px; transition:width .5s .1s; }
+.act-score { font-family:'Fredoka One',cursive; font-size:1.1rem; color:#667eea; min-width:36px; text-align:right; }
+
+/* Funnel */
+.funnel-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #f3f4f6; }
+.funnel-label { font-weight:800; font-size:.88rem; width:160px; flex-shrink:0; }
+.funnel-bar-wrap { flex:1; height:10px; background:#f3f4f6; border-radius:999px; overflow:hidden; }
+.funnel-bar { height:100%; border-radius:999px; }
+.funnel-num { font-family:'Fredoka One',cursive; font-size:1rem; min-width:40px; text-align:right; }
+
+/* Events log */
+.event-row { display:flex; align-items:flex-start; gap:10px; padding:10px 0; border-bottom:1px solid #f9f9f9; }
+.event-dot { width:8px; height:8px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+.event-text { flex:1; font-size:.82rem; font-weight:700; color:#444; }
+.event-time { font-size:.75rem; color:#bbb; white-space:nowrap; }
+
+/* Profile card */
+.profile-card { background:white; border-radius:20px; padding:24px; box-shadow:0 2px 10px rgba(0,0,0,.06); margin-bottom:16px; }
+.profile-field { display:flex; justify-content:space-between; align-items:center; padding:10px 0; border-bottom:1px solid #f3f4f6; font-size:.9rem; }
+.profile-field:last-child { border-bottom:none; }
+.profile-key { font-weight:800; color:#666; }
+.profile-val { font-weight:700; color:#333; }
+
+/* Streak calendar */
+.calendar-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+.cal-day { aspect-ratio:1; border-radius:6px; display:flex; align-items:center; justify-content:center; font-size:.65rem; font-weight:800; color:#888; }
+.cal-day.active { background:#667eea; color:white; }
+.cal-day.today  { background:#ffd93d; color:#333; }
+.cal-day.empty  { background:#f3f4f6; }
+
+.tab-content { display:none; }
+.tab-content.active { display:block; }
+
+.badge { display:inline-block; padding:3px 10px; border-radius:999px; font-size:.75rem; font-weight:800; }
+.badge-green  { background:#dcfce7; color:#15803d; }
+.badge-orange { background:#fef3c7; color:#92400e; }
+.badge-blue   { background:#dbeafe; color:#1d4ed8; }
+.badge-gray   { background:#f3f4f6; color:#666; }
 </style>
 </head>
 <body>
 <nav class="top-nav">
   <div class="nav-left">
     <a href="index.html" class="nav-home-btn">🏠</a>
-    <span class="nav-title">Parent Dashboard</span>
+    <span class="nav-title">Dashboard</span>
   </div>
   <div class="nav-right">
-    <button class="reset-btn" id="btn-reset">🗑 Clear Data</button>
+    <button class="btn btn-secondary" id="btn-reset" style="padding:8px 14px;font-size:.8rem">🗑 Clear</button>
   </div>
 </nav>
-<div class="page-header" style="background:linear-gradient(135deg,#0f172a,#1e3a5f)">
-  <h1>👨‍👩‍👧 Parent Dashboard</h1>
-  <p>Track your child's phonics progress</p>
+
+<div class="page-header" style="background:linear-gradient(135deg,#1e1b4b,#3730a3)">
+  <h1>📊 Parent Dashboard</h1>
+  <p id="dash-subtitle">Loading your data…</p>
 </div>
-<main style="margin-top:24px">
-  <div class="dash-grid" id="summary-grid"></div>
-  <div class="section-head">📊 Activity Progress</div>
-  <div id="activity-list"></div>
-  <div class="section-head">🔤 Alphabet Mastery</div>
-  <div id="alpha-detail"></div>
+
+<main>
+  <!-- Tabs -->
+  <div class="dash-tabs">
+    <button class="dash-tab active" onclick="switchTab('progress')">📈 Progress</button>
+    <button class="dash-tab" onclick="switchTab('funnel')">🔄 Funnel</button>
+    <button class="dash-tab" onclick="switchTab('events')">📋 Events</button>
+    <button class="dash-tab" onclick="switchTab('profile')">👤 Profile</button>
+  </div>
+
+  <!-- PROGRESS TAB -->
+  <div class="tab-content active" id="tab-progress">
+    <div class="kpi-grid" id="kpi-grid"></div>
+    <div class="section-title">🔥 Streak Calendar <span id="streak-badge"></span></div>
+    <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:8px">
+      <div class="calendar-grid" id="streak-calendar"></div>
+      <p style="font-size:.75rem;color:#bbb;font-weight:700;margin-top:10px;text-align:center">Last 28 days · Green = activity day</p>
+    </div>
+    <div class="section-title">✅ Activity Scores</div>
+    <div id="activity-scores"></div>
+    <div class="section-title">🔤 Alphabet Mastery</div>
+    <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+      <div id="alpha-grid" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+    </div>
+  </div>
+
+  <!-- FUNNEL TAB -->
+  <div class="tab-content" id="tab-funnel">
+    <div class="section-title">📊 Conversion Funnel</div>
+    <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);margin-bottom:16px">
+      <div id="funnel-rows"></div>
+    </div>
+    <div class="section-title">💡 Engagement Insights</div>
+    <div id="insights-grid" style="display:flex;flex-direction:column;gap:10px"></div>
+  </div>
+
+  <!-- EVENTS TAB -->
+  <div class="tab-content" id="tab-events">
+    <div class="section-title">📋 Event Log <span id="event-count-badge"></span></div>
+    <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06)">
+      <div id="event-log"></div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div class="tab-content" id="tab-profile">
+    <div class="section-title">👤 Child Profile</div>
+    <div class="profile-card" id="profile-card"></div>
+    <div class="section-title">⚙️ Account</div>
+    <div style="background:white;border-radius:18px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="font-weight:800;font-size:.9rem">Premium Status</div>
+          <div style="font-size:.8rem;color:#888;margin-top:2px" id="premium-status-text"></div>
+        </div>
+        <span id="premium-badge"></span>
+      </div>
+      <button class="btn btn-primary" id="btn-upgrade-dash" style="display:none">⭐ Upgrade to Premium</button>
+      <button class="btn btn-secondary" onclick="location.href='index.html'" style="font-size:.85rem">🏠 Back to Activities</button>
+    </div>
+  </div>
 </main>
+
+<script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
+<script src="js/analytics.js"></script>
+<script src="js/payment.js"></script>
+<script src="js/activity-gating.js"></script>
+
 <script>
-const ACTIVITIES = [
-  {key:'sound-matching',   label:'Sound Matching',      total:10},
-  {key:'alphabet',         label:'Alphabet A–Z',         total:26},
-  {key:'blending-intro',   label:'Blending Intro',       total:10},
-  {key:'digraph-practice', label:'Digraph Practice',     total:8 },
-  {key:'vowel-blends',     label:'Vowel Blends',         total:10},
-  {key:'cvc-words',        label:'CVC Words',            total:18},
-  {key:'sight-words',      label:'Sight Words',          total:50},
-  {key:'word-match',       label:'Word Match',           total:12},
-  {key:'word-explore',     label:'Word Explorer',        total:26},
-  {key:'phonics-review',   label:'Phonics Review',       total:20},
-  {key:'alphabet-balloon', label:'Balloon Pop',          total:20},
-];
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.dash-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(`tab-${name}`).classList.add('active');
+  event.target.classList.add('active');
+}
 
-function loadData() {
-  let totalStars=0, totalActivities=0, totalPossible=0;
-  const rows = [];
-  ACTIVITIES.forEach(a => {
-    const s = UI.getScore(a.key);
-    const stars = s.stars || 0;
-    const total = s.total || a.total;
-    const pct   = total > 0 ? Math.round((stars/total)*100) : 0;
-    if (stars > 0) { totalStars += stars; totalActivities++; }
-    totalPossible += total;
-    rows.push({label:a.label, stars, total, pct});
-  });
+// ── Helpers ───────────────────────────────────────────────────
+function timeAgo(ts) {
+  if (!ts) return 'never';
+  const s = Math.floor((Date.now() - ts) / 1000);
+  if (s < 60)   return 'just now';
+  if (s < 3600) return `${Math.floor(s/60)}m ago`;
+  if (s < 86400)return `${Math.floor(s/3600)}h ago`;
+  return `${Math.floor(s/86400)}d ago`;
+}
 
-  // Summary cards
-  const grid = document.getElementById('summary-grid');
-  grid.innerHTML='';
-  const summary = [
-    {num:totalActivities, lbl:'Activities played', color:'#6366f1'},
-    {num:totalStars,      lbl:'Total stars earned', color:'#f59e0b'},
-    {num:Math.round((totalStars/Math.max(totalPossible,1))*100)+'%', lbl:'Overall score', color:'#22c55e'},
-    {num:JSON.parse(localStorage.getItem('alpha_mastered')||'[]').length, lbl:'Letters mastered', color:'#ec4899'},
+function pctColor(p) {
+  if (p >= 80) return '#22c55e';
+  if (p >= 50) return '#f59e0b';
+  return '#ef4444';
+}
+
+const ACT_LABELS = {
+  'sound-matching':'🔊 Sound Matching','alphabet':'🔤 Alphabet A–Z','blending-intro':'🔤 Blending',
+  'digraph-practice':'📖 Digraphs','vowel-blends':'🎵 Vowel Blends','cvc-words':'📝 CVC Words',
+  'sight-words':'⭐ Sight Words','sentence-reading':'📚 Sentences','word-families':'👨‍👩‍👧‍👦 Word Families',
+  'consonant-blends':'🔗 Consonant Blends','r-controlled-vowels':'🎯 R-Controlled','silent-e-words':'🤫 Silent E',
+  'vowel-digraphs':'🔊 Vowel Digraphs','phonics-review':'🔄 Review','assessment-level-1':'📊 Word Match',
+  'assessment-level-2':'📊 Word Explorer','story-time':'📖 Story Time','parent-dashboard':'👨‍👩‍👧 Dashboard',
+  'progress-tracker':'📈 Tracing','alphabet-balloon':'🎈 Balloon Pop','read-advanced':'📚 Reading L2',
+};
+
+// ── Load data ─────────────────────────────────────────────────
+function load() {
+  const summary  = analytics.getFunnelSummary();
+  const profile  = summary.profile;
+  const events   = analytics.getEvents();
+  const progress = analytics.getProgress();
+  const premium  = summary.isPremium;
+  const streak   = summary.streak;
+  const mastered = new Set(JSON.parse(localStorage.getItem('alpha_mastered') || '[]'));
+
+  // Subtitle
+  const name = profile.childName;
+  document.getElementById('dash-subtitle').textContent =
+    name ? `${name}'s learning journey` : 'Track phonics progress & engagement';
+
+  // ── KPIs ──────────────────────────────────────────────────
+  const kpis = [
+    { num: streak,                     lbl: '🔥 Day Streak',  color: '#f59e0b', sub: streakLabel(streak) },
+    { num: summary.totalStars,         lbl: '⭐ Stars',        color: '#667eea', sub: 'total earned' },
+    { num: summary.activitiesCompleted,lbl: '✅ Done',         color: '#22c55e', sub: 'activities' },
+    { num: mastered.size,              lbl: '🔤 Letters',      color: '#ec4899', sub: 'mastered' },
+    { num: summary.pageViews,          lbl: '👁 Visits',       color: '#6366f1', sub: 'page views' },
+    { num: summary.paywallHits,        lbl: '🔒 Paywall hits', color: '#ef4444', sub: 'upgrade prompts' },
   ];
-  summary.forEach(s => {
-    const card = document.createElement('div');
-    card.className='stat-card';
-    card.innerHTML=`<div class="stat-big" style="color:${s.color}">${s.num}</div><div class="stat-lbl">${s.lbl}</div>`;
-    grid.appendChild(card);
-  });
+  document.getElementById('kpi-grid').innerHTML = kpis.map(k => `
+    <div class="kpi-card">
+      <div class="kpi-num" style="color:${k.color}">${k.num}</div>
+      <div class="kpi-lbl">${k.lbl}</div>
+      <div class="kpi-sub">${k.sub}</div>
+    </div>`).join('');
 
-  // Activity rows
-  const list = document.getElementById('activity-list');
-  const hasData = rows.some(r => r.stars > 0);
-  if (!hasData) {
-    list.innerHTML='<div class="empty-state"><div>📭</div><p>No activity data yet.<br>Complete some activities to see progress here!</p></div>';
-  } else {
-    list.innerHTML='';
-    rows.forEach(r => {
-      if (r.stars === 0) return;
-      const row = document.createElement('div');
-      row.className='activity-row';
-      row.innerHTML=`
-        <span class="act-name">${r.label}</span>
-        <div class="bar-wrap"><div class="bar-fill" style="width:${r.pct}%"></div></div>
-        <span class="act-score">${r.stars}/${r.total}</span>`;
-      list.appendChild(row);
-    });
+  // ── Streak calendar (last 28 days) ─────────────────────────
+  const actDays = new Set(
+    events.filter(e => e.type === 'activity_start').map(e => new Date(e.ts).toDateString())
+  );
+  const today = new Date();
+  const calCells = [];
+  const DAY_LABELS = ['S','M','T','W','T','F','S'];
+  // Header row
+  calCells.push(...DAY_LABELS.map(d => `<div class="cal-day" style="color:#aaa;font-size:.6rem">${d}</div>`));
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(today); d.setDate(today.getDate() - i);
+    const ds = d.toDateString();
+    const isToday   = ds === today.toDateString();
+    const isActive  = actDays.has(ds);
+    calCells.push(`<div class="cal-day ${isToday?'today':isActive?'active':'empty'}" title="${ds}">${d.getDate()}</div>`);
   }
+  document.getElementById('streak-calendar').innerHTML = calCells.join('');
 
-  // Alphabet detail
-  const mastered = new Set(JSON.parse(localStorage.getItem('alpha_mastered')||'[]'));
-  const alphaDiv = document.getElementById('alpha-detail');
-  if (mastered.size === 0) {
-    alphaDiv.innerHTML='<div class="empty-state"><div>🔤</div><p>No letters mastered yet in Alphabet A–Z.</p></div>';
-  } else {
-    alphaDiv.innerHTML=`<p style="font-weight:700;color:var(--clr-text-soft);margin-bottom:12px">${mastered.size}/26 letters mastered</p>
-      <div style="display:flex;flex-wrap:wrap;gap:8px">${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l=>`<div style="width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:1.2rem;background:${mastered.has(l)?'#dcfce7':'#f3f4f6'};color:${mastered.has(l)?'#15803d':'#999'};border:2px solid ${mastered.has(l)?'#22c55e':'transparent'}">${l}</div>`).join('')}</div>`;
+  const sb = document.getElementById('streak-badge');
+  if (streak > 0) sb.innerHTML = `<span class="badge badge-orange">🔥 ${streak} day${streak>1?'s':''}</span>`;
+
+  // ── Activity scores ────────────────────────────────────────
+  const scoreRows = Object.entries(progress)
+    .sort(([,a],[,b]) => (b.lastTs||0) - (a.lastTs||0))
+    .map(([id, v]) => {
+      const pct = v.bestPct || 0;
+      return `
+        <div class="act-row">
+          <div style="font-size:1.4rem">${(ACT_LABELS[id]||id).split(' ')[0]}</div>
+          <div class="act-info">
+            <div class="act-name">${(ACT_LABELS[id]||id).replace(/^\S+\s/,'')}</div>
+            <div class="act-meta">${v.attempts} attempt${v.attempts>1?'s':''} · last ${timeAgo(v.lastTs)}</div>
+          </div>
+          <div class="act-bar-wrap">
+            <div class="act-bar-fill" style="width:${pct}%;background:${pctColor(pct)}"></div>
+          </div>
+          <div class="act-score">${pct}%</div>
+        </div>`;
+    });
+
+  document.getElementById('activity-scores').innerHTML =
+    scoreRows.length ? scoreRows.join('') :
+    `<div style="text-align:center;padding:32px;color:#aaa;font-weight:700">
+      📭 No activity data yet — complete some activities!
+    </div>`;
+
+  // ── Alphabet mastery ───────────────────────────────────────
+  const alphaGrid = document.getElementById('alpha-grid');
+  alphaGrid.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(l => `
+    <div style="
+      width:38px;height:38px;border-radius:10px;
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Fredoka One',cursive;font-size:1.15rem;
+      background:${mastered.has(l)?'#dcfce7':'#f3f4f6'};
+      color:${mastered.has(l)?'#15803d':'#bbb'};
+      border:2px solid ${mastered.has(l)?'#22c55e':'transparent'};
+      transition:all .2s;
+    ">${l}</div>`).join('');
+
+  // ── Funnel ─────────────────────────────────────────────────
+  const totalSessions = new Set(events.map(e => e.session)).size || 1;
+  const funnelSteps = [
+    { label:'🌐 Page views',      n: summary.pageViews,           color:'#6366f1' },
+    { label:'▶️ Activity starts', n: summary.activityStarts,      color:'#3b82f6' },
+    { label:'✅ Completions',     n: summary.activityCompletes,   color:'#22c55e' },
+    { label:'🔒 Paywall hits',    n: summary.paywallHits,         color:'#f59e0b' },
+    { label:'💳 Upgrade clicks',  n: summary.upgradeClicks,       color:'#ef4444' },
+    { label:'⭐ Premium users',   n: premium ? 1 : 0,            color:'#8b5cf6' },
+  ];
+  const funnelMax = Math.max(...funnelSteps.map(s => s.n), 1);
+  document.getElementById('funnel-rows').innerHTML = funnelSteps.map((s, i) => {
+    const prev = i > 0 ? funnelSteps[i-1].n : s.n;
+    const cvr  = prev > 0 ? Math.round((s.n / prev) * 100) : 0;
+    return `
+      <div class="funnel-row">
+        <div class="funnel-label">${s.label}</div>
+        <div class="funnel-bar-wrap">
+          <div class="funnel-bar" style="width:${Math.round((s.n/funnelMax)*100)}%;background:${s.color}"></div>
+        </div>
+        <div class="funnel-num">${s.n}</div>
+        ${i > 0 ? `<span class="badge ${cvr>=50?'badge-green':cvr>=20?'badge-orange':'badge-gray'}">${cvr}%</span>` : '<span style="width:42px"></span>'}
+      </div>`;
+  }).join('');
+
+  // ── Insights ───────────────────────────────────────────────
+  const insights = [];
+  if (streak >= 3) insights.push({ icon:'🔥', text:`${streak}-day streak! Consistency is key to learning.`, color:'#fef3c7' });
+  if (summary.paywallHits >= 3 && !premium) insights.push({ icon:'💡', text:`Hit the paywall ${summary.paywallHits} times — they're interested. Time to upgrade!`, color:'#ede9fe' });
+  if (summary.activityCompletes >= 5) insights.push({ icon:'🏆', text:`Completed ${summary.activityCompletes} activities. Great engagement!`, color:'#dcfce7' });
+  if (mastered.size >= 10) insights.push({ icon:'🔤', text:`${mastered.size} letters mastered — on track for full alphabet!`, color:'#dbeafe' });
+  if (summary.activityStarts > 0 && summary.activityCompletes === 0) insights.push({ icon:'⚠️', text:`Started activities but no completions tracked yet.`, color:'#fee2e2' });
+  if (insights.length === 0) insights.push({ icon:'📭', text:'Complete some activities to see personalised insights here!', color:'#f9fafb' });
+
+  document.getElementById('insights-grid').innerHTML = insights.map(ins => `
+    <div style="background:${ins.color};border-radius:14px;padding:14px 16px;display:flex;align-items:flex-start;gap:10px">
+      <span style="font-size:1.3rem">${ins.icon}</span>
+      <span style="font-weight:700;font-size:.9rem">${ins.text}</span>
+    </div>`).join('');
+
+  // ── Event log ─────────────────────────────────────────────
+  const recentEvents = [...events].reverse().slice(0, 50);
+  const EVENT_COLORS = {
+    page_view:'#6366f1', activity_start:'#22c55e', activity_complete:'#3b82f6',
+    paywall_hit:'#f59e0b', upgrade_click:'#ef4444', signup:'#8b5cf6',
+    onboarding_step:'#ec4899', streak_milestone:'#f97316',
+    paywall_impression:'#f59e0b', page_exit:'#aaa',
+  };
+  document.getElementById('event-count-badge').innerHTML =
+    `<span class="badge badge-blue">${events.length} total</span>`;
+  document.getElementById('event-log').innerHTML = recentEvents.length
+    ? recentEvents.map(e => `
+        <div class="event-row">
+          <div class="event-dot" style="background:${EVENT_COLORS[e.type]||'#aaa'}"></div>
+          <div class="event-text">
+            <strong>${e.type}</strong>
+            ${e.activityId ? ` · ${ACT_LABELS[e.activityId]||e.activityId}` : ''}
+            ${e.step       ? ` · step: ${e.step}` : ''}
+            ${e.score!=null? ` · score: ${e.score}` : ''}
+            ${e.pct!=null  ? ` (${e.pct}%)` : ''}
+          </div>
+          <div class="event-time">${timeAgo(e.ts)}</div>
+        </div>`).join('')
+    : `<div style="text-align:center;padding:32px;color:#aaa;font-weight:700">No events yet</div>`;
+
+  // ── Profile tab ───────────────────────────────────────────
+  const profileFields = [
+    ['Child name',    profile.childName || '—'],
+    ['Age',           profile.childAge  || '—'],
+    ['Goals',         (profile.goals||[]).join(', ') || '—'],
+    ['First seen',    timeAgo(profile.signupTs || parseInt(localStorage.getItem('ph_premium_ts')||'0') || null)],
+    ['Last activity', timeAgo(profile.lastSeen)],
+    ['Streak',        `${streak} day${streak!==1?'s':''}`],
+    ['Device',        events[0]?.ua || '—'],
+  ];
+  document.getElementById('profile-card').innerHTML = profileFields.map(([k,v]) => `
+    <div class="profile-field">
+      <span class="profile-key">${k}</span>
+      <span class="profile-val">${v}</span>
+    </div>`).join('');
+
+  const premiumTs = localStorage.getItem('ph_premium_ts');
+  document.getElementById('premium-status-text').textContent =
+    premium ? `Active since ${timeAgo(parseInt(premiumTs||'0'))}` : 'Free tier — 3 activities available';
+  document.getElementById('premium-badge').innerHTML =
+    premium ? `<span class="badge badge-green">⭐ Premium</span>` : `<span class="badge badge-gray">Free</span>`;
+  const upgradeBtn = document.getElementById('btn-upgrade-dash');
+  if (!premium) {
+    upgradeBtn.style.display = 'block';
+    upgradeBtn.addEventListener('click', () => {
+      analytics.trackUpgradeClick('dashboard');
+      paymentManager.initiateSubscription();
+    });
   }
 }
 
+function streakLabel(n) {
+  if (n === 0) return 'start today!';
+  if (n < 3)   return 'keep going!';
+  if (n < 7)   return 'great habit!';
+  return '🔥 on fire!';
+}
+
+// ── Reset ──────────────────────────────────────────────────
 document.getElementById('btn-reset').addEventListener('click', () => {
-  if (!confirm('Clear all activity progress? This cannot be undone.')) return;
-  ACTIVITIES.forEach(a => localStorage.removeItem(`ph_score_${a.key}`));
-  localStorage.removeItem('alpha_mastered');
-  localStorage.removeItem('ph_premium');
-  loadData();
-  alert('All data cleared.');
+  if (!confirm('Clear ALL data including progress, events and profile? Cannot be undone.')) return;
+  ['ph_progress','ph_events','ph_session','ph_profile','ph_streak',
+   'ph_premium','ph_premium_ts','ph_premium_verified','ph_onboarded',
+   'alpha_mastered'].forEach(k => localStorage.removeItem(k));
+  location.reload();
 });
 
-loadData();
+load();
 </script>
 </body>
 </html>
