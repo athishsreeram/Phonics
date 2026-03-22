@@ -1,0 +1,27 @@
+{
+  "name": "phonics-hub",
+  "version": "1.0.0",
+  "description": "Interactive phonics learning app with monetization",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Static site'",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "phonics",
+    "learning",
+    "education",
+    "children",
+    "reading"
+  ],
+  "author": "Athish Sreeram",
+  "license": "MIT",
+  "dependencies": {
+    "stripe": "^12.0.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

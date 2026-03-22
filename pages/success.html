@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to Phonics Hub Premium!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .success-container {
+      background: white;
+      border-radius: 20px;
+      padding: 60px 40px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    .success-icon {
+      font-size: 80px;
+      margin-bottom: 30px;
+      animation: bounce 1s ease-in-out;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    
+    h1 {
+      font-size: 32px;
+      color: #333;
+      margin-bottom: 15px;
+      font-weight: 700;
+    }
+    
+    .subtitle {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    
+    .features {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 30px;
+      margin: 30px 0;
+      text-align: left;
+    }
+    
+    .feature {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 15px;
+      color: #333;
+    }
+    
+    .feature:last-child {
+      margin-bottom: 0;
+    }
+    
+    .feature-icon {
+      width: 30px;
+      height: 30px;
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
+    .cta-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 40px;
+      flex-direction: column;
+    }
+    
+    .btn {
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn-primary {
+      background: #667eea;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+    
+    .btn-secondary {
+      background: transparent;
+      color: #667eea;
+      border: 2px solid #667eea;
+    }
+    
+    .btn-secondary:hover {
+      background: #f8f9fa;
+    }
+    
+    .support-section {
+      margin-top: 50px;
+      padding-top: 30px;
+      border-top: 1px solid #eee;
+    }
+    
+    .support-text {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 10px;
+    }
+    
+    .support-email {
+      font-size: 16px;
+      font-weight: 600;
+      color: #667eea;
+    }
+    
+    .trial-banner {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 30px;
+      font-size: 14px;
+    }
+    
+    @media (max-width: 600px) {
+      .success-container {
+        padding: 40px 25px;
+      }
+      
+      h1 {
+        font-size: 24px;
+      }
+      
+      .success-icon {
+        font-size: 60px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="success-container">
+    <div class="success-icon">✨</div>
+    
+    <h1>Welcome to Phonics Hub Premium!</h1>
+    
+    <p class="subtitle">
+      Your premium subscription is now active. You have full access to all 16+ phonics activities!
+    </p>
+    
+    <div class="trial-banner">
+      ⏳ <strong>7-Day Free Trial Active</strong> — No charge yet. Cancel anytime, no questions asked.
+    </div>
+    
+    <div class="features">
+      <div class="feature">
+        <div class="feature-icon">✓</div>
+        <span><strong>16+ Premium Activities</strong> — All phonics lessons unlocked</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✓</div>
+        <span><strong>Progress Tracking</strong> — Monitor your child's learning</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✓</div>
+        <span><strong>No Ads</strong> — Pure, distraction-free learning</span>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">✓</div>
+        <span><strong>Offline Access</strong> — Works anywhere, anytime</span>
+      </div>
+    </div>
+    
+    <div class="cta-buttons">
+      <a href="/" class="btn btn-primary">
+        Back to Phonics Hub
+      </a>
+      <a href="https://stripe.com/subscriptions" class="btn btn-secondary" target="_blank">
+        Manage Subscription
+      </a>
+    </div>
+    
+    <div class="support-section">
+      <p class="support-text">Questions or need help?</p>
+      <p class="support-email">startdreamhere123@gmail.com</p>
+      <p class="support-text" style="margin-top: 10px; font-size: 12px;">
+        We're here to help! Email us anytime.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Verify the subscription status when page loads
+    window.addEventListener('load', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('session_id');
+      
+      if (sessionId && typeof analytics !== 'undefined') {
+        analytics.trackConversion();
+        console.log('✅ Conversion tracked');
+      }
+      
+      console.log('✅ Success page loaded');
+    });
+  </script>
+</body>
+</html>

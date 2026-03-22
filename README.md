@@ -1,184 +1,318 @@
-# 🔤 Phonics Learning Hub
+# Phonics Hub - Interactive Learning App
 
-An interactive, **toddler-friendly** phonics learning web app for ages 3–7. Built with pure HTML, CSS, and JavaScript — no build tools required. Works offline after first load.
-
-**Live App:** [https://athishsreeram.github.io/Phonics/](https://athishsreeram.github.io/Phonics/)
-
----
-
-## ✨ Features
-
-- **26 interactive activities** across 6 learning stages
-- **🔊 Global sound toggle** — one tap to mute/unmute, saved across sessions
-- **🎨 5 material packs** — Default, Animals, Food, Objects, Vehicles
-- **📱 iPad + tablet first** — all buttons meet 56px minimum tap targets
-- **🎯 Quiz modes** on Alphabet, Rhyme, Sight Words, and more
-- **⭐ Progress tracking** via localStorage
-- **🎉 Confetti & feedback** animations on correct answers
-- **🔤 Speech synthesis** — all words and letters spoken aloud
-- **Fully responsive** — works on mobile, iPad, and desktop
+**Version:** 1.0.0 with Payment System  
+**Status:** Week 1 Deployment Ready  
+**Demo:** https://phonics77-app.vercel.app/
 
 ---
 
-## 📂 Project Structure
+## Overview
 
-```
-Phonics/
-├── index.html               # 🏠 Main hub — all 6 stages
-├── alphabet.html            # 🔤 Alphabet A–Z with quiz
-├── cvc.html                 # 🔠 CVC word blending + spinner
-├── sight-words.html         # 👁️ Sight word flash cards
-├── rhyme.html               # 🎵 Rhyme families + quiz
-├── vowels.html              # 🗣️ Vowels A E I O U
-├── digraphs.html            # 🔠 Digraph practice
-├── ... (other pages)        # See index.html for full list
-│
-├── css/
-│   └── shared.css           # 🎨 All shared styles (toddler-friendly)
-│
-├── js/
-│   ├── audio.js             # 🔊 Speech synthesis + sound effects
-│   ├── materials.js         # 📦 Material packs system
-│   └── ui.js                # 🎭 Feedback, confetti, helpers
-│
-└── README.md
-```
+Phonics Hub is an interactive phonics learning application for children ages 3-7. It features:
+
+- ✅ 3 free phonics activities
+- ✅ 16+ premium activities (paid tier)
+- ✅ Stripe payment integration
+- ✅ Privacy-first analytics
+- ✅ Offline-capable design
+- ✅ Mobile responsive
+- ✅ No ads or tracking
 
 ---
 
-## 🎨 Material Packs
+## Quick Start
 
-Switch learning materials from the top navigation bar dropdown.
+### Prerequisites
+- Node.js 18+
+- Stripe account (test or live keys)
+- Vercel account for deployment
 
-| Pack | Theme | Best For |
-|------|-------|----------|
-| 📚 Default | Classic phonics words | General learning |
-| 🐾 Animals | Animal names + facts | Animal lovers |
-| 🍎 Food | Yummy food words | Kitchen time |
-| 🎒 Objects | Everyday things | Home / classroom |
-| 🚗 Vehicles | Cars, planes, ships | Transport fans |
-
-### Adding a New Material Pack
-
-Open `js/materials.js` and add a new entry to the `PACKS` object:
-
-```js
-mypack: {
-  name: 'My Pack',       // Display name
-  emoji: '🌟',           // Icon for selector
-  description: 'My custom words',
-
-  // CVC words grouped by vowel sound
-  cvc: {
-    a: ['cat', 'bat', 'hat'],
-    e: ['bed', 'red', 'hen'],
-    i: ['big', 'pig', 'sit'],
-    o: ['hot', 'pot', 'dog'],
-    u: ['bug', 'cup', 'run'],
-  },
-
-  // Optional: word sets with emoji and fun facts
-  wordSets: [
-    { word: 'cat', emoji: '🐱', fact: 'Cats say meow!' },
-  ],
-
-  // Sight words by level (4 levels)
-  sightWords: [
-    ['the', 'and', 'a'],     // Level 1
-    ['he', 'she', 'we'],     // Level 2
-    ['was', 'are', 'has'],   // Level 3
-    ['they', 'what', 'from'], // Level 4
-  ],
-
-  // Rhyme families
-  rhymes: [
-    { family: '-at', words: ['cat', 'bat', 'hat', 'mat'] },
-  ]
-}
-```
-
----
-
-## 🔊 Audio System
-
-The audio module (`js/audio.js`) uses the **Web Speech API** — no audio files needed.
-
-| Feature | Description |
-|---------|-------------|
-| `AudioManager.speak(text)` | Speak text aloud |
-| `AudioManager.speakLetter(letter)` | Speak letter + phoneme |
-| `AudioManager.spellWord(word)` | Spell letter-by-letter then say word |
-| `AudioManager.playTone(type)` | Play `correct`, `wrong`, `click`, `star`, `pop` |
-| `AudioManager.toggle()` | Toggle sound on/off |
-
-The audio preference is saved in `localStorage` as `phonics_audio`.
-
----
-
-## 🛠️ Running Locally
+### Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/athishsreeram/Phonics.git
-cd Phonics
+git clone https://github.com/athishsreeram/phonics77-app.git
+cd phonics77-app
 
-# Option 1: Python (built-in)
-python3 -m http.server 8080
+# Install dependencies
+npm install
 
-# Option 2: Node.js
-npx serve .
+# Start development server
+npm run dev
 
-# Open in browser
-open http://localhost:8080
+# Visit http://localhost:8000
 ```
 
-> ⚠️ Must be served via HTTP (not `file://`) for the Web Speech API to work.
+### Environment Setup
+
+1. **Create `.env` file** (copy from `.env.example`):
+```bash
+cp .env.example .env
+```
+
+2. **Add your Stripe keys:**
+```
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_PRICE_ID=price_...
+```
+
+3. **Deploy to Vercel:**
+```bash
+npm install -g vercel
+vercel
+```
 
 ---
 
-## 🚀 GitHub Pages Deployment
+## Project Structure
 
-1. Push to the `main` branch
-2. Go to **Settings → Pages**
-3. Set source to `Deploy from branch: main / (root)`
-4. Your app is live at `https://yourusername.github.io/Phonics/`
-
----
-
-## 📱 iPad / Tablet Support
-
-All UI elements meet Apple's Human Interface Guidelines:
-- Minimum tap target: **56px × 56px**
-- Fonts start at **18px base** (scales to 22px on large screens)
-- Fixed-position navigation with safe area insets
-- No hover-only interactions
-- Scroll-friendly layouts with no overflow traps
-
----
-
-## 🗺️ Learning Stages
-
-| Stage | Focus | Activities |
-|-------|-------|-----------|
-| 🌱 Stage 1 | Alphabet & Sounds | Alphabet A–Z, Phonic Sets 1–2 |
-| 🌿 Stage 2 | Vowels & CVC | Vowels, CVC Words, Rhyme, Listen & Choose |
-| 🌳 Stage 3 | Digraphs & Blends | Digraph Practice, Digraph Test, Consonant Blends |
-| ✨ Stage 4 | Magic E & Long Vowels | Magic E, Long Vowels |
-| 📖 Stage 5 | Reading | Sight Words, Read Practice, Mini Stories, Word Match |
-| ✍️ Stage 6 | Writing | Letter Tracing, Sentence Builder |
+```
+phonics77-app/
+├── index.html                    # Main application page
+├── pages/
+│   └── success.html             # Post-purchase success page
+├── js/
+│   ├── payment.js               # Stripe integration
+│   ├── activity-gating.js       # Free/paid activity logic
+│   └── analytics.js             # Privacy-first tracking
+├── css/
+│   ├── style.css               # Main styles
+│   └── payment.css             # Payment UI styles
+├── api/
+│   ├── create-subscription.js   # Vercel function for checkout
+│   ├── verify-subscription.js   # Verify subscription status
+│   └── log-events.js           # Analytics endpoint
+├── .env.example                # Environment template
+├── vercel.json                 # Vercel configuration
+├── package.json                # Dependencies
+└── README.md                   # This file
+```
 
 ---
 
-## 🤝 Contributing
+## Features
 
-- Suggest new material packs via Issues
-- Report bugs or UI issues
-- All content is for personal/classroom use only
+### Free Tier (3 Activities)
+1. Sound Matching - Match letters to sounds
+2. Letter Recognition - Identify letters
+3. Blending Intro - Introduction to blending
+
+### Premium Tier (16+ Activities)
+- Digraph Practice
+- Vowel Blends
+- CVC Words
+- Sight Words
+- Sentence Reading
+- Word Families
+- Consonant Blends
+- R-Controlled Vowels
+- Silent E Words
+- Vowel Digraphs
+- Phonics Review
+- Assessment Level 1
+- Assessment Level 2
+- Story Time
+- Parent Dashboard
+- Progress Tracker
+
+### Payment System
+- **Provider:** Stripe
+- **Price:** $9.99/month
+- **Trial:** 7 days (no credit card required)
+- **Mode:** Subscription with automatic renewal
+
+### Analytics
+- Privacy-first (no 3rd party tracking)
+- Client-side event collection
+- Session tracking
+- Conversion monitoring
 
 ---
 
-## 📜 License
+## Configuration
 
-Personal and classroom use only. Do not redistribute or sell.
+### Stripe Setup
 
-[![License: Personal Use Only](https://img.shields.io/badge/License-Personal%20Use%20Only-red)](.)
+1. **Create Stripe Account:**
+   - Go to https://stripe.com
+   - Sign up for free account
+
+2. **Create Product:**
+   - Products → Create
+   - Name: "Phonics Hub Premium"
+   - Type: Service
+   - Price: $9.99 USD/month
+
+3. **Get Keys:**
+   - Settings → API Keys
+   - Copy Publishable Key (pk_...)
+   - Copy Secret Key (sk_...)
+
+4. **Add to Environment:**
+   - Vercel Dashboard → Settings → Environment Variables
+   - Add: `STRIPE_SECRET_KEY=sk_...`
+   - Add: `STRIPE_PUBLIC_KEY=pk_...`
+   - Redeploy
+
+### Activity Configuration
+
+Edit `js/activity-gating.js` to customize free/paid split:
+
+```javascript
+const ACTIVITY_TIERS = {
+  free: [
+    'sound-matching',
+    'letter-recognition',
+    'blending-intro'
+  ],
+  paid: [
+    // All other activities
+  ]
+};
+```
+
+---
+
+## Deployment
+
+### Deploy to Vercel
+
+```bash
+# Install Vercel CLI
+npm install -g vercel
+
+# Deploy
+vercel
+
+# Set environment variables in Vercel Dashboard
+# Then redeploy
+vercel --prod
+```
+
+### GitHub Pages
+
+For static hosting without payment processing:
+```bash
+npm run build
+# Push to gh-pages branch
+```
+
+---
+
+## Testing
+
+### Local Testing
+```bash
+npm run dev
+# Visit http://localhost:8000
+```
+
+### Payment Testing
+Use Stripe test card:
+```
+Number: 4242 4242 4242 4242
+Exp: 12/25
+CVC: 123
+```
+
+### Mobile Testing
+- Test on iPhone: https://phonics77-app.vercel.app/
+- Test on Android: https://phonics77-app.vercel.app/
+- Check responsive design
+
+---
+
+## Monitoring
+
+### Stripe Dashboard
+- Monitor subscriptions: https://dashboard.stripe.com/subscriptions
+- View transactions: https://dashboard.stripe.com/transactions
+- Check webhooks: https://dashboard.stripe.com/webhooks
+
+### Vercel Analytics
+- Function logs: https://vercel.com/dashboard
+- Deployment history: View deployments tab
+- Environment variables: Settings → Environment Variables
+
+---
+
+## Support
+
+**Email:** startdreamhere123@gmail.com  
+**GitHub Issues:** https://github.com/athishsreeram/phonics77-app/issues  
+**Stripe Support:** https://support.stripe.com
+
+---
+
+## Security
+
+- ✅ API keys stored in Vercel environment variables (not in code)
+- ✅ CORS enabled for API endpoints
+- ✅ HTTPS only (Vercel handles SSL)
+- ✅ No sensitive data in localStorage
+- ✅ Privacy-first analytics (no 3rd party tracking)
+
+---
+
+## Performance
+
+- ✅ Single page load
+- ✅ Fast payment checkout (<1s redirect)
+- ✅ Minimal JavaScript (no heavy frameworks)
+- ✅ Optimized images
+- ✅ Cache-friendly structure
+
+---
+
+## Browser Support
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- Mobile browsers (iOS Safari, Chrome Android)
+
+---
+
+## Roadmap
+
+**Phase 1:** ✅ Payment system (CURRENT)  
+**Phase 2:** Analytics + onboarding (Week 2-3)  
+**Phase 3:** Blog + SEO + launch prep (Week 3-4)  
+**Phase 4:** ProductHunt launch (Week 4+)  
+**Phase 5:** Scale to $5k MRR (Month 6+)  
+
+---
+
+## License
+
+MIT License - See LICENSE file for details
+
+---
+
+## Author
+
+**Athish Sreeram**  
+- GitHub: https://github.com/athishsreeram
+- Portfolio: https://athishsreeram.github.io/
+
+---
+
+## Changelog
+
+### v1.0.0 (March 2026)
+- ✅ Initial release with payment system
+- ✅ Stripe integration
+- ✅ Activity gating (free/paid)
+- ✅ Analytics tracking
+- ✅ Vercel deployment
+- ✅ Mobile responsive
+
+---
+
+## Questions?
+
+Email support@startdreamhere123.gmail.com or open an issue on GitHub.
+
+**Ready to launch? Deploy to Vercel and start taking payments!** 🚀

@@ -1,0 +1,13 @@
+/* Phonics Hub - Main Styles */
+/* Add your existing CSS here or import from other files */
+
+:root {
+  --primary-color: #667eea;
+  --secondary-color: #764ba2;
+  --success-color: #639922;
+  --danger-color: #e24b4a;
+  --warning-color: #ba7517;
+  --info-color: #378add;
+}
+
+/* Import this file or add your existing styles */
