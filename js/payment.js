@@ -2,11 +2,11 @@
 'use strict';
 
 const paymentManager = (() => {
-  // Your Stripe Payment Link (direct fallback if API is unavailable)
+  // Direct Stripe Payment Link fallback (if API is unavailable)
   const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/test_cNi28ta2Rdi4g0736G0ZW00';
 
   function getApiBase() {
-    return window.PHONICS_API_BASE || 'https://phonics-api.onrender.com';
+    return window.PHONICS_API_BASE || 'https://phonics-api-k43i.onrender.com';
   }
 
   function isPremium() { return localStorage.getItem('ph_premium') === 'true'; }
@@ -45,15 +45,26 @@ const paymentManager = (() => {
 
   async function redirectToStripe() {
     closeModal();
+    const origin  = window.location.origin;
+    const session = typeof analytics !== 'undefined' ? analytics.getSession().id : '';
+
+    // Use PhonicsAPI if available (preferred)
+    if (window.PhonicsAPI) {
+      const data = await window.PhonicsAPI.startCheckout(
+        `${origin}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
+        `${origin}/index.html`
+      );
+      if (data && data.url) return; // PhonicsAPI already redirected
+    }
+
+    // Fallback: call API directly
     try {
-      const origin  = window.location.origin;
-      const session = typeof analytics !== 'undefined' ? analytics.getSession().id : '';
       const res = await fetch(`${getApiBase()}/api/subscriptions/checkout`, {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({
           session_id:  session,
-          successUrl:  `${origin}/pages/success.html`,
+          successUrl:  `${origin}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
           cancelUrl:   `${origin}/index.html`,
         }),
       });
@@ -62,7 +73,8 @@ const paymentManager = (() => {
     } catch(e) {
       console.warn('API checkout failed, falling back to Payment Link:', e.message);
     }
-    // Fallback to direct Payment Link
+
+    // Last resort: direct Payment Link
     window.location.href = STRIPE_PAYMENT_LINK;
   }
 

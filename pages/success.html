@@ -40,6 +40,7 @@ h1 { font-family:'Fredoka One',cursive;font-size:2.2rem;color:#667eea;margin-bot
 </div>
 
 <script src="../js/config.js"></script>
+<script src="../js/api.js"></script>
 <script>
 // Step 1: Set premium immediately in localStorage
 localStorage.setItem('ph_premium', 'true');
@@ -55,19 +56,26 @@ const btn = document.getElementById('go-btn');
   setTimeout(tick, 1000);
 })();
 
-// Step 3: Verify with central API if session_id present
+// Step 3: Verify with central Render API + register user
 (async () => {
-  const sessionId = new URLSearchParams(window.location.search).get('session_id');
+  const params    = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
   if (!sessionId) return;
-  const API = window.PHONICS_API_BASE || 'https://phonics-api.onrender.com';
+
   try {
-    const res  = await fetch(`${API}/api/subscriptions/verify?session_id=${sessionId}`);
-    const data = await res.json();
-    if (data.active) {
+    // Use PhonicsAPI to verify (routes to Render)
+    const data = await PhonicsAPI.verifySession(sessionId);
+    if (data && data.active) {
       localStorage.setItem('ph_premium_verified', 'true');
       document.getElementById('status').textContent = '✅ Subscription verified by Stripe';
+
+      // Also log purchase_complete event
+      PhonicsAPI.logEvent('purchase_complete', { sessionId });
     }
-  } catch(e) { /* API unavailable — localStorage grant is enough */ }
+  } catch(e) {
+    // API unavailable — localStorage grant is enough
+    console.warn('[success] API verify failed:', e.message);
+  }
 })();
 </script>
 </body>

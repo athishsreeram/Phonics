@@ -38,6 +38,7 @@
 </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -80,6 +81,13 @@ function loadQ() {
 }
 loadQ();
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("vowel-digraphs");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("vowel-digraphs");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof total!=="undefined" ? total : 10;
+    analytics.trackActivityComplete("vowel-digraphs", s, t);
+  }
+});</script>
 </body>
 </html>

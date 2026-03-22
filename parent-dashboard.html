@@ -146,6 +146,7 @@
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/payment.js"></script>
 <script src="js/activity-gating.js"></script>
@@ -387,7 +388,28 @@ document.getElementById('btn-reset').addEventListener('click', () => {
   location.reload();
 });
 
-load();
+
+// ── Sync user profile from Render API ─────────────────────────────────────
+(async () => {
+  if (window.PhonicsAPI) {
+    try {
+      const user = await PhonicsAPI.getUser();
+      if (user) {
+        // Sync premium status
+        if (user.status === 'active' || user.sub_status === 'active' ||
+            user.sub_status === 'trialing') {
+          localStorage.setItem('ph_premium', 'true');
+        }
+        // Sync child profile
+        if (user.child_name) analytics.updateProfile({ childName: user.child_name });
+        if (user.child_age)  analytics.updateProfile({ childAge:  user.child_age });
+        if (user.email)      analytics.updateProfile({ email: user.email });
+      }
+    } catch(e) { /* API unavailable — use local data */ }
+  }
+  load();
+})();
+
 </script>
 </body>
 </html>

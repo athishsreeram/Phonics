@@ -57,6 +57,7 @@
 </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -90,6 +91,13 @@ document.getElementById('btn-next').addEventListener('click', () => { idx++; loa
 
 loadWord();
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("cvc-words");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("cvc-words");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof ROUNDS!=="undefined" ? ROUNDS : 10;
+    analytics.trackActivityComplete("cvc-words", s, t);
+  }
+});</script>
 </body>
 </html>

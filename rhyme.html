@@ -43,6 +43,7 @@
   </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -84,6 +85,13 @@ document.getElementById('btn-all').addEventListener('click', () => {
 
 renderFamily();
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-families");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-families");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof total!=="undefined" ? total : 10;
+    analytics.trackActivityComplete("word-families", s, t);
+  }
+});</script>
 </body>
 </html>

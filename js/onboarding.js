@@ -242,7 +242,14 @@ const onboarding = (() => {
     if (email) answers.email = email;
     if (answers.childName || answers.childAge) {
       analytics.trackSignup(answers.childName || 'anonymous', answers.childAge || 'unknown', answers.email || null);
+    if (window.PhonicsAPI && answers.email) {
+      window.PhonicsAPI.registerUser(answers.email, answers.childName, answers.childAge).catch(() => {});
+    }
       analytics.updateProfile({ childName: answers.childName, childAge: answers.childAge });
+      // Register user in central API
+      if (answers.email) {
+        analytics.registerUser(answers.email, answers.childName, answers.childAge);
+      }
     }
     next();
   }

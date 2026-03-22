@@ -290,8 +290,17 @@ function render() {
 }
 
 function goUpgrade() {
-  const stripeLink = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
-  window.location.href = stripeLink;
+  if (window.PhonicsAPI) {
+    PhonicsAPI.startCheckout(
+      window.location.origin + '/pages/success.html?session_id={CHECKOUT_SESSION_ID}',
+      window.location.origin + '/index.html'
+    ).catch(() => {
+      // Fallback to direct link
+      window.location.href = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
+    });
+  } else {
+    window.location.href = 'https://buy.stripe.com/test_cNi28ta2RdI4g0736G0ZW00';
+  }
 }
 
 function shareProgress() {
@@ -308,7 +317,26 @@ function shareProgress() {
   }
 }
 
-render();
+// Sync premium status from Render API before rendering
+(async () => {
+  if (window.PhonicsAPI) {
+    try {
+      const user = await PhonicsAPI.getUser();
+      if (user) {
+        if (user.status === 'active' || user.sub_status === 'active' || user.sub_status === 'trialing') {
+          localStorage.setItem('ph_premium', 'true');
+        }
+        if (user.child_name) {
+          const profile = JSON.parse(localStorage.getItem('ph_profile') || '{}');
+          profile.childName = user.child_name;
+          if (user.child_age) profile.childAge = user.child_age;
+          localStorage.setItem('ph_profile', JSON.stringify(profile));
+        }
+      }
+    } catch(e) { /* offline */ }
+  }
+  render();
+})();
 </script>
 </body>
 </html>

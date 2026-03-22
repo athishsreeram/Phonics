@@ -1,7 +1,5 @@
-// api/verify-subscription.js  –  Vercel Serverless Function
-// Verifies a Stripe checkout session and confirms subscription status
-
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+// api/verify-subscription.js
+// Proxies to Render API.
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -10,21 +8,13 @@ module.exports = async (req, res) => {
   const { session_id } = req.query;
   if (!session_id) return res.status(400).json({ error: 'Missing session_id' });
 
+  const RENDER_API = process.env.PHONICS_API_BASE || 'https://phonics-api-k43i.onrender.com';
+
   try {
-    const session = await stripe.checkout.sessions.retrieve(session_id, {
-      expand: ['subscription'],
-    });
-
-    const active = session.subscription?.status === 'active' ||
-                   session.subscription?.status === 'trialing';
-
-    res.status(200).json({
-      active,
-      status: session.subscription?.status || 'unknown',
-      customer: session.customer,
-    });
+    const upstream = await fetch(`${RENDER_API}/api/subscriptions/verify?session_id=${session_id}`);
+    const data = await upstream.json();
+    res.status(upstream.status).json(data);
   } catch (err) {
-    console.error('Verify error:', err.message);
     res.status(500).json({ error: err.message });
   }
 };

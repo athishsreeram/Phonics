@@ -16,6 +16,7 @@
 .story-body .phonics-word { color:var(--clr-primary); font-weight:800; cursor:pointer; border-bottom:2px dotted var(--clr-primary); }
 .story-body .phonics-word:hover { background:#fff0f0; border-radius:4px; }
 .read-controls { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:24px; }
+.loading-msg { text-align:center; padding:32px; color:#888; font-size:1rem; }
 </style>
 </head>
 <body>
@@ -32,419 +33,120 @@
 <main>
 <div class="story-card">
   <div class="story-tabs" id="story-tabs"></div>
-  <span class="story-emoji" id="story-emoji">🐱</span>
-  <h2 class="story-title" id="story-title">The Cat and the Hat</h2>
-  <div class="story-body" id="story-body"></div>
+  <span class="story-emoji" id="story-emoji">⏳</span>
+  <h2 class="story-title" id="story-title">Loading stories…</h2>
+  <div class="story-body" id="story-body"><p class="loading-msg">Fetching stories from the library…</p></div>
   <div class="read-controls">
     <button class="btn btn-primary btn-lg" id="btn-read">🔊 Read Story</button>
     <button class="btn btn-secondary" id="btn-stop">⏹ Stop</button>
   </div>
 </div>
 </main>
+
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
 <script>
-const STORIES = [
 
-  // ── SET 1 ──────────────────────────────────────────────────────────────────
-
+// ── Hardcoded fallback stories (used if API is unavailable) ──────────────────
+const FALLBACK_STORIES = [
   {
-    title: 'Mac and Tab',
-    emoji: '🐱',
-    set: 1,
+    id: 'f1', title: 'Mac and Tab', emoji: '🐱', set: 1,
     phonics: ['mac','tab','cat','sad','mad','pal','rat','nap'],
-    text: 'Tab is a sad cat. Tab has a pal. His pal is Mac. Mac is a rat. "I got mad at Mac," said Tab. "I ate Mac up." "I did like Mac," said Tab. "I am a bad cat." Tab ran to get the vet. "I can save Mac," said the vet. The vet made Tab take a nap. The vet made a hole in Tab. "Mac is safe," said the vet. "I am fine," said Mac. "The hole in Tab is fine," said the vet. "I hope Tab can get up," said Mac. "Wake up Tab," said Mac. Tab woke up. "I am fine," said Tab. Mac gave Tab a hug. "I like Tab," said Mac. "I am not mad at him." Mac and Tab ran home. It is time to take a nap.',
+    text: 'Tab is a sad cat. Tab has a pal. His pal is Mac. Mac is a rat. "I got mad at Mac," said Tab. "I ate Mac up." "I did like Mac," said Tab. "I am a bad cat." Tab ran to get the vet. "I can save Mac," said the vet. Mac gave Tab a hug. "I like Tab," said Mac. Mac and Tab ran home.',
   },
   {
-    title: 'The Tin Man',
-    emoji: '🤖',
-    set: 1,
-    phonics: ['tin','man','can','sad','mac','tab','yellow','paint'],
-    text: 'The Tin Man is sad. "It is rain," said the Tin Man. "I am a red man. I am a tin man. I am a sad man." Mac and Tab ran to the Tin Man. "Do not be sad," said Mac. "We can get a can. We can get a can of yellow." "We can get a can of yellow," said Tab. "We can paint the Tin Man." Mac got the can. Tab got the can. "Is it a can of yellow?" said Mac. "It is a can of yellow," said Tab. "See the Tin Man," said Mac. "I am a tin man," said the Tin Man. "I am a yellow man. I am a tin man. I am not sad."',
+    id: 'f2', title: 'The Bee', emoji: '🐝', set: 2,
+    phonics: ['bee','black','yellow','flower','busy'],
+    text: 'A bee was in the grass. The bee was black and yellow. The bee went up in the air. A cat saw the bee. "I will get the bee," said the cat. The bee went up high. The bee went to a flower. A kid watched the bee. The bee was busy.',
   },
   {
-    title: 'Al',
-    emoji: '😺',
-    set: 1,
-    phonics: ['al','cat','mat','lap','pig','log','dog','nap'],
-    text: 'Al is a big cat. Al is on a mat. Al had a nap on the mat. A pig ran to the mat. The pig sat on the mat. Al sat up. "I am Al," he said. "I am a cat. I nap on the mat. A pig is on the mat." Al ran to a log. Al had a nap on the log. A dog ran to the log. The dog sat on the log. Al sat up. "I am Al," he said. "I am a cat. I nap on the log. A dog is on the log." Al ran and ran. Al sat on a lap. Al had a nap on the lap. A pig and a dog ran to the lap. They sat on the lap. Al did not sit up. Al did not get up. Al is a pal.',
+    id: 'f3', title: 'Slide', emoji: '🛝', set: 3,
+    phonics: ['slide','slid','fast','kid'],
+    text: 'A kid had a slide. The slide was big and red. The kid slid on the slide. "Look at me," said the kid. "I can slide fast." A pig ran up. "I can slide," said the pig. They slid and slid. They had a nap.',
   },
-  {
-    title: 'Tim',
-    emoji: '🐷',
-    set: 1,
-    phonics: ['tim','pig','wig','bag','sam','cat','log','pal'],
-    text: 'Tim is a pig. Tim sat on a log. Tim had a wig in a bag. Tim put on the wig. Tim ran to Sam. Sam is a cat. "Are you a pig?" said Sam. "I am a pig," said Tim. "I am not a pig on a log. I am a pig with a wig." "Is it a wig?" said Sam. "It is a wig," said Tim. "Tim is a pig. I am Tim!" Tim and Sam sat on the log. Tim had a nap. Sam had a nap. Tim is a pal. Sam is a pal.',
-  },
-  {
-    title: 'The Jet',
-    emoji: '✈️',
-    set: 1,
-    phonics: ['jet','bed','fell','went','sun','moon','log','nap'],
-    text: 'A man had a jet. The jet is on a big log. The man sat in the jet. The jet went up, up, up. "I am up in the jet," said the man. "I can go to the sun." The jet went and went. The man did not get to the sun. The sun is hot. "I can go to the moon," said the man. The jet went and went. The man did not get to the moon. The moon is a long way off. The jet ran out of gas. The jet went down, down, down. The jet fell on a log. The man got out. "I am on the log," said the man. "The jet is on the log. It is time to go home." The man ran home. He got in bed. The man had a nap. He had a dream. He was in the jet. He went to the sun and the moon.',
-  },
-  {
-    title: 'Ben Bug',
-    emoji: '🐛',
-    set: 1,
-    phonics: ['ben','bug','rock','frog','log','dog','leaf','nap'],
-    text: 'Ben Bug sat on a rock. A frog sat on a rock. "Get off the rock," said the frog. "The sun is hot. I will sit on the rock." Ben got off the rock. Ben sat on a log. A dog ran up. "Get off the log," said the dog. "I sat on a log. I will sit on the log." Ben got off the log. Ben ran and ran. Ben sat under a big leaf. A frog and a dog ran up. "Get off the leaf," said the frog. "No," said Ben. "I sat on a rock. A frog sat on the rock. I sat on a log. A dog sat on the log. I will sit under the big leaf. A frog and a dog can not sit here." Ben sat under the leaf. The frog sat on the rock. The dog sat on the log. Ben had a nap. Ben is a big bug.',
-  },
-  {
-    title: 'Ed',
-    emoji: '🐔',
-    set: 1,
-    phonics: ['ed','red','hen','log','pig','wig','fell','nap'],
-    text: 'Ed is a hen. Ed is a red hen. Ed sat on a log. A pig ran to the log. The pig sat on the log. "I am Ed," said Ed. "I am a red hen. I sat on a log." The pig had a wig. "I have a wig," said the pig. "I will put on the wig." The pig put on the wig. "I am a pig with a wig," he said. "I am a big pig with a wig." Ed got up. "I like the wig," said Ed. "I will put on the wig." Ed put on the wig. Ed sat on the log. "I am a red hen with a wig," said Ed. "I am a red hen. I am a big red hen with a wig." The pig got the wig. The pig put it on. The pig sat on the log. "I am a pig," he said. "I am a pig with a wig." Ed and the pig sat on the log. Ed had a nap. The pig had a nap. The wig fell off. Ed and the pig did not get up. They had a nap.',
-  },
-  {
-    title: 'Meg',
-    emoji: '✏️',
-    set: 1,
-    phonics: ['meg','red','pen','pad','cat','bug','dog','nap'],
-    text: 'Meg sat on a mat. Meg had a pad. Meg had a pen. A cat sat on the mat. The cat is Meg\'s cat. Meg drew a cat on the pad. "See the cat," said Meg. The cat sat up. "I do not like the cat," said the cat. Meg drew a bug on the pad. "See the bug," said Meg. The cat sat up. "I do not like the bug," said the cat. Meg drew a dog on the pad. The dog is a red dog. "See the dog," said Meg. "See the red dog." The cat sat up. "I like the dog," said the cat. "The dog is red. I like the red dog." Meg and the cat sat on the mat. Meg had a nap. The cat had a nap. The red dog sat on the mat. He did not nap. He sat on the mat and had a wiggle.',
-  },
-  {
-    title: 'Ted',
-    emoji: '🧸',
-    set: 1,
-    phonics: ['ted','red','bed','meg','log','rock','nap','back'],
-    text: 'Ted is a bear. Ted is a red bear. Ted sat in a bed. The bed is a big bed. Ted had a nap in the bed. A cat ran up. The cat is Meg. Meg sat on the bed. "Get up, Ted," said Meg. "Do not nap. I will get Ted." Meg got Ted. Meg put Ted on her back. Meg ran with Ted. Ted sat up. "Where am I?" said Ted. "I am on a cat. I am on Meg." Meg ran to a big log. Meg put Ted on the log. "Am I on a log?" said Ted. "I am on a big log. I can not nap here." Meg got Ted. Meg ran to a big rock. Meg put Ted on the rock. "Am I on a rock?" said Ted. "I am on a big rock. I can not nap here." Meg got Ted. Meg ran back to the bed. Meg put Ted in the bed. Ted sat up. "Am I in my bed?" said Ted. "I am in my bed. I will nap here." Meg sat on the bed. Ted had a nap. Meg had a nap. Ted and Meg nap in the bed.',
-  },
-  {
-    title: 'The Wig',
-    emoji: '💁',
-    set: 1,
-    phonics: ['wig','pig','big','sit','cat','hen','log','nap'],
-    text: 'A pig sat on a log. A wig sat on a rock. The pig got the wig. The pig put on the wig. "A wig!" said the pig. "I am a pig with a wig. I am a big pig with a wig." A hen ran up. The hen is Ed. "See the pig," said Ed. "See the pig with a wig." The pig sat on the log. Ed sat on the log. A cat ran up. The cat is Meg. "See the pig," said Meg. "See the pig with a wig." "Get the wig," said Ed. Meg got the wig. Meg put on the wig. "I am a cat with a wig," said Meg. "I am a big cat with a wig." Ed got the wig. Ed put on the wig. "I am a hen with a wig," said Ed. "I am a red hen with a wig." The pig got the wig. The pig put it on. "Let us sit," said the pig. So they sat. The pig sat on the log. Ed sat on the log. Meg sat on the log. "Let us nap," said Ed. So they had a nap. The pig had a nap. Ed had a nap. Meg had a nap. The wig fell off. They did not get up. They are pals.',
-  },
-
-
-  // ── SET 2 ──────────────────────────────────────────────────────────────────
-  {
-    title: 'Mac Gets Well',
-    emoji: '🤒',
-    set: 2,
-    phonics: ['mac','sick','bed','cake','bake','well','tab','cat'],
-    text: 'Mac was a rat. Mac was sick. He had a red nose. He had a hot head. He had to stay in bed. Tab the cat came to see Mac. "I am sorry you are sick," said Tab. "Can I get you something?" "I want a cake," said Mac. "A big red cake." Tab went to bake a cake. She got a pan. She got the mix. She baked a cake. The cake was big and red. Tab put it on a plate. She took it to Mac. Mac ate the cake. "I feel better," said Mac. "Thank you, Tab." Mac got well. He got out of bed. He ran and played with Tab.',
-  },
-  {
-    title: 'The Big Game',
-    emoji: '⚾',
-    set: 2,
-    phonics: ['game','field','stands','ball','air','catch','won','happy'],
-    text: 'Mike and his dad went to a game. It was a big game. The field was big. The stands were full. Mike had a red hat. His dad had a blue hat. They sat in the stands. The game began. The ball went up in the air. The man ran to catch it. He got the ball. "Yay!" yelled Mike. "Yay!" yelled his dad. The game went on. The sun was hot. Mike got a drink. His dad got a drink. The game was over. Mike\'s team won. Mike was happy. "It was a big game," said Mike.',
-  },
-  {
-    title: 'The Joke',
-    emoji: '😄',
-    set: 2,
-    phonics: ['joke','tim','pig','meg','red','cup','bug','funny'],
-    text: 'Tim the pig had a joke. He went to tell Meg the cat. "What is red and goes up and down?" said Tim. "I do not know," said Meg. "What is red and goes up and down?" "A red bug in a cup," said Tim. Meg laughed. "That is a funny joke," she said. Tim went to tell Ed the hen. "What is red and goes up and down?" said Tim. "I do not know," said Ed. "What is red and goes up and down?" "A red bug in a cup," said Tim. Ed laughed. "That is a funny joke," she said. Tim went to tell Spot the dog. "What is red and goes up and down?" said Tim. "I do not know," said Spot. "What is red and goes up and down?" "A red bug in a cup," said Tim. Spot laughed. "That is a funny joke," he said. Tim sat on a log. He was happy. He told the best joke.',
-  },
-  {
-    title: 'The Cake',
-    emoji: '🎂',
-    set: 2,
-    phonics: ['cake','white','icing','pink','table','piece','best','happy'],
-    text: 'Mom made a cake. It was a big white cake. She put it on the table. "I will make it nice," said Mom. She put red icing on it. She put pink flowers on it. The cake was pretty. Dad came home. "Look at the cake," said Mom. "It is for you." Dad smiled. "It is a nice cake," said Dad. "Thank you." Dad cut the cake. He gave a piece to Mom. He gave a piece to Mike. He gave a piece to Meg. He took a piece for himself. The cake was good. They ate it all up. "It was the best cake," said Dad. Mom was happy.',
-  },
-  {
-    title: 'The Bee',
-    emoji: '🐝',
-    set: 2,
-    phonics: ['bee','black','yellow','flower','cat','dog','pig','busy'],
-    text: 'A bee was in the grass. The bee was black and yellow. The bee went up in the air. A cat saw the bee. "I will get the bee," said the cat. The cat ran at the bee. The bee went up high. The cat did not get it. A dog saw the bee. "I will get the bee," said the dog. The dog ran at the bee. The bee went up high. The dog did not get it. A pig saw the bee. "I will get the bee," said the pig. The pig ran at the bee. The bee went up high. The pig did not get it. The bee went to a flower. The bee sat on the flower. A kid saw the bee. "I will let the bee be," said the kid. "The bee is on the flower." The bee went from flower to flower. The kid watched the bee. The bee was busy. The kid smiled.',
-  },
-  {
-    title: 'The Goat',
-    emoji: '🐐',
-    set: 2,
-    phonics: ['goat','farm','garden','rope','pen','grass','tired','full'],
-    text: 'A goat lived on a farm. The goat was white. The goat liked to eat. He ate grass. He ate leaves. He ate a can. One day, the goat got out. He went down the road. He went to a garden. He ate the red flowers. He ate the green leaves. The man saw the goat. "My goat is in the garden," said the man. "I must get him." The man ran to the goat. "Go back to the farm," said the man. The goat did not go. He ate more flowers. The man got a rope. He put the rope on the goat. He led the goat back to the farm. He put the goat in the pen. The goat ate grass. The man sat on a log. He was tired. The goat was full.',
-  },
-  {
-    title: 'Sail',
-    emoji: '⛵',
-    set: 2,
-    phonics: ['sail','lake','boat','wind','fast','rock','paddle','dock'],
-    text: 'Mike and his dad went to the lake. They had a boat. The boat had a sail. The sail was red and white. Mike and his dad got in the boat. The wind came up. The sail went up. The boat went on the lake. "This is fun," said Mike. "Look at the sail go." The boat went fast. The wind blew. The boat went up and down. Dad saw a big rock. "We must turn," said Dad. He turned the boat. The boat went past the rock. The wind stopped. The sail came down. The boat did not go. Mike got a paddle. He paddled the boat. Dad paddled the boat. The boat went back to the dock. "We had a good sail," said Dad. "Yes," said Mike. "Let\'s do it again."',
-  },
-  {
-    title: 'The Seal',
-    emoji: '🦭',
-    set: 2,
-    phonics: ['seal','sea','swim','rock','fish','soft','brown','pal'],
-    text: 'A seal lived in the sea. The seal was brown and soft. The seal liked to swim. The seal liked to play. One day, the seal came up on a rock. A kid saw the seal. "Look at the seal," said the kid. "It is on the rock." The seal went back in the sea. The seal swam fast. The seal went up and down. The seal came up on a rock. The kid went to the rock. "Come here, seal," said the kid. The seal looked at the kid. The kid got a fish. He gave it to the seal. The seal ate the fish. The seal liked the kid. The seal went in the sea. The kid went in the sea. They swam and played. The seal was a good pal.',
-  },
-  {
-    title: 'Hide and Seek',
-    emoji: '🙈',
-    set: 2,
-    phonics: ['hide','seek','meg','tim','ed','spot','mac','found'],
-    text: 'Meg and her pals played hide and seek. Meg was the seeker. She closed her eyes. She counted to ten. Tim the pig hid in a box. Ed the hen hid in a tree. Spot the dog hid in a shed. Mac the rat hid in a can. Meg went to look. She looked in the shed. She found Spot. "Now you are seeker," said Meg. Meg looked in the box. She found Tim. "Now you are seeker," said Meg. Meg looked in the tree. She found Ed. "Now you are seeker," said Meg. Meg looked in the can. She found Mac. "Now you are seeker," said Meg. Meg had found all her pals. They all sat on a log. "It was a good game," said Meg. "Let\'s play again."',
-  },
-  {
-    title: 'The Fire',
-    emoji: '🔥',
-    set: 2,
-    phonics: ['fire','woods','night','truck','hose','water','safe','help'],
-    text: 'One night, a fire started. The fire was in the woods. The fire was big and red. The fire went up in the air. A man saw the fire. "Fire!" he yelled. "I must call for help." The man ran to his house. He called the fire station. The fire truck came fast. The firemen got out. They had a big hose. They put water on the fire. The fire went down. The firemen put water on the fire. The fire went down more. The fire went out. The firemen went back to the station. The man was safe. The woods were safe. The man was happy.',
-  },
-
-  // ── SET 3 ──────────────────────────────────────────────────────────────────
-
-  {
-    title: 'Slide',
-    emoji: '🛝',
-    set: 3,
-    phonics: ['slide','slid','fast','kid','pig','cat','dog','nap'],
-    text: 'A kid had a slide. The slide was big and red. The kid slid on the slide. "Look at me," said the kid. "I can slide fast." A pig ran up. "I can slide," said the pig. The pig slid on the slide. The pig slid fast. "Look at me," said the pig. A cat ran up. "I can slide," said the cat. The cat slid on the slide. The cat slid fast. A dog ran up. "I can slide," said the dog. The dog slid on the slide. The dog slid fast. The kid, the pig, the cat, and the dog slid on the slide. They slid and slid. They had a nap. They slept in the sun.',
-  },
-  {
-    title: 'The Plane Trip',
-    emoji: '🛩️',
-    set: 3,
-    phonics: ['plane','trip','lake','cloud','sky','white','blue','nap'],
-    text: 'Mike had a plane. The plane was a jet. Mike got in the plane. He went up in the sky. "I will take a trip," said Mike. "I will go to the lake." The plane went up and up. Mike saw a cloud. The cloud was big and white. Mike went in the cloud. The plane came out of the cloud. Mike saw the lake. The lake was big and blue. Mike went down and down. Mike got out of the plane. He sat by the lake. He had a nap in the sun.',
-  },
-  {
-    title: 'Spot',
-    emoji: '🐕',
-    set: 3,
-    phonics: ['spot','black','white','log','rock','box','meg','tim'],
-    text: 'Spot is a dog. Spot is a black and white dog. Spot sat on a log. A cat ran up. The cat is Meg. "Get off the log," said Meg. "I will sit on the log." Spot got off the log. Meg sat on the log. Spot sat on a rock. A pig ran up. The pig is Tim. "Get off the rock," said Tim. "I will sit on the rock." Spot got off the rock. Tim sat on the rock. Spot ran to a box. Spot sat on the box. A cat and a pig ran up. "Get off the box," said Meg and Tim. "No," said Spot. "I sat on a log and a rock. I will sit on this box." Meg sat on the log. Tim sat on the rock. Spot sat on the box. They all had a nap.',
-  },
-  {
-    title: 'The Prints',
-    emoji: '❄️',
-    set: 3,
-    phonics: ['prints','snow','winter','kid','dog','cat','pig','gone'],
-    text: 'It was winter. The snow came down. It was a big snow. A kid went in the snow. The kid made prints. The prints went up and down. A dog ran in the snow. The dog made prints. The prints went up and down. A cat ran in the snow. The cat made prints. The prints went up and down. A pig ran in the snow. The pig made prints. The prints went up and down. The kid, the dog, the cat, and the pig made prints in the snow. The snow came down. The prints were gone.',
-  },
-  {
-    title: 'The Dream',
-    emoji: '🐟',
-    set: 3,
-    phonics: ['dream','lake','blue','fish','bear','ted','bed','woke'],
-    text: 'Ted had a dream. Ted is a bear. In his dream, Ted went to a lake. The lake was blue. A fish came up. "I will get the fish," said Ted. The fish went down in the lake. Ted went in the lake. Ted got the fish. "I have the fish," said Ted. The fish got away. Ted went up and down in the lake. He did not get the fish. Ted woke up. "I am in my bed," said Ted. "I did not get the fish. It was a dream."',
-  },
-  {
-    title: 'The Best Gift',
-    emoji: '🎁',
-    set: 3,
-    phonics: ['gift','best','red','box','wig','meg','pig','dog'],
-    text: 'Meg had a gift. It was a red box with a top. Meg got the top off. In the box was a red wig. "I like the wig," said Meg. "I will put it on." Meg put on the wig. "It is the best gift," said Meg. A pig ran up. "I like the wig," said the pig. "May I put it on?" "OK," said Meg. The pig put on the wig. "I like the wig," said the pig. A dog ran up. "I like the wig," said the dog. "May I put it on?" "OK," said Meg and the pig. The dog put on the wig. "I like the wig," said the dog. The pig, the dog, and Meg sat on a log. They took turns with the wig. It was the best gift.',
-  },
-  {
-    title: 'Mittens',
-    emoji: '🐈‍⬛',
-    set: 3,
-    phonics: ['mittens','black','sled','snow','kid','dog','tired','nap'],
-    text: 'Mittens is a cat. Mittens is a black cat. Mittens sat in a box. The box was in a sled. A kid came up. "I will pull the sled," said the kid. The kid pulled the sled. Mittens sat in the box. The sled went in the snow. A dog ran up. The dog was in the snow. "I will get in the sled," said the dog. The dog got in the sled. The kid pulled the sled. The sled went up and down. The dog sat in the sled. Mittens sat in the box. The kid stopped. "I am tired," said the kid. "I will nap." Mittens and the dog had a nap. The kid had a nap. The snow came down. It was a big snow.',
-  },
-  {
-    title: 'The Sea Gull',
-    emoji: '🕊️',
-    set: 3,
-    phonics: ['sea','gull','rock','fish','shell','sky','kid','sun'],
-    text: 'A kid went to the sea. The kid sat on a rock. A sea gull sat on a rock. The sea gull was big and white. "Look at the sea gull," said the kid. The sea gull went up in the sky. The sea gull went down in the sea. The sea gull came up with a fish. "I have a fish," said the sea gull. The kid went in the sea. The kid went up and down. The kid came up with a shell. "I have a shell," said the kid. The sea gull sat on a rock. The kid sat on a rock. The sea gull ate the fish. The kid had the shell. They sat in the sun.',
-  },
-  {
-    title: 'The Lost Duck',
-    emoji: '🦆',
-    set: 3,
-    phonics: ['duck','lost','pond','home','dog','cat','kid','help'],
-    text: 'A duck was lost. The duck went up and down. The duck was sad. A dog came up. "Can I help you?" said the dog. "I am lost," said the duck. "I can not find my home." "Come with me," said the dog. "I will help you." The duck went with the dog. They went up and down. They did not find the duck\'s home. A cat came up. "Can I help you?" said the cat. "I am lost," said the duck. "I can not find my home." "Come with me," said the cat. "I will help you." The duck went with the cat and the dog. They went up and down. They did not find the duck\'s home. A kid came up. "Can I help you?" said the kid. "I am lost," said the duck. "I can not find my home." "Come with me," said the kid. "I will help you." The duck went with the kid. The kid took the duck to a pond. "This is my home," said the duck. "Thank you for the help." The duck went in the pond. The kid, the dog, and the cat went home.',
-  },
-  {
-    title: 'Max and the Fox',
-    emoji: '🦊',
-    set: 3,
-    phonics: ['max','fox','box','wig','dog','log','turns','nap'],
-    text: 'Max is a dog. Max sat on a log. A fox ran up. The fox had a box. "Look at my box," said the fox. "It is a red box." "I like your box," said Max. "May I see it?" "OK," said the fox. Max looked at the box. The box had a top. Max got the top off. In the box was a red wig. "It is a wig," said Max. "I like the wig." Max put on the wig. "I am Max," he said. "I am a dog with a wig." The fox put on the wig. "I am a fox with a wig," he said. Max and the fox sat on a log. Max put on the wig. The fox put on the wig. They took turns. They had a nap on the log. The wig fell off. They did not get up.',
-  },
-
-  // ── SET 4 ──────────────────────────────────────────────────────────────────
-
-  {
-    title: 'Fish Fun',
-    emoji: '🎣',
-    set: 4,
-    phonics: ['fish','lake','hook','bait','wait','catch','line','fun'],
-    text: 'Mike and his dad went to the lake. They had a fishing pole. They had a can of bait. "I want to catch a big fish," said Mike. Mike put bait on his hook. He cast his line in the water. He sat on a rock. "I will wait," said Mike. Dad put bait on his hook. He cast his line in the water. He sat on a log. "I will wait," said Dad. Mike sat and sat. His line went down. Mike pulled up his line. A fish was on the hook. "I got a fish!" said Mike. "It is a big fish." Dad looked at the fish. "It is a big fish," said Dad. "Let it go." Mike took the fish off the hook. He put it in the water. The fish swam away. "Fish fun," said Mike. "Let\'s go home."',
-  },
-  {
-    title: 'The Chicken Ranch',
-    emoji: '🐓',
-    set: 4,
-    phonics: ['chicken','ranch','truck','corn','spot','dog','feed','nap'],
-    text: 'A man had a chicken ranch. The man had a red truck. The man had a dog. The dog\'s name was Spot. The man got in his truck. Spot got in the truck. The man went to town. "I need corn for the chickens," said the man. The man went to the feed store. He got a bag of corn. He put it in his truck. The man went back to the ranch. He put the corn in a big can. The chickens ran up. "I will feed the chickens," said the man. The man got a can of corn. He put corn on the ground. The chickens ate the corn. Spot ate the corn. "Spot," said the man. "You are a dog. Dogs do not eat corn." Spot ran off. The chickens ate the corn. The man sat on a log. The sun was hot. The man had a nap.',
-  },
-  {
-    title: 'Ring the Bell',
-    emoji: '🔔',
-    set: 4,
-    phonics: ['bell','ring','barn','ding','farm','pig','cow','horse'],
-    text: 'A kid went to a farm. The farm had a big red barn. On the barn was a bell. "I will ring the bell," said the kid. The kid rang the bell. The bell went ding, ding, ding. A pig ran up. "Do not ring the bell," said the pig. "I am taking a nap." The kid rang the bell again. The bell went ding, ding, ding. A cow ran up. "Do not ring the bell," said the cow. "I am taking a nap." The kid rang the bell again. The bell went ding, ding, ding. A horse ran up. "Do not ring the bell," said the horse. "I am taking a nap." The kid ran to the barn. He sat by the bell. He did not ring it. The pig, the cow, and the horse had a nap. The kid had a nap. The bell did not ring.',
-  },
-  {
-    title: 'The Little Skunk',
-    emoji: '🦨',
-    set: 4,
-    phonics: ['skunk','fur','spray','smell','pal','rabbit','dog','woods'],
-    text: 'A little skunk lived in the woods. The skunk had black and white fur. The skunk was sad. "I do not have a pal," said the skunk. The skunk went for a walk. A rabbit ran up. "I will be your pal," said the rabbit. The skunk was happy. The rabbit and the skunk went for a walk. A dog ran up. The dog ran at the skunk. The skunk got mad. The skunk sprayed the dog. The dog ran off. The rabbit ran off. "I am not your pal," said the rabbit. "You smell bad." The skunk was sad. The skunk went home. He sat on a log. A little skunk came up. "I will be your pal," said the little skunk. The skunk was happy. The skunks sat on a log. They had a nap. They did not smell bad to each other.',
-  },
-  {
-    title: 'The Tent',
-    emoji: '⛺',
-    set: 4,
-    phonics: ['tent','sleep','wind','rain','scared','yard','bag','bed'],
-    text: 'A kid had a tent. The tent was red and blue. The kid put the tent in the yard. "I will sleep in the tent," said the kid. The kid got a sleeping bag. He put it in the tent. He got a lamp. He put it in the tent. The kid got in the tent. He got in his sleeping bag. The wind came up. The tent went up and down. "I am not scared," said the kid. The rain came down. The tent went up and down. "I am not scared," said the kid. The wind and rain came down. The tent went up and down. "I am scared," said the kid. The kid ran in the house. He got in his bed. "I will sleep in the tent in the summer," said the kid. "The wind and rain are not fun."',
-  },
-  {
-    title: 'The Lost Horse',
-    emoji: '🐴',
-    set: 4,
-    phonics: ['horse','lost','road','woods','truck','pen','man','nap'],
-    text: 'A man had a horse. The horse was red and brown. The man went to town. The horse was in a pen. The horse ran out of the pen. The horse ran up the road. The horse ran in the woods. The horse was lost. The man came back from town. He went to the pen. The horse was not in the pen. "My horse is lost," said the man. The man got in his truck. He went up the road. He did not see the horse. He went in the woods. He did not see the horse. The man went home. He sat on a log. He was sad. The horse came out of the woods. The horse ran to the man. "I am not lost," said the horse. "I was in the woods." The man got on the horse. He went in the house. The horse went in the pen. The man had a nap. The horse had a nap.',
-  },
-  {
-    title: 'The Funny Farm',
-    emoji: '🐄',
-    set: 4,
-    phonics: ['farm','funny','cow','pig','horse','sheep','moo','oink'],
-    text: 'A man had a farm. The farm was funny. The man had a cow. The cow was red. The cow did not say moo. The cow said oink. The man had a pig. The pig was pink. The pig did not say oink. The pig said moo. The man had a horse. The horse was brown. The horse did not say neigh. The horse said baa. The man had a sheep. The sheep was white. The sheep did not say baa. The sheep said neigh. The man sat on a log. He was sad. "My farm is funny," said the man. A kid came to the farm. "I like your farm," said the kid. "It is funny." The kid laughed. The man laughed. The cow went oink. The pig went moo. The horse went baa. The sheep went neigh. The man and the kid sat on a log. They had a nap. The farm was funny.',
-  },
-  {
-    title: "The Bird's Nest",
-    emoji: '🐦',
-    set: 4,
-    phonics: ['bird','nest','eggs','blue','feathers','tree','sky','nap'],
-    text: 'A bird made a nest. The nest was in a tree. The bird had three eggs. The eggs were blue. The bird sat on the eggs. The sun was hot. The bird sat on the eggs. The rain came down. The bird sat on the eggs. The eggs broke. Three little birds came out. They had no fur. They had no feathers. The bird got food for the little birds. The little birds ate the food. The little birds got feathers. The little birds got big. The little birds sat in the nest. The bird went up in the sky. "Come up," said the bird. The little birds went up in the sky. The bird and the little birds went up and down. They had fun in the sun. They went back to the nest. They had a nap.',
-  },
-  {
-    title: 'The Goat',
-    emoji: '🐐',
-    set: 4,
-    phonics: ['goat','bell','ding','fence','woods','deer','rabbit','farm'],
-    text: 'A goat lived on a farm. The goat was white. The goat had a bell on its neck. The bell went ding, ding, ding. The goat ran in the field. The bell went ding, ding, ding. The goat ran up the hill. The bell went ding, ding, ding. The goat saw a fence. The fence was red. The goat jumped the fence. The goat was in the woods. The goat ran in the woods. The bell went ding, ding, ding. A deer ran up. "Who are you?" said the deer. "I am a goat," said the goat. "You are not a deer," said the deer. The deer ran off. The goat ran in the woods. The bell went ding, ding, ding. A rabbit ran up. "Who are you?" said the rabbit. "I am a goat," said the goat. "You are not a rabbit," said the rabbit. The rabbit ran off. The goat ran back to the farm. The goat ran in the field. The bell went ding, ding, ding. The man came out. "My goat is back," said the man. The man gave the goat some corn. The goat ate the corn. The bell went ding, ding, ding.',
-  },
-  {
-    title: 'The Fishing Trip',
-    emoji: '⛵',
-    set: 4,
-    phonics: ['fishing','trip','boat','lake','hook','bait','blue','nap'],
-    text: 'Mike and his dad went on a fishing trip. They went to the lake. They had a boat. They had fishing poles. They had bait. Mike and his dad got in the boat. The boat went on the lake. Mike put bait on his hook. He cast his line in the water. Dad put bait on his hook. He cast his line in the water. Mike sat and sat. His line went down. Mike pulled up his line. A fish was on the hook. The fish was big and blue. "I got a fish," said Mike. "It is a big blue fish." Dad looked at the fish. "It is a big fish," said Dad. "Let it go." Mike took the fish off the hook. He put it in the water. The fish swam away. Dad\'s line went down. Dad pulled up his line. A fish was on the hook. The fish was big and red. "I got a fish," said Dad. "It is a big red fish." "Let it go," said Mike. Dad took the fish off the hook. He put it in the water. The fish swam away. Mike and his dad sat in the boat. They had fun. They did not keep the fish. They went home. They had a nap.',
-  },
-
-  // ── SET 5 ──────────────────────────────────────────────────────────────────
-
-  {
-    title: 'The Pet Poodle',
-    emoji: '🐩',
-    set: 5,
-    phonics: ['poodle','puff','fluffy','park','scared','safe','lap','nap'],
-    text: 'Pam had a pet poodle. The poodle was white and fluffy. Pam named her Puff. Puff was a small dog. Puff liked to run and play. Puff liked to sit on Pam\'s lap. One day, Pam took Puff to the park. Puff ran in the grass. Puff saw a big dog. The big dog ran at Puff. Puff ran back to Pam. "Help," said Pam. "Puff is scared." Pam picked up Puff. The big dog ran away. Puff was safe. "I love my pet poodle," said Pam. Puff licked Pam\'s hand. They went home. Puff had a nap on Pam\'s lap.',
-  },
-  {
-    title: 'The Good Cook',
-    emoji: '🎂',
-    set: 5,
-    phonics: ['cook','cake','flour','sugar','icing','oven','pink','happy'],
-    text: 'Mom was a good cook. She made cakes and pies. She made cookies and bread. One day, Mom said, "I will make a cake for Dad." Mom got the flour. She got the sugar. She got the eggs. Mom mixed the cake. She put it in the oven. The cake smelled good. The cake was done. Mom put icing on the cake. The cake was pink and white. Dad came home. "Look at the cake," said Mom. "It is for you." Dad smiled. "Thank you," said Dad. "You are a good cook." Dad ate the cake. It was the best cake. Mom was happy.',
-  },
-  {
-    title: 'Snow Fun',
-    emoji: '☃️',
-    set: 5,
-    phonics: ['snow','sled','hill','snowman','snowballs','cocoa','fast','fun'],
-    text: 'It was a snowy day. The snow was deep and white. Mike and Meg went out to play. "We can sled," said Mike. Mike got the sled. Meg got the sled. They went up the hill. They went down the hill. They went fast. "Snow fun," said Meg. They made a snowman. They put a hat on it. They put a scarf on it. They put a stick for the arm. The snowman looked funny. "It is a good snowman," said Mike. They made snowballs. They threw snowballs. They laughed and ran. The sun went down. "Time to go in," said Mom. Mike and Meg went inside. They had hot cocoa. They had fun in the snow.',
-  },
-  {
-    title: 'A Cow in Town',
-    emoji: '🐮',
-    set: 5,
-    phonics: ['cow','town','street','store','police','farm','fence','grass'],
-    text: 'A cow lived on a farm. The cow was brown and white. The cow got out of the fence. The cow went down the road. The cow went into town. The cow walked on the street. A man saw the cow. "A cow in town," said the man. "That is funny." The cow walked past the store. The cow walked past the bank. The cow walked past the school. Kids saw the cow. "Look at the cow," said the kids. The cow looked at the kids. A police car came up. The police man got out. "I will take the cow back," he said. The police man led the cow back to the farm. He put the cow in the fence. "Stay here," said the police man. The cow ate grass. The police man went back to town. The cow did not get out again.',
-  },
-  {
-    title: 'The Mouse House',
-    emoji: '🐭',
-    set: 5,
-    phonics: ['mouse','house','grass','twigs','mud','wind','strong','happy'],
-    text: 'A little mouse lived in a field. The mouse was gray and small. The mouse needed a house. "I will make a house," said the mouse. The mouse got some grass. The mouse got some twigs. The mouse got some leaves. The mouse made a small house. It was round and soft. The mouse went inside. The wind came up. The wind blew the house away. The mouse was sad. "I will make a new house," said the mouse. The mouse got some sticks. The mouse got some mud. The mouse made a strong house. The wind came up. The house did not blow away. The mouse went inside. "My house is good," said the mouse. The mouse had a nap. The sun was warm. The mouse was happy.',
-  },
-  {
-    title: 'The Shy Tiger',
-    emoji: '🐯',
-    set: 5,
-    phonics: ['tiger','shy','orange','cave','rabbit','alone','pals','happy'],
-    text: 'A tiger lived in the woods. The tiger was big and orange. The tiger was shy. He did not like to be seen. The tiger hid in the grass. He hid behind the trees. He hid in a cave. The other tigers played. The shy tiger did not play. He was scared. One day, a little rabbit came up. "Why are you alone?" said the rabbit. "I am shy," said the tiger. "I will be your pal," said the rabbit. The tiger smiled. The rabbit and the tiger played. They ran in the woods. They had fun. The other tigers saw the shy tiger. "Come play with us," they said. The shy tiger went to play. The shy tiger was not shy now. He had pals. He was happy.',
-  },
-  {
-    title: 'The Lost Wallet',
-    emoji: '👛',
-    set: 5,
-    phonics: ['wallet','lost','store','milk','bread','eggs','phone','found'],
-    text: 'Dad went to the store. He got some milk. He got some bread. He got some eggs. Dad went to pay. He looked for his wallet. His wallet was not there. "Oh no," said Dad. "I lost my wallet." Dad went back to the car. He looked in the car. No wallet. Dad went back to the house. He looked in the house. No wallet. Dad was sad. "I lost my money," said Dad. The phone rang. A man said, "I found a wallet. Is it yours?" Dad went to the man. The man gave Dad the wallet. "Thank you," said Dad. "Thank you so much." Dad was happy. He went back to the store. He got his milk, bread, and eggs.',
-  },
-  {
-    title: 'Too Small',
-    emoji: '🚲',
-    set: 5,
-    phonics: ['small','bike','ride','sister','sam','sue','yard','happy'],
-    text: 'Sam had a little sister. Her name was Sue. Sue was small. Sam had a bike. Sue wanted to ride the bike. "You are too small," said Sam. Sue was sad. She went to her room. Sue had a little bike. She got on her bike. She rode it in the yard. Sam saw Sue. "Look at me," said Sue. "I can ride my bike." Sam smiled. "You are small," said Sam. "But you can ride your bike." Sue was happy. Sam got on his bike. They rode together. Sue was not too small for her bike.',
-  },
-  {
-    title: 'The Square Egg',
-    emoji: '🥚',
-    set: 5,
-    phonics: ['square','egg','hen','round','chick','funny','yellow','hatch'],
-    text: 'A hen laid an egg. The egg was not round. The egg was square. The hen looked at the egg. "My egg is square," said the hen. "That is not right." The other hens came to look. "A square egg," they said. "We have never seen a square egg." The hen sat on the egg. She sat and sat. The egg did not hatch. The hen was sad. "I want a chick," she said. A man came to the farm. He saw the square egg. "That is a funny egg," he said. The man took the egg. He made a hole in it. Out came a little chick. The chick was soft and yellow. The chick was round, not square. The hen was happy. "I have my chick," she said.',
-  },
-  {
-    title: 'The Clumsy Rabbit',
-    emoji: '🐇',
-    set: 5,
-    phonics: ['clumsy','rabbit','logs','holes','storm','tree','hero','mud'],
-    text: 'A rabbit lived in the woods. The rabbit was clumsy. He fell over logs. He fell in holes. The other rabbits laughed. "You are clumsy," they said. The rabbit was sad. One day, a big storm came. The wind blew. The rain came down. A tree fell on a rabbit hole. The little rabbits were in the hole. They could not get out. The clumsy rabbit ran to the hole. He tried to move the tree. He fell in the mud. He got up and tried again. He pushed and pushed. He moved the tree. The little rabbits got out. "Thank you," said the little rabbits. "You saved us." The other rabbits saw. "You are not clumsy," they said. "You are a hero." The rabbit was happy. He was still clumsy. But he was a hero too.',
-  },
-
 ];
 
+let STORIES = [];
 let curStory = 0;
 
+// ── Render tabs ────────────────────────────────────────────────────────────
 function renderTabs() {
   const tabs = document.getElementById('story-tabs');
-  tabs.innerHTML='';
-  STORIES.forEach((s,i) => {
+  tabs.innerHTML = '';
+  STORIES.forEach((s, i) => {
     const btn = document.createElement('button');
-    btn.className=`stab${i===curStory?' active':''}`;
-    btn.textContent=s.emoji+' '+s.title.split(' ').slice(0,2).join(' ');
-    btn.addEventListener('click',()=>{curStory=i; renderStory(); renderTabs();});
+    btn.className = `stab${i === curStory ? ' active' : ''}`;
+    // Support both API stories (title field) and legacy (title field)
+    const title = (s.title || '').split(' ').slice(0, 2).join(' ');
+    btn.textContent = (s.emoji || '📖') + ' ' + title;
+    btn.addEventListener('click', () => { curStory = i; renderStory(); renderTabs(); });
     tabs.appendChild(btn);
   });
 }
 
+// ── Render story body ──────────────────────────────────────────────────────
 function renderStory() {
   const s = STORIES[curStory];
-  document.getElementById('story-emoji').textContent = s.emoji;
+  if (!s) return;
+
+  document.getElementById('story-emoji').textContent = s.emoji || '📖';
   document.getElementById('story-title').textContent = s.title;
+
+  // Support both API format (s.content) and legacy format (s.text)
+  const storyText = s.content || s.text || '';
+  // Support both API format (s.words array) and legacy (s.phonics array)
+  const phonicsWords = new Set((s.words || s.phonics || []).map(w => w.toLowerCase()));
+
   const body = document.getElementById('story-body');
-  body.innerHTML = s.text.split(/\b/).map(w => {
-    const clean = w.toLowerCase().replace(/[^a-z]/g,'');
-    if(s.phonics.includes(clean)) return `<span class="phonics-word" onclick="AudioManager.speak('${clean}',{rate:.7})">${w}</span>`;
+  body.innerHTML = storyText.split(/\b/).map(w => {
+    const clean = w.toLowerCase().replace(/[^a-z]/g, '');
+    if (phonicsWords.has(clean)) {
+      return `<span class="phonics-word" onclick="AudioManager.speak('${clean}',{rate:.7})">${w}</span>`;
+    }
     return w;
   }).join('');
+
+  // Track story open
+  if (typeof analytics !== 'undefined') {
+    analytics.logEvent('story_open', { storyId: s.id, title: s.title });
+  }
 }
 
-document.getElementById('btn-read').addEventListener('click', () => AudioManager.speak(STORIES[curStory].text, {rate:.8}));
+// ── Load stories from API, fall back to hardcoded ─────────────────────────
+async function loadStories() {
+  let apiStories = [];
+
+  try {
+    apiStories = await PhonicsAPI.getStories();
+  } catch(e) {
+    console.warn('[story] API unavailable, using fallback stories');
+  }
+
+  if (apiStories && apiStories.length > 0) {
+    STORIES = apiStories;
+    console.log(`[story] Loaded ${STORIES.length} stories from API`);
+  } else {
+    // Fall back to the full hardcoded set
+    STORIES = FALLBACK_STORIES;
+    console.log('[story] Using fallback stories');
+  }
+
+  curStory = 0;
+  renderTabs();
+  renderStory();
+}
+
+document.getElementById('btn-read').addEventListener('click', () => {
+  const s = STORIES[curStory];
+  if (s) AudioManager.speak(s.content || s.text || '', { rate: .8 });
+});
 document.getElementById('btn-stop').addEventListener('click', () => AudioManager.stop());
 
-renderTabs(); renderStory();
+// Load on DOM ready
+loadStories();
 </script>
 <script>if(typeof analytics!=="undefined")analytics.trackActivityStart("story-time");</script>
 </body>

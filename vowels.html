@@ -40,6 +40,7 @@
   <div class="vowel-grid" id="long-grid"></div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -67,6 +68,13 @@ PHONICS_DATA.vowels.forEach(v => {
   });
 });
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("vowel-blends");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("vowel-blends");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof TOTAL!=="undefined" ? TOTAL : 10;
+    analytics.trackActivityComplete("vowel-blends", s, t);
+  }
+});</script>
 </body>
 </html>

@@ -29,6 +29,7 @@
   <div class="r-grid" id="r-grid"></div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
@@ -54,6 +55,13 @@ R_VOWELS.forEach((rv, i) => {
   grid.appendChild(card);
 });
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("r-controlled-vowels");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("r-controlled-vowels");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof ROUNDS!=="undefined" ? ROUNDS : 10;
+    analytics.trackActivityComplete("r-controlled-vowels", s, t);
+  }
+});</script>
 </body>
 </html>

@@ -60,6 +60,7 @@
 </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -91,6 +92,13 @@ document.getElementById('btn-next').addEventListener('click', () => { idx=(idx+1
 
 render();
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("silent-e-words");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("silent-e-words");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof total!=="undefined" ? total : 10;
+    analytics.trackActivityComplete("silent-e-words", s, t);
+  }
+});</script>
 </body>
 </html>

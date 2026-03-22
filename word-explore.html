@@ -38,6 +38,7 @@
 </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/ui.js"></script>
@@ -69,6 +70,13 @@ document.getElementById('btn-hear').addEventListener('click', () => {
 });
 document.getElementById('btn-clear').addEventListener('click', () => { built=[]; render(); });
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-explore");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("word-explore");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof total!=="undefined" ? total : (typeof ROUNDS!=="undefined" ? ROUNDS : 10);
+    analytics.trackActivityComplete("word-explorer", s, t);
+  }
+});</script>
 </body>
 </html>

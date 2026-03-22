@@ -2,14 +2,16 @@
 'use strict';
 
 const analytics = (() => {
-  // ── CONFIG — replace with your deployed API URL ───────────────────────────
-  const API_BASE    = 'https://phonics-api.onrender.com'; // change after deploy
   const SESSION_KEY = 'ph_session';
   const PROFILE_KEY = 'ph_profile';
 
+  function _apiBase() {
+    return window.PHONICS_API_BASE || 'https://phonics-api-k43i.onrender.com';
+  }
+
   function isPremium() { return localStorage.getItem('ph_premium') === 'true'; }
 
-  // ── Session — persists across page loads within same browser ──────────────
+  // ── Session ────────────────────────────────────────────────────────────────
   function getSession() {
     let s = {};
     try { s = JSON.parse(localStorage.getItem(SESSION_KEY)) || {}; } catch(e) {}
@@ -22,7 +24,7 @@ const analytics = (() => {
     return s;
   }
 
-  // ── Core: send event to central API ──────────────────────────────────────
+  // ── Core: send event to central API ───────────────────────────────────────
   function logEvent(type, data = {}) {
     const sess  = getSession();
     const event = {
@@ -31,22 +33,26 @@ const analytics = (() => {
       url:       window.location.pathname,
       ua:        sess.ua,
       premium:   isPremium(),
-      ts:        Date.now(),
+      ts:        Math.floor(Date.now() / 1000),
       ...data,
     };
 
-    // Fire-and-forget — never block the user
-    fetch(`${API_BASE}/api/events`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify(event),
-      keepalive: true,
-    }).catch(() => {});  // silent fail — offline is fine
+    // Use PhonicsAPI if loaded, else direct fetch
+    if (window.PhonicsAPI && typeof window.PhonicsAPI.logEvent === 'function') {
+      window.PhonicsAPI.logEvent(type, data);
+    } else {
+      fetch(`${_apiBase()}/api/events`, {
+        method:    'POST',
+        headers:   { 'Content-Type': 'application/json' },
+        body:      JSON.stringify(event),
+        keepalive: true,
+      }).catch(() => {});
+    }
 
     return event;
   }
 
-  // ── Activity tracking ─────────────────────────────────────────────────────
+  // ── Activity tracking ──────────────────────────────────────────────────────
   function trackPageView()  { logEvent('page_view', { title: document.title }); }
 
   function trackActivityStart(id) {
@@ -58,7 +64,6 @@ const analytics = (() => {
   function trackActivityComplete(id, score, total) {
     const pct = total > 0 ? Math.round((score / total) * 100) : 0;
     logEvent('activity_complete', { activityId: id, score, total, pct });
-    // Also update localStorage progress for the progress widget
     const p = getProgress();
     if (!p[id]) p[id] = { attempts: 0, bestScore: 0, bestPct: 0 };
     p[id].attempts++;
@@ -77,16 +82,27 @@ const analytics = (() => {
     logEvent('signup', { childName, childAge, hasEmail: !!email });
     updateProfile({ childName, childAge, signupTs: Date.now() });
     if (email) captureEmail(email, childName, 'onboarding');
+
+    // Register with central API
+    if (window.PhonicsAPI) {
+      window.PhonicsAPI.registerUser(email, childName, childAge).catch(() => {});
+    }
   }
 
-  // ── Email capture — posts directly to API ────────────────────────────────
+  // ── Email capture ──────────────────────────────────────────────────────────
   function captureEmail(email, name, source) {
     if (!email || !email.includes('@')) return;
-    fetch(`${API_BASE}/api/emails`, {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ email, name, source, session_id: getSession().id }),
-    }).catch(() => {});
+
+    // Send to central API
+    if (window.PhonicsAPI) {
+      window.PhonicsAPI.captureEmail(email, name, source);
+    } else {
+      fetch(`${_apiBase()}/api/emails`, {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ email, name, source, session_id: getSession().id }),
+      }).catch(() => {});
+    }
     updateProfile({ email });
     logEvent('email_captured', { source });
   }
@@ -126,6 +142,12 @@ const analytics = (() => {
     const email = input?.value?.trim();
     if (!email || !email.includes('@')) { if(input) input.style.borderColor='#ef4444'; return; }
     captureEmail(email, getProfile().childName || 'parent', 'email_bar');
+
+    // Also register as user
+    if (window.PhonicsAPI) {
+      window.PhonicsAPI.registerUser(email, getProfile().childName, null).catch(() => {});
+    }
+
     const el = document.getElementById('_email-capture');
     if (el) {
       el.innerHTML = `<div style="text-align:center;font-family:'Fredoka One',cursive;font-size:1.1rem;color:#22c55e;padding:8px">✅ Subscribed!</div>`;
@@ -133,7 +155,7 @@ const analytics = (() => {
     }
   }
 
-  // ── Upgrade nudge ─────────────────────────────────────────────────────────
+  // ── Upgrade nudge ──────────────────────────────────────────────────────────
   function _showUpgradeNudge(trigger) {
     if (isPremium() || document.getElementById('_upgrade-nudge')) return;
     const el = document.createElement('div');
@@ -155,7 +177,7 @@ const analytics = (() => {
     logEvent('upgrade_nudge_shown', { trigger });
   }
 
-  // ── Streak (local only — also sent via event) ─────────────────────────────
+  // ── Streak ─────────────────────────────────────────────────────────────────
   function _updateStreak() {
     const today = new Date().toDateString(), yest = new Date(Date.now()-864e5).toDateString();
     const d = JSON.parse(localStorage.getItem('ph_streak') || '{"last":"","count":0,"longest":0}');
@@ -172,19 +194,19 @@ const analytics = (() => {
     return (d.last===today||d.last===yest) ? d.count : 0;
   }
 
-  // ── Local progress (mirror of DB for offline use) ─────────────────────────
+  // ── Local progress ─────────────────────────────────────────────────────────
   function getProgress()    { try{ return JSON.parse(localStorage.getItem('ph_progress')||'{}'); }catch(e){ return {}; } }
   function _saveProgress(p) { try{ localStorage.setItem('ph_progress', JSON.stringify(p)); }catch(e){} }
   function getActivityProgress(id) { return getProgress()[id] || null; }
   function getTotalStars()  { return Object.values(getProgress()).reduce((s,a)=>s+(a.bestScore||0),0); }
   function getActivitiesCompleted() { return Object.values(getProgress()).filter(a=>(a.attempts||0)>0).length; }
 
-  // ── Profile (local) ───────────────────────────────────────────────────────
+  // ── Profile ────────────────────────────────────────────────────────────────
   function getProfile()     { try{ return JSON.parse(localStorage.getItem(PROFILE_KEY)||'{}'); }catch(e){ return {}; } }
   function updateProfile(d) { try{ localStorage.setItem(PROFILE_KEY, JSON.stringify({...getProfile(),...d})); }catch(e){} }
   function isNewUser()      { return !localStorage.getItem(PROFILE_KEY) && !localStorage.getItem('ph_progress'); }
 
-  // ── Auto-tracking ─────────────────────────────────────────────────────────
+  // ── Auto page-exit tracking ────────────────────────────────────────────────
   window._pageStart = Date.now();
   window.addEventListener('beforeunload', () => {
     const s = Math.round((Date.now()-window._pageStart)/1000);

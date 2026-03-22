@@ -35,6 +35,7 @@
   <div class="blend-grid" id="blend-grid"></div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -58,6 +59,13 @@ PHONICS_DATA.consonantBlends.forEach((b, i) => {
   grid.appendChild(chip);
 });
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("consonant-blends");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("consonant-blends");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof score!=="undefined" ? score : 0;
+    var t = typeof ROUNDS!=="undefined" ? ROUNDS : 10;
+    analytics.trackActivityComplete("consonant-blends", s, t);
+  }
+});</script>
 </body>
 </html>

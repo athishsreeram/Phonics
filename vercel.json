@@ -1,3 +1,6 @@
 {
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "env": {
+    "PHONICS_API_BASE": "https://phonics-api-k43i.onrender.com"
+  }
 }

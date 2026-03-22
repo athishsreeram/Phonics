@@ -63,6 +63,7 @@
 </div>
 </main>
 <script src="js/config.js"></script>
+<script src="js/api.js"></script>
 <script src="js/analytics.js"></script>
 <script src="js/audio.js"></script>
 <script src="js/materials.js"></script>
@@ -129,6 +130,13 @@ function nextQ() {
 
 buildDots(); renderCard();
 </script>
-<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("digraph-practice");</script>
+<script>if(typeof analytics!=="undefined")analytics.trackActivityStart("digraph-practice");
+window.addEventListener('beforeunload', function() {
+  if(typeof analytics!=="undefined") {
+    var s = typeof qs!=="undefined" ? qs : 0;
+    var t = typeof qt!=="undefined" ? qt : 10;
+    analytics.trackActivityComplete("digraph-practice", s, t);
+  }
+});</script>
 </body>
 </html>
