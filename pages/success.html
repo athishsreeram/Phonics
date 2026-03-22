@@ -6,36 +6,79 @@
 <title>🎉 Welcome to Premium! · Phonics Hub</title>
 <link rel="stylesheet" href="../css/shared.css">
 <style>
-.success-card { background:white; border-radius:28px; padding:48px 28px; text-align:center; box-shadow:var(--shadow-md); max-width:480px; margin:60px auto; }
-.success-icon { font-size:5rem; display:block; margin-bottom:20px; animation:starBurst .5s ease; }
+body { display:flex; align-items:center; justify-content:center; min-height:100vh; padding:20px; }
+.success-card {
+  background:white; border-radius:28px; padding:48px 28px; text-align:center;
+  box-shadow:var(--shadow-md); max-width:480px; width:100%;
+  animation: fadeIn .5s ease;
+}
+.success-icon { font-size:5rem; display:block; margin-bottom:20px; animation:starBurst .6s ease; }
 .success-card h1 { font-family:'Fredoka One',cursive; font-size:2.2rem; color:var(--clr-primary); margin-bottom:12px; }
 .success-card p  { font-size:1rem; color:#666; margin-bottom:8px; }
 .perks { list-style:none; text-align:left; margin:20px 0; display:flex; flex-direction:column; gap:10px; }
 .perks li { display:flex; align-items:center; gap:10px; font-weight:700; font-size:.95rem; }
 .perk-icon { font-size:1.4rem; }
+.verifying { font-size:.9rem; color:var(--clr-text-soft); margin-top:12px; }
 </style>
 </head>
 <body>
-<main style="padding:20px">
-<div class="success-card">
+<div class="success-card" id="card">
   <span class="success-icon">🎉</span>
   <h1>Welcome to Premium!</h1>
   <p>Your subscription is now active. All 19+ activities are unlocked!</p>
   <ul class="perks">
-    <li><span class="perk-icon">✅</span> 19+ interactive activities</li>
+    <li><span class="perk-icon">✅</span> 19+ interactive phonics activities</li>
     <li><span class="perk-icon">🔊</span> Text-to-speech on every activity</li>
     <li><span class="perk-icon">📊</span> Parent dashboard &amp; progress tracking</li>
-    <li><span class="perk-icon">📴</span> Works offline (no internet needed)</li>
+    <li><span class="perk-icon">📴</span> Works offline</li>
     <li><span class="perk-icon">🚫</span> Zero ads, zero tracking</li>
   </ul>
   <a href="../index.html" class="btn btn-primary btn-lg" style="display:block;text-decoration:none;margin-top:8px">
     🚀 Start Learning!
   </a>
+  <p class="verifying" id="verify-msg"></p>
 </div>
-</main>
+
 <script>
-// Store premium status locally so gating works immediately
-localStorage.setItem('ph_premium','true');
+// ── Step 1: Always set premium in localStorage immediately ──
+localStorage.setItem('ph_premium', 'true');
+localStorage.setItem('ph_premium_ts', Date.now().toString());
+
+// ── Step 2: If Stripe returned a session_id, verify it ─────
+// This confirms the payment actually succeeded before trusting localStorage.
+// Requires your Vercel api/verify-subscription endpoint to be deployed.
+(async () => {
+  const params    = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
+
+  if (!sessionId) {
+    // No session_id — came here directly or via a manual Stripe Payment Link
+    // localStorage is already set above, nothing more to do
+    return;
+  }
+
+  document.getElementById('verify-msg').textContent = 'Verifying your subscription…';
+
+  try {
+    const res  = await fetch(`/api/verify-subscription?session_id=${sessionId}`);
+    const data = await res.json();
+
+    if (data.active) {
+      localStorage.setItem('ph_premium', 'true');
+      localStorage.setItem('ph_premium_customer', data.customer || '');
+      document.getElementById('verify-msg').textContent = '✅ Subscription verified!';
+    } else {
+      // Payment not confirmed — revoke
+      localStorage.setItem('ph_premium', 'false');
+      document.getElementById('verify-msg').textContent =
+        '⚠️ Payment not confirmed yet. Please contact support if this is an error.';
+    }
+  } catch (e) {
+    // API not available (e.g. on GitHub Pages) — keep localStorage grant
+    document.getElementById('verify-msg').textContent = '';
+    console.warn('Verify endpoint unavailable, keeping localStorage grant.');
+  }
+})();
 </script>
 </body>
 </html>

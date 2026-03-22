@@ -221,21 +221,15 @@
 <script src="js/analytics.js"></script>
 <script>
 window.addEventListener('load', async () => {
-  // Wire up premium-unlocked links (replaces lock buttons with real hrefs)
+  // Wire up gating (adds click handlers, checks premium)
   await activityGating.initializeActivityGating();
 
-  // If user is premium, remove lock styling from all premium cards
+  // If premium — fully unlock all cards including pointer-events
   if (paymentManager.isPremium()) {
-    document.querySelectorAll('.activity-card.locked').forEach(card => {
-      card.classList.remove('locked');
-      const badge = card.querySelector('.lock-badge');
-      if (badge) badge.remove();
-      const btn = card.querySelector('.play-btn');
-      if (btn) { btn.textContent = '▶️ Play'; btn.style.background = '#22c55e'; }
-    });
+    paymentManager.unlockPremiumCards();
   }
 
-  console.log('✅ Phonics Hub loaded');
+  console.log('✅ Phonics Hub loaded, premium:', paymentManager.isPremium());
 });
 </script>
 

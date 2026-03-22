@@ -123,9 +123,9 @@ body {
 }
 .activity-card.locked .play-btn {
   background: #9ca3af;
-  cursor: not-allowed;
-  pointer-events: none;
+  cursor: default;
 }
+/* once .locked is removed, .play-btn inherits normal pointer-events */
 .lock-badge {
   position: absolute;
   top: 12px; right: 14px;
