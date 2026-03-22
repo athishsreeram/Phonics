@@ -64,15 +64,18 @@ window.PhonicsAPI = (() => {
 
   // ── USERS ──────────────────────────────────────────────────────────────────
   async function registerUser(email, childName, childAge) {
-    if (!email) return { ok: false, error: 'email required' };
+    // Email is optional — if not provided we still write to users table
+    // using child name + session so the row exists for later email linking
+    const emailToUse = (email && email.includes('@')) ? email : null;
+
     const data = await _post('/api/users/register', {
-      email,
+      email:      emailToUse,
       child_name: childName || null,
       child_age:  childAge  ? parseInt(childAge) : null,
     });
     if (data.ok && data.data) {
-      localStorage.setItem('ph_email', email);
-      localStorage.setItem('ph_user',  JSON.stringify(data.data));
+      if (emailToUse) localStorage.setItem('ph_email', emailToUse);
+      localStorage.setItem('ph_user', JSON.stringify(data.data));
     }
     return data;
   }
@@ -104,6 +107,7 @@ window.PhonicsAPI = (() => {
   }
 
   // ── EMAILS ─────────────────────────────────────────────────────────────────
+  // Single call: POST /api/emails → writes to email_leads table only
   function captureEmail(email, name, source) {
     if (!email || !email.includes('@')) return Promise.resolve({ ok: false });
     localStorage.setItem('ph_email', email);

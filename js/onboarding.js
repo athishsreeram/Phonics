@@ -97,6 +97,13 @@ const onboarding = (() => {
               style="${inputStyle()}" />
           </div>
           <div>
+            <label style="font-weight:800;font-size:.85rem;color:#444;display:block;margin-bottom:6px">
+              Your email
+            </label>
+            <input id="ob-email" type="email" placeholder="parent@email.com" required
+              style="${inputStyle()}" />
+          </div>
+          <div>
             <label style="font-weight:800;font-size:.85rem;color:#444;display:block;margin-bottom:8px">
               Child's age
             </label>
@@ -238,19 +245,43 @@ const onboarding = (() => {
   function saveChildInfo() {
     const name  = document.getElementById('ob-name')?.value?.trim();
     const email = document.getElementById('ob-email')?.value?.trim();
-    if (name)  answers.childName = name;
-    if (email) answers.email = email;
-    if (answers.childName || answers.childAge) {
-      analytics.trackSignup(answers.childName || 'anonymous', answers.childAge || 'unknown', answers.email || null);
-    if (window.PhonicsAPI && answers.email) {
-      window.PhonicsAPI.registerUser(answers.email, answers.childName, answers.childAge).catch(() => {});
-    }
-      analytics.updateProfile({ childName: answers.childName, childAge: answers.childAge });
-      // Register user in central API
-      if (answers.email) {
-        analytics.registerUser(answers.email, answers.childName, answers.childAge);
+
+    // Email is mandatory — show inline error and block progression
+    if (!email || !email.includes('@')) {
+      const input = document.getElementById('ob-email');
+      if (input) {
+        input.style.borderColor = '#ef4444';
+        input.placeholder = 'Please enter a valid email';
+        input.focus();
       }
+      return;
     }
+
+    if (name)  answers.childName = name;
+    answers.email = email;
+
+    // Track signup event + update local profile
+    analytics.trackSignup(
+      answers.childName || 'anonymous',
+      answers.childAge  || 'unknown',
+      answers.email     || null
+    );
+    analytics.updateProfile({
+      childName: answers.childName,
+      childAge:  answers.childAge,
+      email:     answers.email || undefined,
+    });
+
+    // Single API call on onboarding — POST /api/users/register
+    // Backend handles writing to both email_leads + users tables
+    if (window.PhonicsAPI) {
+      window.PhonicsAPI.registerUser(
+        answers.email,
+        answers.childName || null,
+        answers.childAge  || null
+      ).catch(() => {});
+    }
+
     next();
   }
 

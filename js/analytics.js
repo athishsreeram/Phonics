@@ -79,14 +79,11 @@ const analytics = (() => {
   function trackOnboardingStep(step, data = {}) { logEvent('onboarding_step', { step, ...data }); }
 
   function trackSignup(childName, childAge, email) {
+    // Only logs the event + updates local profile.
+    // API calls (registerUser, captureEmail) are owned by saveChildInfo in onboarding.js
+    // to avoid duplicate requests.
     logEvent('signup', { childName, childAge, hasEmail: !!email });
     updateProfile({ childName, childAge, signupTs: Date.now() });
-    if (email) captureEmail(email, childName, 'onboarding');
-
-    // Register with central API
-    if (window.PhonicsAPI) {
-      window.PhonicsAPI.registerUser(email, childName, childAge).catch(() => {});
-    }
   }
 
   // ── Email capture ──────────────────────────────────────────────────────────
@@ -141,12 +138,11 @@ const analytics = (() => {
     const input = document.getElementById('_email-input');
     const email = input?.value?.trim();
     if (!email || !email.includes('@')) { if(input) input.style.borderColor='#ef4444'; return; }
-    captureEmail(email, getProfile().childName || 'parent', 'email_bar');
-
-    // Also register as user
+    // PhonicsAPI.captureEmail writes to BOTH email_leads AND users tables
     if (window.PhonicsAPI) {
-      window.PhonicsAPI.registerUser(email, getProfile().childName, null).catch(() => {});
+      window.PhonicsAPI.captureEmail(email, getProfile().childName || null, 'email_bar').catch(() => {});
     }
+    captureEmail(email, getProfile().childName || 'parent', 'email_bar');
 
     const el = document.getElementById('_email-capture');
     if (el) {
