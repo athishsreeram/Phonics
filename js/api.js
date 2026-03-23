@@ -1,18 +1,6 @@
 /* js/api.js
  * Central API client for all Phonics Hub → Render API operations.
  * Loaded after config.js on every page.
- *
- * Exposes: window.PhonicsAPI
- * Operations wired:
- *   - POST /api/events        (page views, activity start/complete, upgrade clicks)
- *   - POST /api/emails        (email lead capture)
- *   - POST /api/users/register  (user registration / upsert)
- *   - POST /api/users/ping    (last_seen update on every page load)
- *   - GET  /api/users/me      (fetch user profile + subscription status)
- *   - GET  /api/stories       (fetch all stories for story.html)
- *   - GET  /api/stories/:id   (fetch single story)
- *   - POST /api/subscriptions/checkout  (Stripe checkout session)
- *   - GET  /api/subscriptions/verify    (verify Stripe payment)
  */
 'use strict';
 
@@ -48,7 +36,6 @@ window.PhonicsAPI = (() => {
   }
 
   // ── EVENTS ─────────────────────────────────────────────────────────────────
-  // Called automatically by analytics.js — do not call directly
   function logEvent(type, data = {}) {
     const session = _getSessionId();
     return _post('/api/events', {
@@ -64,10 +51,7 @@ window.PhonicsAPI = (() => {
 
   // ── USERS ──────────────────────────────────────────────────────────────────
   async function registerUser(email, childName, childAge) {
-    // Email is optional — if not provided we still write to users table
-    // using child name + session so the row exists for later email linking
     const emailToUse = (email && email.includes('@')) ? email : null;
-
     const data = await _post('/api/users/register', {
       email:      emailToUse,
       child_name: childName || null,
@@ -92,11 +76,7 @@ window.PhonicsAPI = (() => {
     const data = await _get(`/api/users/me?email=${encodeURIComponent(email)}`);
     if (data.ok && data.data) {
       localStorage.setItem('ph_user', JSON.stringify(data.data));
-      // Sync premium status from server
-      const serverStatus = data.data.status || data.data.sub_status;
-      if (serverStatus === 'active' || serverStatus === 'trialing') {
-        localStorage.setItem('ph_premium', 'true');
-      }
+      _syncPremiumFromUser(data.data);
       return data.data;
     }
     return null;
@@ -107,7 +87,6 @@ window.PhonicsAPI = (() => {
   }
 
   // ── EMAILS ─────────────────────────────────────────────────────────────────
-  // Single call: POST /api/emails → writes to email_leads table only
   function captureEmail(email, name, source) {
     if (!email || !email.includes('@')) return Promise.resolve({ ok: false });
     localStorage.setItem('ph_email', email);
@@ -126,12 +105,14 @@ window.PhonicsAPI = (() => {
   }
 
   // ── SUBSCRIPTIONS ──────────────────────────────────────────────────────────
+
   async function startCheckout(successUrl, cancelUrl) {
     const origin = window.location.origin;
-    const data = await _post('/api/subscriptions/checkout', {
-      session_id:  _getSessionId(),
-      successUrl:  successUrl  || `${origin}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
-      cancelUrl:   cancelUrl   || `${origin}/index.html`,
+    const email  = localStorage.getItem('ph_email') || null;
+    const data   = await _post('/api/subscriptions/checkout', {
+      email,
+      successUrl: successUrl || `${origin}/pages/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      cancelUrl:  cancelUrl  || `${origin}/index.html`,
     });
     if (data.url) {
       window.location.href = data.url;
@@ -141,30 +122,105 @@ window.PhonicsAPI = (() => {
     return data;
   }
 
+  // Called from success.html after Stripe redirect.
+  // Writes expiry to localStorage so offline checks work.
   async function verifySession(sessionId) {
-    // Pass email if known so backend can link session → users + subscriptions tables
-    const email = localStorage.getItem('ph_email') || '';
+    const email  = localStorage.getItem('ph_email') || '';
     const params = new URLSearchParams({ session_id: sessionId });
     if (email) params.set('email', email);
 
     const data = await _get(`/api/subscriptions/verify?${params.toString()}`);
-    if (data.ok && data.active) {
-      localStorage.setItem('ph_premium',          'true');
-      localStorage.setItem('ph_premium_ts',        Date.now().toString());
-      localStorage.setItem('ph_premium_verified',  'true');
-      // Update cached user status
+
+    if (data.ok) {
+      if (data.active) {
+        localStorage.setItem('ph_premium',         'true');
+        localStorage.setItem('ph_premium_ts',       Date.now().toString());
+        localStorage.setItem('ph_premium_verified', 'true');
+      }
+      if (data.expires_at) {
+        localStorage.setItem('ph_expires_at', data.expires_at);
+      }
+      if (data.email) {
+        localStorage.setItem('ph_email', data.email);
+      }
+      // Update cached user
       const stored = getStoredUser();
-      if (stored) {
-        stored.status = data.status || 'active';
+      if (stored && data.status) {
+        stored.status = data.status;
         localStorage.setItem('ph_user', JSON.stringify(stored));
       }
     }
+
     return data;
   }
 
-  // ── HELPERS ────────────────────────────────────────────────────────────────
+  // Called on every app load — background sync with backend.
+  // Updates localStorage expiry and premium flag.
+  async function getSubscriptionStatus() {
+    const email = localStorage.getItem('ph_email');
+    if (!email) return { active: false, status: 'none' };
+
+    const data = await _get(
+      `/api/subscriptions/status?email=${encodeURIComponent(email)}`
+    );
+
+    if (data.ok) {
+      if (data.active) {
+        localStorage.setItem('ph_premium',   'true');
+        localStorage.setItem('ph_expires_at', data.expires_at || '');
+      } else {
+        // Backend says expired — revoke localStorage
+        localStorage.removeItem('ph_premium');
+        localStorage.removeItem('ph_expires_at');
+      }
+    }
+
+    return data;
+  }
+
+  // ── PREMIUM HELPERS ────────────────────────────────────────────────────────
+
+  // Fast local check — uses expiry if available, falls back to flag
+  function isPremium() {
+    if (localStorage.getItem('ph_premium') !== 'true') return false;
+    const expiresAt = localStorage.getItem('ph_expires_at');
+    if (!expiresAt) return true; // no expiry stored yet — trust the flag
+    return new Date(expiresAt) > new Date();
+  }
+
+  function _syncPremiumFromUser(user) {
+    const active = user.status === 'active' || user.status === 'trialing' ||
+                   user.sub_status === 'active' || user.sub_status === 'trialing';
+    if (active) {
+      localStorage.setItem('ph_premium', 'true');
+    }
+    if (user.expires_at) {
+      localStorage.setItem('ph_expires_at', user.expires_at);
+    }
+  }
+
+  // ── BACKGROUND SYNC every 5 minutes ───────────────────────────────────────
+  // Runs silently — keeps premium status in sync without blocking anything
+  function _startBackgroundSync() {
+    const INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+    async function sync() {
+      try {
+        const data = await getSubscriptionStatus();
+        // Dispatch event so UI can react if status changed
+        window.dispatchEvent(new CustomEvent('ph:subscription-sync', { detail: data }));
+      } catch (e) {
+        // Silent — never interrupt the user
+      }
+    }
+
+    // First sync after 10s (let page settle), then every 5 min
+    setTimeout(sync, 10000);
+    setInterval(sync, INTERVAL);
+  }
+
+  // ── SESSION HELPERS ────────────────────────────────────────────────────────
   function _getSessionId() {
-    // Reuse existing session from analytics.js if loaded, else own key
     try {
       const s = JSON.parse(localStorage.getItem('ph_session') || '{}');
       return s.id || sessionStorage.getItem('ph_sid') || _makeSessionId();
@@ -177,15 +233,16 @@ window.PhonicsAPI = (() => {
     return id;
   }
 
-  function _isPremium() {
-    return localStorage.getItem('ph_premium') === 'true';
-  }
-
-  // ── AUTO-PING on every page load ───────────────────────────────────────────
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => pingUser());
-  } else {
+  // ── INIT ───────────────────────────────────────────────────────────────────
+  const _init = () => {
     pingUser();
+    _startBackgroundSync();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _init);
+  } else {
+    _init();
   }
 
   return {
@@ -193,6 +250,7 @@ window.PhonicsAPI = (() => {
     registerUser, pingUser, getUser, getStoredUser,
     captureEmail,
     getStories, getStory,
-    startCheckout, verifySession,
+    startCheckout, verifySession, getSubscriptionStatus,
+    isPremium,
   };
 })();

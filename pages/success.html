@@ -6,25 +6,42 @@
 <title>🎉 Premium Unlocked! · Phonics Hub</title>
 <link rel="stylesheet" href="../css/shared.css">
 <style>
-body { display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px;
-       background:linear-gradient(135deg,#667eea,#764ba2); }
-.success-card { background:white;border-radius:28px;padding:48px 28px;text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.25);max-width:460px;width:100%;animation:fadeIn .5s ease; }
-.icon { font-size:5rem;display:block;margin-bottom:16px; }
-h1 { font-family:'Fredoka One',cursive;font-size:2.2rem;color:#667eea;margin-bottom:8px; }
-.sub { font-size:1rem;color:#666;margin-bottom:20px; }
-.perks { list-style:none;text-align:left;margin:20px 0;display:flex;flex-direction:column;gap:10px; }
-.perks li { display:flex;align-items:center;gap:10px;font-weight:700;font-size:.95rem; }
-.go-btn { display:block;width:100%;padding:16px;border-radius:16px;border:none;
-  background:linear-gradient(135deg,#667eea,#764ba2);color:white;
-  font-family:'Nunito',sans-serif;font-weight:800;font-size:1.1rem;
-  cursor:pointer;text-decoration:none;margin-top:8px;transition:transform .2s,box-shadow .2s; }
-.go-btn:hover { transform:translateY(-2px);box-shadow:0 8px 20px rgba(102,126,234,.4); }
-.status { font-size:.85rem;color:#22c55e;font-weight:700;margin-top:12px;min-height:20px; }
+body {
+  display:flex; align-items:center; justify-content:center;
+  min-height:100vh; padding:20px;
+  background:linear-gradient(135deg,#667eea,#764ba2);
+}
+.card {
+  background:white; border-radius:28px; padding:48px 28px;
+  text-align:center; box-shadow:0 20px 60px rgba(0,0,0,.25);
+  max-width:460px; width:100%; animation:fadeIn .5s ease;
+}
+.icon  { font-size:5rem; display:block; margin-bottom:16px; }
+h1     { font-family:'Fredoka One',cursive; font-size:2.2rem; color:#667eea; margin-bottom:8px; }
+.sub   { font-size:1rem; color:#666; margin-bottom:20px; }
+.perks { list-style:none; text-align:left; margin:20px 0; display:flex; flex-direction:column; gap:10px; }
+.perks li { display:flex; align-items:center; gap:10px; font-weight:700; font-size:.95rem; }
+.go-btn {
+  display:block; width:100%; padding:16px; border-radius:16px; border:none;
+  background:linear-gradient(135deg,#667eea,#764ba2); color:white;
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:1.1rem;
+  cursor:pointer; text-decoration:none; margin-top:8px;
+  transition:transform .2s, box-shadow .2s;
+}
+.go-btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(102,126,234,.4); }
+.status-row {
+  margin-top:16px; padding:12px 16px; border-radius:12px;
+  background:#f0fdf4; border:1px solid #bbf7d0;
+  font-size:.85rem; font-weight:700; color:#15803d;
+  min-height:20px;
+}
+.status-row.warn  { background:#fffbeb; border-color:#fde68a; color:#b45309; }
+.status-row.error { background:#fef2f2; border-color:#fecaca; color:#dc2626; }
+.expiry-info { font-size:.78rem; color:#888; margin-top:8px; }
 </style>
 </head>
 <body>
-<div class="success-card">
+<div class="card">
   <span class="icon">🎉</span>
   <h1>Premium Unlocked!</h1>
   <p class="sub">All 19+ phonics activities are now available.</p>
@@ -36,75 +53,106 @@ h1 { font-family:'Fredoka One',cursive;font-size:2.2rem;color:#667eea;margin-bot
     <li>📴 Works offline</li>
   </ul>
   <a href="../index.html" class="go-btn" id="go-btn">🚀 Start Learning Now!</a>
-  <p class="status" id="status">Activating premium…</p>
+  <div class="status-row" id="status">Activating your subscription…</div>
+  <div class="expiry-info" id="expiry-info"></div>
 </div>
 
 <script src="../js/config.js"></script>
 <script src="../js/api.js"></script>
 <script>
 (async () => {
-  const statusEl  = document.getElementById('status');
-  const btn       = document.getElementById('go-btn');
-  const params    = new URLSearchParams(window.location.search);
+  const statusEl = document.getElementById('status');
+  const expiryEl = document.getElementById('expiry-info');
+  const btn      = document.getElementById('go-btn');
+  const params   = new URLSearchParams(window.location.search);
   const sessionId = params.get('session_id');
 
-  // Step 1: Set premium in localStorage immediately so UI unlocks now
+  // ── Step 1: Instant localStorage unlock ────────────────────────────────────
+  // User sees premium immediately — backend verify happens in background
   localStorage.setItem('ph_premium',    'true');
   localStorage.setItem('ph_premium_ts', Date.now().toString());
-  statusEl.textContent = '✅ Premium saved to this browser';
 
-  // Step 2: Start countdown
-  let countdown = 4;
-  const tick = () => {
+  // ── Step 2: Countdown redirect ─────────────────────────────────────────────
+  let countdown = 5;
+  let redirectTimer;
+
+  function tick() {
     btn.textContent = `🚀 Start Learning! (${countdown}s)`;
-    if (countdown <= 0) { window.location.href = '../index.html'; return; }
+    if (countdown <= 0) {
+      window.location.href = '../index.html';
+      return;
+    }
     countdown--;
-    setTimeout(tick, 1000);
-  };
+    redirectTimer = setTimeout(tick, 1000);
+  }
   tick();
 
-  // Step 3: Verify with Render API — this writes to subscriptions + users tables
+  // ── Step 3: Verify with backend ────────────────────────────────────────────
   if (!sessionId) {
     statusEl.textContent = '✅ Premium active';
     return;
   }
 
   try {
-    // verifySession calls GET /api/subscriptions/verify?session_id=...&email=...
-    // The backend:
-    //   1. Retrieves the Stripe session
-    //   2. Upserts users.status = 'active' or 'trialing'
-    //   3. Inserts row into subscriptions table
     const data = await PhonicsAPI.verifySession(sessionId);
 
     if (data && data.active) {
+      // ── Success: subscription confirmed ────────────────────────────────────
       statusEl.textContent = '✅ Subscription verified & saved';
+      statusEl.className   = 'status-row';
 
-      // Step 4: If Stripe returned the customer email, register/update user
-      const stripeEmail = data.customer?.email;
-      if (stripeEmail) {
-        localStorage.setItem('ph_email', stripeEmail);
-        // Upsert user with active status — also writes to email_leads
-        await PhonicsAPI.registerUser(stripeEmail, null, null);
+      // Store expiry for offline checks
+      if (data.expires_at) {
+        localStorage.setItem('ph_expires_at', data.expires_at);
+        const expDate = new Date(data.expires_at);
+        expiryEl.textContent = `Premium active until ${expDate.toLocaleDateString('en-CA', {
+          year: 'numeric', month: 'long', day: 'numeric'
+        })}`;
       }
 
-      // Step 5: Log purchase_complete event to events table
+      // Register user row if email returned from Stripe
+      if (data.email) {
+        localStorage.setItem('ph_email', data.email);
+        PhonicsAPI.registerUser(data.email, null, null).catch(() => {});
+      }
+
+      // Log purchase event
       PhonicsAPI.logEvent('purchase_complete', {
         data: {
           session_id: sessionId,
           status:     data.status,
-          email:      stripeEmail || localStorage.getItem('ph_email') || null,
+          expires_at: data.expires_at,
+          email:      data.email || localStorage.getItem('ph_email'),
         },
       });
 
+      // Speed up redirect — verified, no need to wait
+      clearTimeout(redirectTimer);
+      countdown = 2;
+      tick();
+
     } else {
-      statusEl.textContent = '⚠️ Payment pending — premium will activate shortly';
+      // ── Payment processing / not yet confirmed ──────────────────────────
+      // Premium is already set in localStorage so user has access
+      statusEl.textContent = '✅ Premium active — sync in progress';
+      statusEl.className   = 'status-row warn';
+      expiryEl.textContent = 'Your subscription will be fully confirmed within a minute.';
+
+      PhonicsAPI.logEvent('purchase_pending', {
+        data: { session_id: sessionId },
+      });
     }
 
-  } catch(e) {
-    // API unavailable — localStorage premium is enough to unlock
-    console.warn('[success] API verify failed:', e.message);
-    statusEl.textContent = '✅ Premium active (offline mode)';
+  } catch (e) {
+    // ── API error — localStorage premium still grants access ───────────────
+    console.warn('[success] verify error:', e.message);
+    statusEl.textContent = '✅ Premium active';
+    statusEl.className   = 'status-row';
+    expiryEl.textContent = 'Your subscription is active. Sync will complete in the background.';
+
+    PhonicsAPI.logEvent('purchase_verify_failed', {
+      data: { session_id: sessionId, error: e.message },
+    });
   }
 })();
 </script>
